@@ -1,15 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {  } from 'react'
+import { Routes, Router, Route } from 'react-router-dom';
+import { PageExample } from './pages/PageExample';
 import { Chat } from './pages/Chat'
+import "./styles/variables.scss";
+import './App.scss'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <Chat />
+    App 
+      {/* <Router>
+        <Routes>
+          <Route path="/" element={<PageExample />} />
+        </Routes>
+      </Router> */}
     </>
   )
 }
