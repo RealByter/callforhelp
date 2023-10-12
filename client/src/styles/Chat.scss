@@ -1,7 +1,6 @@
 @import "./variables.scss";
 
 .chat-page {
-    background: linear-gradient(360deg, #BAA6F1 -1.2%, rgba(166, 192, 241, 0) 112.26%);
     height: 100vh;
     width: 100vw;
     position: relative;
@@ -23,6 +22,7 @@
             border-radius: 8px 8px 0px 8px;
             align-self: flex-start;
             font-size: $chat-msg-text-size;
+            color: $chat-msg-text-color;
             
         }
 
@@ -33,7 +33,10 @@
             align-self: flex-end;
         }
         
-
+        .no-msg {
+            margin: auto;
+            margin-top: 10vh;
+        }
     }
 
     .chat-top-bar {
@@ -41,7 +44,6 @@
         height: 22%;
         display: flex;
         flex-direction: column;
-        // background-color: #FFFFFF;
         
         &-upper {
             border-bottom: $chat-upper-top-bar-border;
@@ -61,12 +63,14 @@
                 flex-direction: column;
 
                 .title {
-                    font-size: 20px;
+                    font-size: $chat-title-text-size;
                     font-weight: bold;
+                    color: $default-text-color;
                 }
                 
                 .sub-title {
-                    font-size: 14px;
+                    font-size: $chat-sub-title-text-size;
+                    color: $sub-text-color;
                 }
             }
 
@@ -94,6 +98,8 @@
                     height: 70%;
                     border: none;
                     border-radius: $chat-input-radius;
+                    color: $default-text-color;
+                    font-weight: bold;
 
                     &::before {
                         outline: none;
@@ -156,7 +162,7 @@
             margin: 0 auto;
             width: 92%;
             height: 70%;
-            border: 2px solid #9360FFEB;
+            border: $chat-input-order;
             border-radius: $chat-input-radius;
             background-color: $chat-input-bgd;
             display: flex;
@@ -176,12 +182,21 @@
             }
         
             .chat-input-send {
-                height: 5vh;
-                width: 5vh;
+                height: 35px;
+                width: 35px;
+                padding: 0;
                 background-color: $chat-send-btn-bgd;
                 border-radius: 50%;
                 align-self: center;
-                margin-left: 10px;
+                margin-left: 8px;
+                transform: rotate(180deg);
+                border: none;
+                outline: none;
+
+                svg {
+                    margin-left: 5px;
+                    margin-top: 4px;
+                }
             }
         
         }

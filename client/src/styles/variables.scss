@@ -28,6 +28,8 @@ $waiting-page-sub-title-size: 18px;
 $login-page-title-size: 24px;
 $login-page-all-text-size: 14px;
 $chat-msg-text-size: 16px;
+$chat-title-text-size: 20px;
+$chat-sub-title-text-size: 14px;
 
 //borders
 $login-input-border: 1px solid #FFFFFF40;
@@ -36,6 +38,7 @@ $support-list-have-msg-border-img: linear-gradient(267.86deg, #736CFF 6.51%, #01
 $chat-btn-border: 2px solid;
 $chat-btn-border-img: linear-gradient(267.86deg, #736CFF 6.51%, #0159FF 100%);
 $chat-upper-top-bar-border: 1px solid #E1E4E9;
+$chat-input-order: 2px solid $chat-send-btn-bgd;
 
 //opacity
 $login-input-opacity: 50%;
