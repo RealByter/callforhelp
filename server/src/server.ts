@@ -1,15 +1,16 @@
 import { Socket, Server } from 'socket.io';
+import { SocketFunction } from './index';
 
 export class CallForHelpServer {
     public static readonly PORT: string = '3000';
     public static readonly CORS_ORIGIN = 'http://localhost:5173';
 
-    private onConnectCallback: (socket: Socket) => void;
+    private onConnectCallback: SocketFunction;
     private port: number;
     private corsOrigin: string;
     private io: Server;
 
-    constructor(onConnectCallback: (socket: Socket) => void) {
+    constructor(onConnectCallback: SocketFunction) {
         this.onConnectCallback = onConnectCallback;
         this.configurate();
         this.createServerSocket();
@@ -46,7 +47,7 @@ export class CallForHelpServer {
 
         this.io.on('connection', (socket: Socket) => {
             console.log(`New connection from ${socket.handshake.address}`)
-            this.onConnectCallback(socket);
+            this.onConnectCallback(this.io, socket);
         });
     }
 }
