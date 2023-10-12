@@ -1,0 +1,29 @@
+
+
+.chat-page {
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(360deg, #BAA6F1 -1.2%, rgba(166, 192, 241, 0) 112.26%);
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.massage-body {
+    max-width: 80%;
+    width: fit-content;
+    height: fit-content;
+    padding: 3%;
+    margin: 3%;
+    background: #eae2fc;
+    border-radius: 5px;
+    align-self: right;
+}
+
+.massage-body.sender {
+    background: #FFFFFF;
+    background-blend-mode: screen;
+    align-self: left;
+}
