@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Message, MessageProps } from '../components/Message';
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatInput } from "../components/ChatInput";
-import '../styles/Chat.css';
+import '../styles/Chat.scss';
 
 
 export const Chat = () => {

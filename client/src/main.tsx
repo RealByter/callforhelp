@@ -6,6 +6,7 @@ import "./index.css";
 import SocketProvider from "./context/socket/SocketProvider.tsx";
 import './fonts/Assistant.ttf';
 import { PageExample } from "./pages/PageExample";
+import { Chat } from "./pages/Chat";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,9 @@ const router = createBrowserRouter([
     path: "/ex",
     element: <PageExample />,
     // loader: teamLoader,
+  }, {
+    path: "/chat",
+    element: <Chat />
   }
 ]);
 
