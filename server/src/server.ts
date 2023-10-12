@@ -1,37 +1,44 @@
-import { Socket, Server } from "socket.io";
+import { Socket, Server } from 'socket.io';
 
 export class CallForHelpServer {
-    public static readonly PORT: number = 3000;
-    private port: string | number;
+    public static readonly PORT: string = '3000';
+    public static readonly CORS_ORIGIN = 'http://localhost:5173';
+
+    private onConnectCallback: (socket: Socket) => void;
+    private port: number;
+    private corsOrigin: string;
     private io: Server;
 
-    constructor() {
+    constructor(onConnectCallback: (socket: Socket) => void) {
+        this.onConnectCallback = onConnectCallback;
         this.configurate();
         this.createServerSocket();
         this.listen();
     }
 
-    private configurate(): void { 
-        const proccessPort = process.env.PORT;
+    private configurateSetting(settingEnvName: string, defaultSetting: string): string {
+        const setting = process.env[settingEnvName];
 
-        if (proccessPort === undefined) {
-            this.port = CallForHelpServer.PORT;
-            console.log(`Environment variable port is undefined, defaulting to ${CallForHelpServer.PORT}`);
-        } else {
-            this.port = proccessPort;
-        }
+        if (setting === undefined) {
+            console.log(`Environment variable ${settingEnvName} is non-existent! defaulting to ${defaultSetting}`);
+            
+            return defaultSetting;
+        } 
+
+        return setting;
+    }
+
+    private configurate(): void { 
+        this.port = parseInt(this.configurateSetting('PORT', CallForHelpServer.PORT));
+        this.corsOrigin = this.configurateSetting('CORS_ORIGIN',  CallForHelpServer.CORS_ORIGIN);
     }
 
     private createServerSocket(): void {
-        this.io = require('socket.io')(this.port, {
+        this.io = new Server(this.port, {
             cors: {
-                origin: ['http://localhost:8080']
+                origin: [this.corsOrigin]
             }
         });
-    }
-
-    private onConnect(socket: Socket): void {
-        // register handlers here, see https://socket.io/docs/v4/server-application-structure/ for structure
     }
     
     private listen(): void {
@@ -39,7 +46,7 @@ export class CallForHelpServer {
 
         this.io.on('connection', (socket: Socket) => {
             console.log(`New connection from ${socket.handshake.address}`)
-            this.onConnect(socket);
+            this.onConnectCallback(socket);
         });
     }
 }
