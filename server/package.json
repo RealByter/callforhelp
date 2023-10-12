@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "socket.io": "^4.7.2"
+  },
+  "name": "callforhelp-server",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
