@@ -1,7 +1,10 @@
 import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
-
+import {
+    passwordValidations,
+    emailValidations,
+} from "../constants/validationOptions";
 type LoginFormProps = {
     onSubmit: () => void;
 };
@@ -10,17 +13,7 @@ interface LoginFormI {
     email: string;
     password: string;
 }
-const emailValidations = {
-    required: true,
-    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/,
-};
 
-const passwordValidations = {
-    required: true,
-    min: 8,
-    pattern:
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-};
 const LoginForm = (props: LoginFormProps) => {
     const { onSubmit } = props;
     const {
