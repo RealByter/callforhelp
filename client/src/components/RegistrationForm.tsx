@@ -1,6 +1,11 @@
 import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
+import {
+    nameValidations,
+    emailValidations,
+    passwordValidations,
+} from "../constants/validationOptions";
 
 type RegistrationFormProps = {
     onSubmit: (userInfo: {
@@ -16,22 +21,6 @@ interface RegistrationFormI {
     password: string;
 }
 
-const nameValidations = {
-    required: true,
-    min: 2,
-};
-const emailValidations = {
-    required: true,
-    // pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/,
-    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-};
-
-const passwordValidations = {
-    required: true,
-    min: 8,
-    pattern:
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-};
 const RegistrationForm = (props: RegistrationFormProps) => {
     const { onSubmit } = props;
     const {
