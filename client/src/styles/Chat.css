@@ -1,12 +1,16 @@
 
 
 .chat-page {
+    background: linear-gradient(360deg, #BAA6F1 -1.2%, rgba(166, 192, 241, 0) 112.26%);
     height: 100vh;
     width: 100vw;
-    background: linear-gradient(360deg, #BAA6F1 -1.2%, rgba(166, 192, 241, 0) 112.26%);
+    position: relative;
 }
 
 .messages {
+    height: fit-content;
+    max-height: 87%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -17,13 +21,69 @@
     height: fit-content;
     padding: 3%;
     margin: 3%;
-    background: #eae2fc;
-    border-radius: 5px;
-    align-self: right;
+    background: #f1ebff;
+    border-radius: 8px 8px 0px 8px;
+    align-self: flex-start;
 }
 
 .massage-body.sender {
     background: #FFFFFF;
     background-blend-mode: screen;
-    align-self: left;
+    border-radius: 8px 8px 8px 0;
+    align-self: flex-end;
+}
+
+.chat-top-bar {
+    width: 100%;
+    height: 13%;
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding: 10%;
+}
+
+.top-bar-text {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    /* gap: 20%; */
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sub-title {
+    font-size: 14px;
+}
+
+.top-bar-close {
+    
+}
+
+.chat-input {
+    height: 11%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+}
+
+.chat-input-parts {
+    margin: 0 auto;
+    width: 92%;
+    height: 70%;
+}
+
+.chat-input-box {
+    width: 100%;
+    height: 100%;
+    border: 2px solid #9360FFEB;
+    border-radius: 114px;
+    box-sizing: border-box;
+    display: inline-block;
 }
