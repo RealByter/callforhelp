@@ -6,7 +6,7 @@ type Props = {
     onSubmit: () => void;
 };
 
-interface LoginForm {
+interface RegistrationFormI {
     name: string;
     email: string;
     password: string;
@@ -27,13 +27,13 @@ const passwordValidations = {
     pattern:
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
-const LoginForm = (props: Props) => {
+const RegistrationForm = (props: Props) => {
     const { onSubmit } = props;
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginForm>();
+    } = useForm<RegistrationFormI>();
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -57,4 +57,4 @@ const LoginForm = (props: Props) => {
     );
 };
 
-export default LoginForm;
+export default RegistrationForm;
