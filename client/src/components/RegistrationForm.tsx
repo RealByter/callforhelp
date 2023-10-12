@@ -2,7 +2,7 @@ import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
 
-type Props = {
+type RegistrationFormProps = {
     onSubmit: () => void;
 };
 
@@ -27,7 +27,7 @@ const passwordValidations = {
     pattern:
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
-const RegistrationForm = (props: Props) => {
+const RegistrationForm = (props: RegistrationFormProps) => {
     const { onSubmit } = props;
     const {
         register,
