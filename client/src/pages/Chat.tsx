@@ -19,7 +19,7 @@ export const Chat = () => {
 
     return (
         <div className="chat-page" >
-            <ChatTopBar />
+            <ChatTopBar chatEnded={false} />
 
 
             <div className="messages">
