@@ -6,16 +6,10 @@ type Props = {
     onSubmit: () => void;
 };
 
-interface RegistrationFormI {
-    name: string;
+interface LoginFormI {
     email: string;
     password: string;
 }
-
-const nameValidations = {
-    required: true,
-    min: 2,
-};
 const emailValidations = {
     required: true,
     pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/,
@@ -27,21 +21,16 @@ const passwordValidations = {
     pattern:
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
-const RegistrationForm = (props: Props) => {
+const LoginForm = (props: Props) => {
     const { onSubmit } = props;
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<RegistrationFormI>();
+    } = useForm<LoginFormI>();
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <FormField
-                inputType="text"
-                label="שם"
-                inputProps={register("name", nameValidations)}
-            />
             <FormField
                 inputType="text"
                 inputProps={register("email", emailValidations)}
@@ -52,9 +41,9 @@ const RegistrationForm = (props: Props) => {
                 inputProps={register("password", passwordValidations)}
                 label="סיסמא"
             />
-            <button type="submit">הרשם</button>
+            <button type="submit">התחבר</button>
         </form>
     );
 };
 
-export default RegistrationForm;
+export default LoginForm;
