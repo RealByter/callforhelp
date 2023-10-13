@@ -7,12 +7,16 @@ import '../styles/Chat.scss';
 
 export const Chat = () => {
     const [msg, setMsg] = useState<MessageProps[]>([
-        {isSender: false, content: "הודגעה ראשונה"},
-        {isSender: false, content: "הודעה שנייה"},
-        {isSender: true, content: "תגובה ראשונה אמור להיות בסדר "}
+        {isSender: false, content: "הודעה ראשונה", id: 1},
+        {isSender: false, content: "הודעה שנייה", id: 2},
+        {isSender: true, content: "תגובה ראשונה אמור להיות בסדר ", id: 3}
     ]);
 
-    const msgIsEmpty = useMemo(() => msg.length == 0, msg)
+    const msgIsEmpty = useMemo(() => msg.length == 0, msg);
+
+    const sendMsg = (text: string) => {
+        //some sending logic with socket
+    }
 
 
     return (
@@ -23,10 +27,12 @@ export const Chat = () => {
             <div className="messages">
                 {msgIsEmpty ? 
                     <span className="no-msg">עוד אין הודעות</span> 
-                    : msg.map((m) => <Message isSender={m.isSender} content={m.content} />)}
+                    : msg.map((m) => <React.Fragment key={m.id}>
+                            <Message id={m.id} isSender={m.isSender} content={m.content} />
+                        </React.Fragment>)}
             </div>
             
-            <ChatInput />
+            <ChatInput sendMsgFunc={sendMsg} />
         </div>
     )
 }
