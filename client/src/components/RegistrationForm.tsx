@@ -1,5 +1,6 @@
 import React from "react";
 import FormField from "./FormField";
+import "../styles/forms.scss";
 import { useForm } from "react-hook-form";
 import Errors from "./FormErrors";
 import {
@@ -38,45 +39,43 @@ const RegistrationForm = (props: RegistrationFormProps) => {
         [onSubmit]
     );
     return (
-        <form onSubmit={handleSubmit(submitHandler)} className="form">
-            <FormField
-                inputType="text"
-                label="שם"
-                inputProps={register("name", nameValidations)}
-                inputClass={errors.name && "input-error"}
-                hint={{
-                    component: Errors("name", errors),
-                }}
-            />
-            <FormField
-                inputType="text"
-                inputProps={register("email", emailValidations)}
-                label="אימייל"
-                inputClass={errors.email && "input-error"}
-                hint={{ component: Errors("email", errors) }}
-            />
-            <FormField
-                inputType="password"
-                inputProps={register("password", passwordValidations)}
-                label="סיסמא"
-                inputClass={errors.password && "input-error"}
-                hint={{ component: Errors("password", errors) }}
-            />
+        <>
+            <form onSubmit={handleSubmit(submitHandler)} className="form">
+                <h2>הרשמה עם מייל</h2>
+                <FormField
+                    inputType="text"
+                    label="שם"
+                    inputProps={register("name", nameValidations)}
+                    inputClass={errors.name && "input-error"}
+                />
+                <FormField
+                    inputType="text"
+                    inputProps={register("email", emailValidations)}
+                    label="אימייל"
+                    inputClass={errors.email && "input-error"}
+                />
+                <FormField
+                    inputType="password"
+                    inputProps={register("password", passwordValidations)}
+                    label="סיסמא"
+                    inputClass={errors.password && "input-error"}
+                />
 
-            <div className="form-helper">
-                <p>הסיסמא צריכה לעמוד בתנאים הבאים</p>
-                <ul>
-                    <li>להכיל לפחות 8 תווים</li>
-                    <li>להכיל אות קטנה אחת לפחות</li>
-                    <li>להכיל אות גדולה אחת לפחות</li>
-                    <li>להכיל סימן</li>
-                    <li>להכיל מספר</li>
-                </ul>
-            </div>
-            <button type="submit" className="form-submit-btn">
-                הרשם
-            </button>
-        </form>
+                <div className="form-helper">
+                    <p>הסיסמא צריכה לעמוד בתנאים הבאים</p>
+                    <ul>
+                        <li>להכיל לפחות 8 תווים</li>
+                        <li>להכיל אות קטנה אחת לפחות</li>
+                        <li>להכיל אות גדולה אחת לפחות</li>
+                        <li>להכיל סימן</li>
+                        <li>להכיל מספר</li>
+                    </ul>
+                </div>
+                <button type="submit" className="form-submit-btn">
+                    הרשם
+                </button>
+            </form>
+        </>
     );
 };
 
