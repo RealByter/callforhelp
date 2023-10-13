@@ -1,7 +1,7 @@
 import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
+import Errors from "./FormErrors";
 import {
     nameValidations,
     emailValidations,
@@ -37,25 +37,6 @@ const RegistrationForm = (props: RegistrationFormProps) => {
         },
         [onSubmit]
     );
-    const Errors = (name: "name" | "email" | "password") => {
-        return (
-            errors[name] && (
-                <ErrorMessage
-                    errors={errors}
-                    name={name}
-                    render={({ messages }) => {
-                        return messages
-                            ? Object.entries(messages).map(
-                                  ([type, message]) => (
-                                      <p key={type}>{message}</p>
-                                  )
-                              )
-                            : null;
-                    }}
-                />
-            )
-        );
-    };
     return (
         <form onSubmit={handleSubmit(submitHandler)} className="form">
             <FormField
@@ -64,7 +45,7 @@ const RegistrationForm = (props: RegistrationFormProps) => {
                 inputProps={register("name", nameValidations)}
                 inputClass={errors.name && "input-error"}
                 hint={{
-                    component: Errors("name"),
+                    component: Errors("name", errors),
                 }}
             />
             <FormField
@@ -72,22 +53,24 @@ const RegistrationForm = (props: RegistrationFormProps) => {
                 inputProps={register("email", emailValidations)}
                 label="אימייל"
                 inputClass={errors.email && "input-error"}
-                hint={{ component: Errors("email") }}
+                hint={{ component: Errors("email", errors) }}
             />
             <FormField
                 inputType="password"
                 inputProps={register("password", passwordValidations)}
                 label="סיסמא"
                 inputClass={errors.password && "input-error"}
-                hint={{ component: Errors("password") }}
+                hint={{ component: Errors("password", errors) }}
             />
 
             <div className="form-helper">
-                <p>הסיסמא לא מתאימה. הסיסמא צריכה לעמוד בתנאים הבאים</p>
+                <p>הסיסמא צריכה לעמוד בתנאים הבאים</p>
                 <ul>
                     <li>להכיל לפחות 8 תווים</li>
                     <li>להכיל אות קטנה אחת לפחות</li>
                     <li>להכיל אות גדולה אחת לפחות</li>
+                    <li>להכיל סימן</li>
+                    <li>להכיל מספר</li>
                 </ul>
             </div>
             <button type="submit" className="form-submit-btn">
