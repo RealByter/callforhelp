@@ -2,14 +2,14 @@ import React from "react";
 import Eye from "../assets/eye.svg";
 import NoShowEye from "../assets/eye-slash.svg";
 import "../styles/forms.scss";
-import Hint from "./Hint";
+import Hint, { HintProps } from "./Hint";
 type TextInputProps = {
     label: string;
     inputType?: string;
     placeHolder?: string;
     inputProps: any; // Should have the useForm register props
     inputClass?: string;
-    hint?: string;
+    hint?: HintProps;
 };
 
 export default function FormField(props: TextInputProps) {
@@ -32,7 +32,9 @@ export default function FormField(props: TextInputProps) {
         <div className="form-field">
             <label htmlFor={`input-${inputProps.name}`}>{label}</label>
             <div className="form-field-input-container">
-                {hint && <Hint text={hint} />}
+                {hint && (hint.messages || hint.component) && (
+                    <Hint {...hint} />
+                )}
                 <input
                     {...inputProps!}
                     type={effectiveInputType}

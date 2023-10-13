@@ -1,6 +1,7 @@
 import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import {
     nameValidations,
     emailValidations,
@@ -27,13 +28,34 @@ const RegistrationForm = (props: RegistrationFormProps) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<RegistrationFormI>();
+    } = useForm<RegistrationFormI>({
+        criteriaMode: "all",
+    });
     const submitHandler = React.useCallback(
         (data: RegistrationFormI) => {
             onSubmit(data);
         },
         [onSubmit]
     );
+    const Errors = (name: "name" | "email" | "password") => {
+        return (
+            errors[name] && (
+                <ErrorMessage
+                    errors={errors}
+                    name={name}
+                    render={({ messages }) => {
+                        return messages
+                            ? Object.entries(messages).map(
+                                  ([type, message]) => (
+                                      <p key={type}>{message}</p>
+                                  )
+                              )
+                            : null;
+                    }}
+                />
+            )
+        );
+    };
     return (
         <form onSubmit={handleSubmit(submitHandler)} className="form">
             <FormField
@@ -41,31 +63,25 @@ const RegistrationForm = (props: RegistrationFormProps) => {
                 label="שם"
                 inputProps={register("name", nameValidations)}
                 inputClass={errors.name && "input-error"}
+                hint={{
+                    component: Errors("name"),
+                }}
             />
             <FormField
                 inputType="text"
                 inputProps={register("email", emailValidations)}
                 label="אימייל"
                 inputClass={errors.email && "input-error"}
+                hint={{ component: Errors("email") }}
             />
             <FormField
                 inputType="password"
                 inputProps={register("password", passwordValidations)}
                 label="סיסמא"
                 inputClass={errors.password && "input-error"}
-                hint="must be 2 letters"
+                hint={{ component: Errors("password") }}
             />
-            {errors.name?.type === "required" && <p>Name is required</p>}
-            {errors.email?.type === "required" && <p>Email is required</p>}
-            {errors.password?.type === "required" && (
-                <p>Password is required</p>
-            )}
-            {errors.email?.type === "pattern" && (
-                <p>Email doesn't fit pattern</p>
-            )}
-            {errors.password?.type === "pattern" && (
-                <p>Password doesn't fit pattern</p>
-            )}
+
             <div className="form-helper">
                 <p>הסיסמא לא מתאימה. הסיסמא צריכה לעמוד בתנאים הבאים</p>
                 <ul>
