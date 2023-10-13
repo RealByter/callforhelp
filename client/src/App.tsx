@@ -11,7 +11,9 @@ function App() {
     return <p>Attempt to connect user</p>
   }
 
-  return user ? <p>User logged in</p> : <p>You should sign in or <Link to="/signup">sign up</Link></p>
+  return user ? 
+  <p>User logged in</p> : 
+  <p>You should <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link></p>
 }
 
 export default App
