@@ -8,7 +8,9 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = ({ children }) => {
     return (
         <div className="page-header">
-            {children}
+            <span className="page-header-text">
+                {children}
+            </span>
         </div>
     )
 }

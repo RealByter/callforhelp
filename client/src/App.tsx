@@ -8,12 +8,7 @@ function App() {
 
   return (
     <>
-    App 
-      {/* <Router>
-        <Routes>
-          <Route path="/" element={<PageExample />} />
-        </Routes>
-      </Router> */}
+      App
     </>
   )
 }
