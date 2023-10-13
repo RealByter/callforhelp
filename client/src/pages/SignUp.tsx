@@ -24,6 +24,7 @@ const SignUpPage = () => {
 
     return (
         <form onSubmit={handleFormSubmit}>
+            <h1>Sign Up</h1><br/>
             <p>Email</p><br/>
             <input type="email" name="email"/><br/>
             <p>Password</p><br/>

@@ -24,6 +24,7 @@ const SignInPage = () => {
 
     return (
         <form onSubmit={handleFormSubmit}>
+            <h1>Sign In</h1><br/>
             <p>Email</p><br/>
             <input type="email" name="email"/><br/>
             <p>Password</p><br/>
