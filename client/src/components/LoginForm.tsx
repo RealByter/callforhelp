@@ -1,6 +1,7 @@
 import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
+import "../styles/forms.scss";
 import {
     passwordValidations,
     emailValidations,
@@ -23,14 +24,16 @@ const LoginForm = (props: LoginFormProps) => {
     } = useForm<LoginFormI>();
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="form">
             <FormField
                 inputType="text"
-                inputProps={register("email", emailValidations)}
+                inputProps={register("email", {
+                    ...emailValidations,
+                })}
                 label="אימייל"
             />
             <FormField
-                inputType="text"
+                inputType="password"
                 inputProps={register("password", passwordValidations)}
                 label="סיסמא"
             />
