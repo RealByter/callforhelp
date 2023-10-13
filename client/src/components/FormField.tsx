@@ -9,7 +9,6 @@ type TextInputProps = {
     placeHolder?: string;
     inputProps: any; // Should have the useForm register props
     inputClass?: string;
-    hint?: HintProps;
 };
 
 export default function FormField(props: TextInputProps) {
@@ -19,7 +18,6 @@ export default function FormField(props: TextInputProps) {
         inputProps,
         inputClass = "",
         placeHolder = label,
-        hint,
     } = props;
     const [shown, setShown] = React.useState(inputType !== "password");
     const toggleShown = () => {
@@ -32,11 +30,9 @@ export default function FormField(props: TextInputProps) {
         <div className="form-field">
             <label htmlFor={`input-${inputProps.name}`}>{label}</label>
             <div className="form-field-input-container">
-                {hint && (hint.messages || hint.component) && (
-                    <Hint {...hint} />
-                )}
                 <input
                     {...inputProps!}
+                    id={`input-${inputProps.name}`}
                     type={effectiveInputType}
                     className={`form-field-input ${inputClass}`}
                     placeholder={placeHolder}

@@ -7,8 +7,10 @@
     justify-content: center;
     * {
         color: $default-text-color;
+        font: $font;
     }
-    width: 500px;
+    width: 100%;
+    padding: 50px;
 }
 .form-field-rtl {
     align-items: flex-end;
@@ -35,21 +37,21 @@
     display: inline-block;
     width: 100%;
 }
-.form-field-input-eye {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 10px;
-}
+// .form-field-input-eye {
+//     position: absolute;
+//     left: 10px;
+//     top: 50%;
+//     transform: translateY(-50%);
+//     // padding: 10px;
+// }
 .form-helper {
     display: flex;
     flex-direction: column;
     background-color: $chat-input-bgd;
     margin-top: 10px;
     border-radius: $login-page-input-radius;
-    font: $font;
     width: 100%;
+    padding: 10px;
     ul,
     p {
         list-style-type: none;
@@ -69,23 +71,24 @@
 .form-field-eye {
     position: absolute;
     width: null;
-    left: 0;
+    left: 10px;
     top: 50%; /* Vertically center the icon within the input field */
     transform: translateY(-50%);
-    padding: 10px; /* Adjust this value to control the spacing between the icon and the input */
 }
 
 .form-field-hint {
     position: absolute;
-    left: -230px; /* Adjust this value to control the space between input and hint */
     top: 50%;
-    transform: translateY(-50%);
-    background-color: #f0f0f0;
+    left: 0;
+    transform: translate(-110%, -50%);
+    background-color: $chat-input-bgd;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    width: 200px;
-    opacity: 0.8;
+    p {
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .form-field-hint-triangle {
