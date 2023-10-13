@@ -2,12 +2,13 @@ import React from "react";
 import FormField from "./FormField";
 import { useForm } from "react-hook-form";
 import "../styles/forms.scss";
+import Errors from "./FormErrors";
 import {
     passwordValidations,
     emailValidations,
 } from "../constants/validationOptions";
 type LoginFormProps = {
-    onSubmit: () => void;
+    onSubmit: ({ email: string, password: string }) => void;
 };
 
 interface LoginFormI {
@@ -21,23 +22,31 @@ const LoginForm = (props: LoginFormProps) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormI>();
+    } = useForm<LoginFormI>({ criteriaMode: "all" });
+
+    const submitHanlder = (data: LoginFormI) => {
+        onSubmit(data);
+    };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="form">
+        <form onSubmit={handleSubmit(submitHanlder)} className="form">
             <FormField
-                inputType="text"
-                inputProps={register("email", {
-                    ...emailValidations,
-                })}
                 label="אימייל"
+                inputType="text"
+                inputProps={register("email", emailValidations)}
+                inputClass={errors.email && "input-error"}
+                hint={{ component: Errors("email", errors) }}
             />
             <FormField
                 inputType="password"
                 inputProps={register("password", passwordValidations)}
+                inputClass={errors.password && "input-error"}
                 label="סיסמא"
+                hint={{ component: Errors("password", errors) }}
             />
-            <button type="submit">התחבר</button>
+            <button type="submit" className="form-submit-btn">
+                התחבר
+            </button>
         </form>
     );
 };

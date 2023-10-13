@@ -1,12 +1,12 @@
 export const nameValidations = {
-    required: "נדרש להכניס שם",
+    required: "יש להכניס שם",
     minLength: {
         value: 2,
         message: "צריך להיות לפחות 2 תווים",
     },
 };
 export const emailValidations = {
-    required: "צריך להכניס מייל",
+    required: "יש להכניס מייל",
     // pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/,
     pattern: {
         value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -15,7 +15,7 @@ export const emailValidations = {
 };
 
 export const passwordValidations = {
-    required: "צריך להכניס סיסמא",
+    required: "יש להכניס סיסמא",
     minLength: {
         value: 8,
         message: "צריך להיות לפחות 8 תווים",
