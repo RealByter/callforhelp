@@ -36,9 +36,11 @@
     width: 100%;
     box-sizing: border-box;
     outline: $input-outline;
+    opacity: $login-input-opacity;
 }
 .form-field-input:focus {
     outline: $input-outline-focus;
+    opacity: 1;
 }
 .input-error {
     outline: $input-error-border;
