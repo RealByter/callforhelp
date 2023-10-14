@@ -4,9 +4,10 @@ import BlockIcon from '@mui/icons-material/Block';
 
 export interface IChatBoxProps {
   sendChatMsg: (text: string) => void;
+  blockSupporter: () => void
 }
 
-export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg }: IChatBoxProps) => {
+export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg, blockSupporter }: IChatBoxProps) => {
   const [currentMsg, setCurrentMsg] = useState<string>('');
 
   const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,21 +16,20 @@ export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg }: IChatBoxProps) => {
     sendChatMsg?.(currentMsg);
   };
 
-  const setInputOnChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setCurrentMsg(e.target.value);
-    return;
   };
 
   return (
     <div className="chat-input">
-      <button className="chat-input-block">
+      <button className="chat-input-block" onClick={blockSupporter}>
         <BlockIcon />
       </button>
       <form className="chat-input-parts"  onSubmit={(e) => sendMsg(e)}>
         <input
           className="chat-input-parts-box"
           value={currentMsg}
-          onChange={setInputOnChange}
+          onChange={handleChange}
           placeholder="הודעה"
         />
         <button className="chat-input-parts-send" type="submit">

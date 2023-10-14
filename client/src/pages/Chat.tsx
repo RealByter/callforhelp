@@ -1,14 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Message, MessageProps } from '../components/Message';
+import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
 import '../styles/Chat.scss';
-import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 
 export const Chat = () => {
   const [msg, setMsg] = useState<MessageProps[]>(MOCK_MESSAGES);
 
-  const msgIsEmpty = msg.length;
+  const msgIsEmpty = msg.length === 0;
 
   const sendMsg = (text: string) => {
     //some sending logic with socket
