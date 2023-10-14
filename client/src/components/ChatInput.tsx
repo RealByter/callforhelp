@@ -7,7 +7,7 @@ export interface ChatInputProps {
 }
 
 export const ChatInput: FC<ChatInputProps> = ({ sendMsgFunc }: ChatInputProps) => {
-  const [input, setInput] = useState<string>('');
+  const [currentMsg, setCurrentMsg] = useState<string>('');
 
   const sendMsg = () => {
     //add validation of input
