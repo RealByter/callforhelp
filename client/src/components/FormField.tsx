@@ -1,7 +1,7 @@
 import React from 'react';
 import Eye from '../assets/eye.svg';
 import NoShowEye from '../assets/eye-slash.svg';
-import classes from './Form.module.scss';
+import classes from './FormField.module.scss';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 type TextInputProps = {
