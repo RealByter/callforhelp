@@ -51,7 +51,7 @@ const Input: React.FC<InputProps> = ({
 					id={formName}
 					{...register(formName, validationRules)}></input>
 				{type === 'password' && (
-					<button onClick={() => setShowPassword(prev => !prev)}>
+					<button type='button' onClick={() => setShowPassword(prev => !prev)}>
 						{showPassword ? (
 							<VisibilityOffOutlinedIcon htmlColor="#304571" />
 						) : (
