@@ -2,12 +2,12 @@ import React from "react";
 import Eye from "../assets/eye.svg";
 import NoShowEye from "../assets/eye-slash.svg";
 import "../styles/forms.scss";
-import Hint, { HintProps } from "./Hint";
+import { UseFormRegisterReturn } from "react-hook-form";
 type TextInputProps = {
     label: string;
     inputType?: string;
     placeHolder?: string;
-    inputProps: any; // Should have the useForm register props
+    inputProps: UseFormRegisterReturn; // Should have the useForm register props
     inputClass?: string;
 };
 
