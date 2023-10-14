@@ -26,11 +26,30 @@
 }
 .form-field-input {
     background-color: aliceblue;
+    margin: 10px;
+}
+.form-field label {
+    margin-right: 20px;
+}
+.form-field-input {
+    background-color: $chat-input-bgd;
     padding: 10px;
     border-radius: $login-page-input-radius;
     border: $login-input-border;
     width: 100%;
     box-sizing: border-box;
+    outline: $input-outline;
+    opacity: $login-input-opacity;
+}
+.form-field-input:focus {
+    outline: $input-outline-focus;
+    opacity: 1;
+}
+.input-error {
+    outline: $input-error-border;
+}
+.input-error:focus {
+    outline: $input-outline-focus;
 }
 .form-field-input-container {
     position: relative;
@@ -50,10 +69,13 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
+        color: red;
+        font-size: 12px;
     }
     p::before {
         content: "⚠️";
-        margin-left: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }
 .form-submit-btn {
