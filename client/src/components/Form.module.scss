@@ -4,12 +4,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   * {
     color: $default-text-color;
     font: $font;
   }
   width: 100%;
+}
+.formContainer {
+  width: 100%;
+  margin-bottom: 100px;
 }
 .form-helper {
   display: flex;

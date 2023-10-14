@@ -89,40 +89,42 @@ const Form = (props: FormProps) => {
   return (
     <>
       <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
-        {name && (
-          <>
-            <FormField
-              inputType="text"
-              inputProps={register('name', nameValidations)}
-              label="שם"
-              inputClass={errors.email && classes['input-error']}
-              placeHolder="שם מלא"
-            />
-            {errors.name && Errors('name', errors)}
-          </>
-        )}
-        {email && (
-          <>
-            <FormField
-              inputType="text"
-              inputProps={register('email', emailValidations)}
-              label="אימייל"
-              inputClass={errors.email && classes['input-error']}
-            />
-            {errors.email && Errors('email', errors)}
-          </>
-        )}
-        {password && (
-          <>
-            <FormField
-              inputType="password"
-              inputProps={register('password', passwordValidations)}
-              label="סיסמא"
-              inputClass={errors.password && classes['input-error']}
-            />
-            {errors.password && Errors('password', errors)}
-          </>
-        )}
+        <div className={classes.formContainer}>
+          {name && (
+            <>
+              <FormField
+                inputType="text"
+                inputProps={register('name', nameValidations)}
+                label="שם"
+                inputClass={errors.email && classes['input-error']}
+                placeHolder="שם מלא"
+              />
+              {errors.name && Errors('name', errors)}
+            </>
+          )}
+          {email && (
+            <>
+              <FormField
+                inputType="text"
+                inputProps={register('email', emailValidations)}
+                label="אימייל"
+                inputClass={errors.email && classes['input-error']}
+              />
+              {errors.email && Errors('email', errors)}
+            </>
+          )}
+          {password && (
+            <>
+              <FormField
+                inputType="password"
+                inputProps={register('password', passwordValidations)}
+                label="סיסמא"
+                inputClass={errors.password && classes['input-error']}
+              />
+              {errors.password && Errors('password', errors)}
+            </>
+          )}
+        </div>
 
         <button type="submit" className={classes['form-submit-btn']}>
           {submitLabel}
