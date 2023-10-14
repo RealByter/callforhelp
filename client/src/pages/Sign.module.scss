@@ -1,9 +1,11 @@
-.signInContainer {
+.outerContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50vh;
 }
-.signInHeader {
+.header {
   margin: 0;
+}
+.formContainer {
+  width: 80vw;
 }
