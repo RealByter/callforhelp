@@ -4,23 +4,19 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import SocketProvider from "./context/socket/SocketProvider.tsx";
-import { PageExample } from "./pages/PageExample";
+import SignUpPage from "./pages/SignUp.tsx";
+import SignInPage from "./pages/SignIn.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // children: [
-    //   {
-    //     path: "/ex",
-    //     element: <PageExample />,
-    //     // loader: teamLoader,
-    //   },
-    // ],
   },{
-    path: "/ex",
-    element: <PageExample />,
-    // loader: teamLoader,
+    path: "/signup",
+    element: <SignUpPage />,
+  }, {
+    path: "/signin",
+    element: <SignInPage />
   }
 ]);
 
