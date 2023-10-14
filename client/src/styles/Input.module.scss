@@ -26,6 +26,11 @@
 		border-color: rgba(147, 96, 255, 0.2);
 	}
 
+  &:disabled {
+    border-color: #EFEFEF;
+    color: #D9D9D9;
+  }
+
 	&.invalid {
 		border-color: rgba(223, 40, 51, 0.5);
 	}
