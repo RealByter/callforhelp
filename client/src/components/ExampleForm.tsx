@@ -20,6 +20,7 @@ const ExampleForm: React.FC = () => {
 			className={classes['example-form']}>
 			<Input
 				label="אימייל"
+        type="email"
 				register={register}
 				formName="email"
 				placeholder="הכנס אימייל"
@@ -34,6 +35,7 @@ const ExampleForm: React.FC = () => {
 			/>
 			<Input
 				label="סיסמא"
+        type="password"
 				register={register}
 				formName="password"
 				placeholder="הכנס סיסמא"
