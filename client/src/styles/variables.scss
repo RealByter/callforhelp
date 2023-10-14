@@ -1,9 +1,5 @@
 //backgrounds:
-$all-grad-purple-bgd: linear-gradient(
-  360deg,
-  #baa6f1 -1.2%,
-  rgba(166, 192, 241, 0) 112.26%
-);
+$all-grad-purple-bgd: linear-gradient(360deg, #baa6f1 -1.2%, rgba(166, 192, 241, 0) 112.26%);
 $call-ended-prompt-bgd: #ffd9d9;
 $btn-bgd: #ffffff;
 $chat-input-bgd: #f4f1ff;
@@ -35,11 +31,7 @@ $login-page-all-text-size: 14px;
 //borders
 $login-input-border: 1px solid #ffffff40;
 $-border: 2px solid;
-$support-list-have-msg-border-img: linear-gradient(
-  267.86deg,
-  #736cff 6.51%,
-  #0159ff 100%
-);
+$support-list-have-msg-border-img: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
 $chat-btn-border: 2px solid;
 $chat-btn-border-img: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
 

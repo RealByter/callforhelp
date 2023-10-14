@@ -18,8 +18,7 @@ function App() {
     </p>
   ) : (
     <p>
-      You should <Link to="/signin">sign in</Link> or{' '}
-      <Link to="/signup">sign up</Link>
+      You should <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
     </p>
   );
 }

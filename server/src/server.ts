@@ -17,10 +17,7 @@ export class CallForHelpServer {
     this.listen();
   }
 
-  private configurateSetting(
-    settingEnvName: string,
-    defaultSetting: string
-  ): string {
+  private configurateSetting(settingEnvName: string, defaultSetting: string): string {
     const setting = process.env[settingEnvName];
 
     if (setting === undefined) {
@@ -35,13 +32,8 @@ export class CallForHelpServer {
   }
 
   private configurate(): void {
-    this.port = parseInt(
-      this.configurateSetting('PORT', CallForHelpServer.PORT)
-    );
-    this.corsOrigin = this.configurateSetting(
-      'CORS_ORIGIN',
-      CallForHelpServer.CORS_ORIGIN
-    );
+    this.port = parseInt(this.configurateSetting('PORT', CallForHelpServer.PORT));
+    this.corsOrigin = this.configurateSetting('CORS_ORIGIN', CallForHelpServer.CORS_ORIGIN);
   }
 
   private createServerSocket(): void {

@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const [createUserWithEmailAndPassword, user] =
-    useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
