@@ -2,27 +2,21 @@ import React, { useState } from 'react';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import BlockIcon from '@mui/icons-material/Block';
 
-export interface ChatInputProps {
-  sendMsgFunc: (text: string) => void;
+export interface IChatBoxProps {
+  sendChatMsg: (text: string) => void;
 }
 
-export const ChatInput: FC<ChatInputProps> = ({ sendMsgFunc }: ChatInputProps) => {
-  const [input, setInput] = useState<string>('');
+export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg }: IChatBoxProps) => {
+  const [currentMsg, setCurrentMsg] = useState<string>('');
 
-  const sendMsg = () => {
+  const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     //add validation of input
-    sendMsgFunc?.(input);
-  };
-
-  const checkEnterPress = (e: KeyboardEvent) => {
-    if (e.key === 13) {
-      sendMsg();
-    }
-    return;
+    sendChatMsg?.(currentMsg);
   };
 
   const setInputOnChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+    setCurrentMsg(e.target.value);
     return;
   };
 
@@ -31,18 +25,17 @@ export const ChatInput: FC<ChatInputProps> = ({ sendMsgFunc }: ChatInputProps) =
       <button className="chat-input-block">
         <BlockIcon />
       </button>
-      <div className="chat-input-parts">
+      <form className="chat-input-parts"  onSubmit={(e) => sendMsg(e)}>
         <input
           className="chat-input-parts-box"
-          value={input}
+          value={currentMsg}
           onChange={setInputOnChange}
-          onKeyDown={checkEnterPress}
           placeholder="הודעה"
         />
-        <button className="chat-input-parts-send" onClick={() => sendMsg()}>
+        <button className="chat-input-parts-send" type="submit">
           <SendRoundedIcon />
         </button>
-      </div>
+      </form>
     </div>
   );
 };

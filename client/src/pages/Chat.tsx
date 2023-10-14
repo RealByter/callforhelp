@@ -1,22 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { Message, MessageProps } from '../components/Message';
 import { ChatTopBar } from '../components/ChatTopBar';
-import { ChatInput } from '../components/ChatInput';
+import { ChatBox } from '../components/ChatBox';
 import '../styles/Chat.scss';
+import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 
 export const Chat = () => {
-  const [msg, setMsg] = useState<MessageProps[]>([
-    { isSender: false, content: 'הודעה ראשונה', id: 1 },
-    { isSender: false, content: 'הודעה שנייה', id: 2 },
-    { isSender: true, content: 'תגובה ראשונה אמור להיות בסדר ', id: 3 },
-    { isSender: false, content: 'הודעה שנייה', id: 4 },
-    { isSender: false, content: 'הודעה שנייה', id: 5 },
-    { isSender: false, content: 'הודעה שנייה', id: 6 },
-    { isSender: false, content: 'הודעה שנייה', id: 7 },
-    { isSender: false, content: 'הודעה שנייה', id: 8 },
-  ]);
+  const [msg, setMsg] = useState<MessageProps[]>(MOCK_MESSAGES);
 
-  const msgIsEmpty = useMemo(() => msg.length == 0, msg);
+  const msgIsEmpty = msg.length;
 
   const sendMsg = (text: string) => {
     //some sending logic with socket
@@ -32,13 +24,13 @@ export const Chat = () => {
         ) : (
           msg.map((m) => (
             <React.Fragment key={m.id}>
-              <Message id={m.id} isSender={m.isSender} content={m.content} />
+              <Message isSender={m.isSender} content={m.content} />
             </React.Fragment>
           ))
         )}
       </div>
 
-      <ChatInput sendMsgFunc={sendMsg} />
+      <ChatBox sendMsgFunc={sendMsg} />
     </div>
   );
 };
