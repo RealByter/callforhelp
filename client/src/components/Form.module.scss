@@ -1,4 +1,4 @@
-@import 'variables';
+@import '../styles/variables.scss';
 
 .form {
   display: flex;
@@ -10,7 +10,6 @@
     font: $font;
   }
   width: 100%;
-  padding: 50px;
 }
 .form-field-rtl {
   align-items: flex-end;
@@ -25,8 +24,7 @@
   width: 100%;
 }
 .form-field-input {
-  background-color: aliceblue;
-  margin: 10px;
+  background-color: $chat-input-bgd;
 }
 .form-field label {
   margin-right: 20px;
@@ -38,18 +36,18 @@
   border: $login-input-border;
   width: 100%;
   box-sizing: border-box;
-  outline: $input-outline;
+  //   outline: $input-outline;
   opacity: $login-input-opacity;
 }
 .form-field-input:focus {
-  outline: $input-outline-focus;
+  //   outline: $input-outline-focus;
   opacity: 1;
 }
 .input-error {
-  outline: $input-error-border;
+  //   outline: $input-error-border;
 }
 .input-error:focus {
-  outline: $input-outline-focus;
+  //   outline: $input-outline-focus;
 }
 .form-field-input-container {
   position: relative;

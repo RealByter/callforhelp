@@ -2,6 +2,8 @@ import { FormEvent } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
+import classes from './SignUp.module.scss';
+import Form from '../components/Form';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -22,19 +24,10 @@ const SignUpPage = () => {
   }
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <h1>Sign Up</h1>
-      <br />
-      <p>Email</p>
-      <br />
-      <input type="email" name="email" />
-      <br />
-      <p>Password</p>
-      <br />
-      <input type="password" name="password" />
-      <br />
-      <button type="submit">Submit</button>
-    </form>
+    <div className={classes.outerContainer}>
+      <h1>הרשמה עם מייל</h1>
+      <Form name password email onSubmit={console.log} submitLabel="הרשמה" />
+    </div>
   );
 };
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import FormField from './FormField';
-import '../styles/forms.scss';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import classes from './Form.module.scss';
 
-type FormOptions = Partial<{
+export type FormOptions = Partial<{
   name: string;
   email: string;
   password: string;
@@ -36,6 +36,7 @@ const emailValidations = {
 const passwordValidations = {
   required: 'יש להכניס סיסמא',
   validate: {
+    length: (value: ValidationType) => (value as string).length > 8 || 'צריכה להיות לפחות 8 תווים',
     oneLowercase: (value: ValidationType) =>
       value?.toUpperCase() !== value || 'צריכה להכיל אות קטנה ',
     onUppercase: (value: ValidationType) =>
@@ -43,16 +44,12 @@ const passwordValidations = {
     oneNumber: (value: ValidationType) => /\d/.test(value as string) || 'צריכה להכיל מספר',
     specialCharacter: (value: ValidationType) =>
       /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value as string) || 'צריכה להכיל סימן מיוחד'
-  },
-  minLength: {
-    value: 8,
-    message: 'סיסמא צריכה להיות לפחות 8 תווים'
   }
 };
 
 const Errors = (name: string, errors: FieldErrors) => {
   return (
-    <div className="form-helper">
+    <div className={classes['form-helper']}>
       <ErrorMessage
         errors={errors}
         name={name}
@@ -91,14 +88,14 @@ const Form = (props: FormProps) => {
   );
   return (
     <>
-      <form onSubmit={handleSubmit(submitHandler)} className="form">
+      <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
         {name && (
           <>
             <FormField
               inputType="text"
               inputProps={register('name', nameValidations)}
               label="שם"
-              inputClass={errors.email && 'input-error'}
+              inputClass={errors.email && classes['input-error']}
               placeHolder="שם מלא"
             />
             {errors.name && Errors('name', errors)}
@@ -110,7 +107,7 @@ const Form = (props: FormProps) => {
               inputType="text"
               inputProps={register('email', emailValidations)}
               label="אימייל"
-              inputClass={errors.email && 'input-error'}
+              inputClass={errors.email && classes['input-error']}
             />
             {errors.email && Errors('email', errors)}
           </>
@@ -121,13 +118,13 @@ const Form = (props: FormProps) => {
               inputType="password"
               inputProps={register('password', passwordValidations)}
               label="סיסמא"
-              inputClass={errors.password && 'input-error'}
+              inputClass={errors.password && classes['input-error']}
             />
             {errors.password && Errors('password', errors)}
           </>
         )}
 
-        <button type="submit" className="form-submit-btn">
+        <button type="submit" className={classes['form-submit-btn']}>
           {submitLabel}
         </button>
       </form>
