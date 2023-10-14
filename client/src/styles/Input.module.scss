@@ -1,0 +1,48 @@
+.input-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.input {
+	padding: 0.75rem 1rem;
+	color: black;
+  font-size: 0.875rem;
+	font-weight: 400;
+	border-radius: 4px;
+	background-color: rgba(255, 255, 255, 0.5);
+	border: 1px solid transparent;
+  outline: none;
+
+	&::placeholder {
+		color: #909090;
+	}
+
+	&:focus {
+		border-color: #9360ff !important; // To show the focus instead of invalid on focus
+	}
+
+	&:active {
+		border-color: rgba(147, 96, 255, 0.2);
+	}
+
+	&.invalid {
+		border-color: rgba(223, 40, 51, 0.5);
+	}
+}
+
+.label {
+	padding: 0 1rem;
+  color: #0E1C74;
+  font-size: 0.875rem;
+  font-weight: 600;
+	// Add the Assistant font once the chat is merged
+}
+
+.error {
+  color: #DF2833;
+  padding: 0 1rem;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+}

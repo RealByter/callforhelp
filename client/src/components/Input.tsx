@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import { UseFormRegister, FieldError, RegisterOptions } from 'react-hook-form';
 import { ISigninFormValues, ISignupFormValues } from '../consts/formInputs';
+import classes from '../styles/Input.module.scss';
 
-type InputProps = {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	formName: string;
 	label: string;
 	placeholder: string;
-	error?: FieldError
+	error?: FieldError;
 	register: UseFormRegister<ISignupFormValues | ISigninFormValues>;
-  validationRules?: RegisterOptions<ISigninFormValues | ISignupFormValues, string>
-};
+	validationRules?: RegisterOptions<
+		ISigninFormValues | ISignupFormValues,
+		string
+	>;
+}
 
 const Input: React.FC<InputProps> = ({
 	label,
@@ -17,16 +21,23 @@ const Input: React.FC<InputProps> = ({
 	error,
 	register,
 	formName,
-  validationRules
+	validationRules,
+	...rest
 }) => {
 	return (
-		<div>
-			<label htmlFor={formName}>{label}</label>
+		<div className={classes['input-container']}>
+			<label htmlFor={formName} className={classes.label}>
+				{label}
+			</label>
 			<input
+				{...rest}
+        dir="rtl"
+				className={`${classes.input} ${error && classes.invalid}`}
+				aria-invalid={error ? 'true' : 'false'}
 				placeholder={placeholder}
 				id={formName}
 				{...register(formName, validationRules)}></input>
-			{error && <p>{error.message}</p>}
+			{error && <p className={classes.error}>{error.message}</p>}
 		</div>
 	);
 };

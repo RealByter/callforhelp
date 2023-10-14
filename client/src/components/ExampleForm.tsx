@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ISigninFormValues } from '../consts/formInputs';
 import Input from './Input';
+import classes from '../styles/ExampleForm.module.scss';
 
 const ExampleForm: React.FC = () => {
 	const {
@@ -14,7 +15,9 @@ const ExampleForm: React.FC = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(submitHandler)}>
+		<form
+			onSubmit={handleSubmit(submitHandler)}
+			className={classes['example-form']}>
 			<Input
 				label="אימייל"
 				register={register}
@@ -37,8 +40,7 @@ const ExampleForm: React.FC = () => {
 				validationRules={{
 					required: { value: true, message: 'חובה למלא' },
 					pattern: {
-						value:
-							/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+						value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
 						message: 'לסיסמא צריך להיות כזה וכזה',
 					},
 					minLength: { value: 8, message: 'סיסמא קצרה מדי' },
