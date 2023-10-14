@@ -6,6 +6,7 @@ $chat-input-bgd: #f4f1ff;
 $chat-first-part-msg-bgd: #ffffff;
 $chat-second-part-msg-bgd: #9360ff;
 $chat-send-btn-bgd: #e5dbff;
+$scrollbar-bgd: #e5dbff;
 
 //buttons
 $all-pages-btn-radius: 20px;
@@ -44,6 +45,10 @@ $chat-input-order: 2px solid $chat-send-btn-bgd;
 $login-input-opacity: 50%;
 $calls-ended-opacity: 25%;
 
+//colors
+$chat-icons-color: #1C297C;
+$login-hr-color: #6d69be;
+
 //general
 $font: Assistant;
-$login-hr-color: #6d69be;
+$scrollbar-radius: 8px;

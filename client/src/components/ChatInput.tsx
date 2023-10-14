@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import BlockIcon from '@mui/icons-material/Block';
 
 export interface ChatInputProps {
   sendMsgFunc: (text: string) => void;
@@ -27,15 +28,18 @@ export const ChatInput: FC<ChatInputProps> = ({ sendMsgFunc }: ChatInputProps) =
 
   return (
     <div className="chat-input">
+      <button className="chat-input-block">
+        <BlockIcon />
+      </button>
       <div className="chat-input-parts">
         <input
-          className="chat-input-box"
+          className="chat-input-parts-box"
           value={input}
           onChange={setInputOnChange}
           onKeyDown={checkEnterPress}
           placeholder="הודעה"
         />
-        <button className="chat-input-send" onClick={() => sendMsg()}>
+        <button className="chat-input-parts-send" onClick={() => sendMsg()}>
           <SendRoundedIcon />
         </button>
       </div>
