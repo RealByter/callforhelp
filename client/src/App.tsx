@@ -1,6 +1,6 @@
-import {  } from 'react'
-import "./styles/variables.scss";
-import './App.scss'
+import {} from 'react';
+import './styles/variables.scss';
+import './App.scss';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import './styles/variables.scss';
 import './App.scss';

@@ -1,12 +1,12 @@
 @import './styles/variables.scss';
 
 @font-face {
-  font-family: "Assistant";
-  src: local("AssistantRegular"),
-    url("./fonts/Assistant.ttf") format("truetype");
+  font-family: 'Assistant';
+  src:
+    local('AssistantRegular'),
+    url('./fonts/Assistant.ttf') format('truetype');
   font-weight: normal;
 }
-
 
 #root {
   background: $all-grad-purple-bgd;
@@ -18,6 +18,6 @@
   * {
     box-sizing: border-box;
     // display: inline-block;
-    font-family: "Assistant";
+    font-family: 'Assistant';
   }
 }
