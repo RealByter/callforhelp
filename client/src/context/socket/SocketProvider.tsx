@@ -1,6 +1,6 @@
-import { ReactNode, useRef } from "react";
-import { io } from "socket.io-client";
-import { SocketCtx } from "./SocketCtx";
+import { ReactNode, useRef } from 'react';
+import { io } from 'socket.io-client';
+import { SocketCtx } from './SocketCtx';
 
 const SocketProvider = (props: { children?: ReactNode }) => {
   const socketRef = useRef(io({ autoConnect: false }));

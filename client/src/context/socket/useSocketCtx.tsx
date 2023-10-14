@@ -1,5 +1,5 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 
-import { SocketCtx } from "./SocketCtx";
+import { SocketCtx } from './SocketCtx';
 
 export const useSocketCtx = () => useContext(SocketCtx);
