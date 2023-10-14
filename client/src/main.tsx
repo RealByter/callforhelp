@@ -9,28 +9,28 @@ import SignInPage from './pages/SignIn.tsx';
 import ExampleForm from './components/ExampleForm.tsx';
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <App />,
-	},
-	{
-		path: '/signup',
-		element: <SignUpPage />,
-	},
-	{
-		path: '/signin',
-		element: <SignInPage />,
-	},
-	{
-		path: '/test',
-		element: <ExampleForm />,
-	},
+  {
+    path: '/',
+    element: <App />
+  },
+  {
+    path: '/signup',
+    element: <SignUpPage />
+  },
+  {
+    path: '/signin',
+    element: <SignInPage />
+  },
+  {
+    path: '/test',
+    element: <ExampleForm />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<SocketProvider>
-			<RouterProvider router={router} />
-		</SocketProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <SocketProvider>
+      <RouterProvider router={router} />
+    </SocketProvider>
+  </React.StrictMode>
 );
