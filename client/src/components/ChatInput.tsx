@@ -21,9 +21,8 @@ export const ChatInput: FC<ChatInputProps> = ({ sendMsgFunc }: ChatInputProps) =
     return;
   };
 
-  const setInputOnChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    return;
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setCurrentMsg(e.target.value);
   };
 
   return (
