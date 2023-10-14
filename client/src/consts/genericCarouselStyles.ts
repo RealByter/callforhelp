@@ -1,16 +1,15 @@
-import { carouselActiveIndicatorColor, carouselIndicatorColor } from "./colors"
+import { carouselActiveIndicatorColor, carouselIndicatorColor } from './colors';
 
 export const carouselIndicatorIconButtonProps = {
-    style: {
-        color: carouselIndicatorColor,
-        backgroundColor: 'transparent',
-        outline: 'none'
-    }
-}
-
+  style: {
+    color: carouselIndicatorColor,
+    backgroundColor: 'transparent',
+    outline: 'none'
+  }
+};
 
 export const carouselActiveIndicatorIconButtonProps = {
-    style: {
-        color: carouselActiveIndicatorColor,
-    }
-}
+  style: {
+    color: carouselActiveIndicatorColor
+  }
+};
