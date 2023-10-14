@@ -1,123 +1,123 @@
-@import "variables";
+@import 'variables';
 
 .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    * {
-        color: $default-text-color;
-        font: $font;
-    }
-    width: 100%;
-    padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  * {
+    color: $default-text-color;
+    font: $font;
+  }
+  width: 100%;
+  padding: 50px;
 }
 .form-field-rtl {
-    align-items: flex-end;
+  align-items: flex-end;
 }
 .form-field {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    font-weight: bold;
-    font-size: 16px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  width: 100%;
 }
 .form-field-input {
-    background-color: aliceblue;
-    margin: 10px;
+  background-color: aliceblue;
+  margin: 10px;
 }
 .form-field label {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 .form-field-input {
-    background-color: $chat-input-bgd;
-    padding: 10px;
-    border-radius: $login-page-input-radius;
-    border: $login-input-border;
-    width: 100%;
-    box-sizing: border-box;
-    outline: $input-outline;
-    opacity: $login-input-opacity;
+  background-color: $chat-input-bgd;
+  padding: 10px;
+  border-radius: $login-page-input-radius;
+  border: $login-input-border;
+  width: 100%;
+  box-sizing: border-box;
+  outline: $input-outline;
+  opacity: $login-input-opacity;
 }
 .form-field-input:focus {
-    outline: $input-outline-focus;
-    opacity: 1;
+  outline: $input-outline-focus;
+  opacity: 1;
 }
 .input-error {
-    outline: $input-error-border;
+  outline: $input-error-border;
 }
 .input-error:focus {
-    outline: $input-outline-focus;
+  outline: $input-outline-focus;
 }
 .form-field-input-container {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
 .form-helper {
-    display: flex;
-    flex-direction: column;
-    background-color: $chat-input-bgd;
-    margin-top: 10px;
-    border-radius: $login-page-input-radius;
-    width: 100%;
-    padding: 10px;
-    ul,
-    p {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        color: red;
-        font-size: 12px;
-    }
-    p::before {
-        content: "⚠️";
-        margin-left: 5px;
-        margin-right: 5px;
-    }
+  display: flex;
+  flex-direction: column;
+  background-color: $chat-input-bgd;
+  margin-top: 10px;
+  border-radius: $login-page-input-radius;
+  width: 100%;
+  padding: 10px;
+  ul,
+  p {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    color: red;
+    font-size: 12px;
+  }
+  p::before {
+    content: '⚠️';
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }
 .form-submit-btn {
-    background-color: $btn-bgd;
-    border-radius: $all-pages-btn-radius;
-    margin-top: 10px;
+  background-color: $btn-bgd;
+  border-radius: $all-pages-btn-radius;
+  margin-top: 10px;
 }
 
 .input-error {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 .form-field-eye {
-    position: absolute;
-    width: null;
-    left: 10px;
-    top: 50%; /* Vertically center the icon within the input field */
-    transform: translateY(-50%);
+  position: absolute;
+  width: null;
+  left: 10px;
+  top: 50%; /* Vertically center the icon within the input field */
+  transform: translateY(-50%);
 }
 
 .form-field-hint {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(-110%, -50%);
-    background-color: $chat-input-bgd;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    p {
-        margin: 0;
-        padding: 0;
-    }
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-110%, -50%);
+  background-color: $chat-input-bgd;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .form-field-hint-triangle {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid #f0f0f0;
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #f0f0f0;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
