@@ -1,19 +1,19 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 
-interface ChatTopBarProps {
-  chatEnded: boolean;
+interface IChatTopBarProps {
+  isChatEnded: boolean;
   isSupporter: boolean;
   endChat?: () => void;
-  replace?: () => void;
+  changeChatRoom?: () => void;
 }
 
-export const ChatTopBar: FC<ChatTopBarProps> = ({
-  chatEnded,
+export const ChatTopBar: FC<IChatTopBarProps> = ({
+  isChatEnded,
   isSupporter,
   endChat,
-  replace
-}: ChatTopBarProps) => {
+  changeChatRoom
+}: IChatTopBarProps) => {
   return (
     <div className={`chat-top-bar ${chatEnded ? 'ended' : ''}`}>
       <div className="chat-top-bar-upper">
