@@ -104,6 +104,7 @@ const Form = (props: FormProps) => {
                             inputProps={register("name", nameValidations)}
                             label="שם"
                             inputClass={errors.email && "input-error"}
+                            placeHolder="שם מלא"
                         />
                         {errors.name && Errors("name", errors)}
                     </>
