@@ -96,7 +96,7 @@ const Form = (props: FormProps) => {
                 inputType="text"
                 inputProps={register('name', nameValidations)}
                 label="שם"
-                inputClass={errors.email && classes['input-error']}
+                inputClass={errors.name && classes['input-error']}
                 placeHolder="שם מלא"
               />
               {errors.name && Errors('name', errors)}

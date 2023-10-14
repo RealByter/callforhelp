@@ -68,3 +68,9 @@
   top: 50%;
   transform: translateY(-50%);
 }
+.input-error {
+  outline: $input-outline-error;
+}
+.input-error:focus {
+  outline: $input-outline-focus;
+}

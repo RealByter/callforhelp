@@ -25,26 +25,16 @@
   border: $login-input-border;
   width: 100%;
   box-sizing: border-box;
-  //   outline: $input-outline;
   opacity: $login-input-opacity;
 }
 .form-field-input:focus {
-  //   outline: $input-outline-focus;
+  outline: $input-outline-focus;
   opacity: 1;
-}
-.input-error {
-  //   outline: $input-error-border;
-}
-.input-error:focus {
-  //   outline: $input-outline-focus;
 }
 .form-field-input-container {
   position: relative;
   display: inline-block;
   width: 100%;
-}
-.input-error {
-  border: 1px solid red;
 }
 .form-field-eye {
   position: absolute;
