@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  position: relative;
 }
 
 .input-wrapper {
@@ -85,4 +86,7 @@
   margin: 0;
   font-size: 0.75rem;
   font-weight: 400;
+  position: absolute; // if you see this after you saw the issue in the ui, it's probably because i (avishay) forgot to ask the designers something so please remind me
+  top: 4.5rem;
+  right: 0;
 }
