@@ -5,7 +5,7 @@ interface HeaderProps {
     children: React.ReactNode;
 }
 
-export const Header: FC<HeaderProps> = ({ children }) => {
+const Header: FC<HeaderProps> = ({ children }) => {
     return (
         <div className="page-header">
             <span className="page-header-text">
@@ -14,3 +14,5 @@ export const Header: FC<HeaderProps> = ({ children }) => {
         </div>
     )
 }
+
+export default Header;

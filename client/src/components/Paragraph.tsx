@@ -1,13 +1,16 @@
-import React from 'react'
+import React from 'react';
+import "../styles/paragraph.scss";
 
 export interface ParagraphProps {
-
+    children: React.ReactNode;
 }
 
-export const Paragraph: FC<ParagraphProps> = ({ }: ParagraphProps) => {
+const Paragraph: FC<ParagraphProps> = ({ children }: ParagraphProps) => {
     return (
-        <div>
-            
-        </div>
+        <p className="generic-paragraph">
+            {children}
+        </p>
     )
 }
+
+export default Paragraph;
