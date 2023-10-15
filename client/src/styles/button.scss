@@ -1,0 +1,11 @@
+@import "../styles/variables.scss";
+
+.generic-button,
+.generic-button:focus {
+    background-color: $btn-bgd;
+    font-size: $login-page-all-text-size;
+    color: $default-text-color;
+    border-radius: $all-pages-btn-radius;
+    outline: none;
+    width: 100%;
+}
