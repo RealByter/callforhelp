@@ -1,17 +1,31 @@
+import { useEffect, useState } from 'react';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase/connection';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IPossibleFormValues } from '../../consts/formInputs';
 import Input from './Input';
 import FormWrapper from './FormWrapper';
+import { useNavigate } from 'react-router-dom';
 
 const Signup: React.FC = () => {
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile] = useUpdateProfile(auth);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<IPossibleFormValues>();
 
-  const submitHandler: SubmitHandler<IPossibleFormValues> = (data) => {
-    console.log(data);
+  const submitHandler: SubmitHandler<IPossibleFormValues> = async (data) => {
+    const user = await createUserWithEmailAndPassword(data.email, data.password);
+    if (user) {
+      const success = await updateProfile({ displayName: data.username });
+      if (success) {
+        navigate('/');
+      }
+    }
   };
 
   return (
