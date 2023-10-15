@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MuiButton from '@mui/material/Button';
-import "../styles/button.scss"
+import { buttonStyle } from '../consts/buttonStyle';
 
 export interface ButtonProps {
     children: React.ReactNode
@@ -10,7 +10,7 @@ const Button: FC<ButtonProps> = ({ children }: ButtonProps) => {
     return (
         <MuiButton
             variant="text"
-            className="generic-button">
+            sx={buttonStyle}>
             {children}
         </MuiButton>
     )
