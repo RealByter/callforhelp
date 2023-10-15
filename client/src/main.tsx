@@ -7,6 +7,7 @@ import SocketProvider from './context/socket/SocketProvider.tsx';
 // import SignUpPage from './pages/SignUp.tsx';
 // import SignInPage from './pages/SignIn.tsx';
 import Signin from './components/SecondVersion/Signin.tsx';
+import Signup from './components/SecondVersion/Signup.tsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <Signin />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
   }
 ]);
 
