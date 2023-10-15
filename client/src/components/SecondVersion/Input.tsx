@@ -1,17 +1,17 @@
 import React, { InputHTMLAttributes, useState } from 'react';
 import { UseFormRegister, FieldError, RegisterOptions } from 'react-hook-form';
-import { ISigninFormValues, ISignupFormValues } from '../consts/formInputs';
+import { IPossibleFormValues } from '../../consts/formInputs';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import classes from '../styles/Input.module.scss';
+import classes from '../../styles/Input.module.scss';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   formName: string;
   label: string;
   placeholder: string;
   error?: FieldError;
-  register: UseFormRegister<ISignupFormValues | ISigninFormValues>;
-  validationRules?: RegisterOptions<ISigninFormValues | ISignupFormValues, string>;
+  register: UseFormRegister<IPossibleFormValues>;
+  validationRules?: RegisterOptions<IPossibleFormValues, string>;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -47,7 +47,7 @@ const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           id={formName}
           {...register(formName, validationRules)}
-        ></input>
+          style={type === 'password' ? { paddingLeft: '2.75rem' } : {}}></input>
         {type === 'password' && (
           <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
             {showPassword ? (

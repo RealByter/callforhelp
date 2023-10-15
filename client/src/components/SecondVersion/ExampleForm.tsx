@@ -1,16 +1,16 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ISigninFormValues } from '../consts/formInputs';
+import { IPossibleFormValues } from '../../consts/formInputs';
 import Input from './Input';
-import classes from '../styles/ExampleForm.module.scss';
+import classes from '../../styles/ExampleForm.module.scss';
 
 const ExampleForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<ISigninFormValues>();
+  } = useForm<IPossibleFormValues>();
 
-  const submitHandler: SubmitHandler<ISigninFormValues> = (data) => {
+  const submitHandler: SubmitHandler<IPossibleFormValues> = (data) => {
     console.log(data);
   };
 
