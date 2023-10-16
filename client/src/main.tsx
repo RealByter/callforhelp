@@ -27,6 +27,7 @@ const router = createBrowserRouter([
     path: '/login',
     element: <QuickSignup />
   },
+  {
     path: '/chat',
     element: <Chat />
 
