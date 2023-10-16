@@ -4,8 +4,11 @@ import GoogleLogo from '../assets/logo_googleg_48dp.svg';
 import FacebookLogo from '../assets/FacebookLogo.png';
 import MailLogo from '../assets/Mail.svg';
 import OrBackground from '../assets/OrBackground.svg';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const QuickSignup: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className={classes['temp-wrapper']}>
       <div className={classes.page}>
@@ -24,19 +27,29 @@ const QuickSignup: React.FC = () => {
           <div className={classes.line} />
           <div className={classes.or}>
             <span>או</span>
-            <img src={OrBackground} alt='' />
+            <img src={OrBackground} alt="" />
           </div>
           <div className={classes.line} />
         </div>
-        <LoginButton onClick={() => {}}>
+        <LoginButton
+          onClick={() => {
+            navigate('/signup');
+          }}>
           <img src={MailLogo} alt="Mail Logo" />
           להרשמה עם אימייל
         </LoginButton>
         <p dir="rtl">
-          בהרשמתך הנך מתחייב שקראת את <span className={classes.highlight}>תנאי השימוש</span>
+          בהרשמתך הנך מתחייב שקראת את{' '}
+          <button className={classes.highlight} onClick={() => {}}>
+            תנאי השימוש
+          </button>{' '}
+          {/* Opens the terms modal */}
         </p>
         <p dir="rtl">
-          כבר יש לך חשבון? <span className={classes.highlight}>להתחברות</span>
+          כבר יש לך חשבון?{' '}
+          <NavLink to="/signin" className={classes.highlight}>
+            להתחברות
+          </NavLink>
         </p>
       </div>
     </div>
