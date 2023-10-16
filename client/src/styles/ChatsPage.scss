@@ -1,0 +1,37 @@
+@import './variables.scss';
+
+.chats-page {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+@media screen and (min-width: 380px) {
+  .chat-page {
+    .chat-input {
+      &-parts {
+        width: 76vw;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .chat-page {
+    .chat-input {
+      &-parts {
+        width: 80vw;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .chat-page {
+    .chat-input {
+      &-parts {
+        width: 83vw;
+      }
+    }
+  }
+}

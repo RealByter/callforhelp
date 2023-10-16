@@ -8,6 +8,7 @@ import SignUpPage from './pages/SignUp.tsx';
 import SignInPage from './pages/SignIn.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
+import { ChatsPage } from './pages/ChatsPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     path: '/chat',
     element: <Chat />
 
+  },
+  {
+    path: '/chats',
+    element: <ChatsPage />
   }
 ]);
 
