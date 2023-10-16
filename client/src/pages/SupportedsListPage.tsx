@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/Chat.scss';
 import { List } from '@mui/material';
+import ChatItem from '../components/ChatItem';
+import SwitchRoleLink from '../components/SwitchRoleLink';
 
 export const SupportedsListPage = () => {
 
@@ -9,21 +11,20 @@ export const SupportedsListPage = () => {
         <h1>רשימת נתמכים</h1>
 
         <List>
-            <div>
-                <h2>שם מלא</h2>
-                <h3>תגובה אחרוונה
-                    <span>00:00</span>
-                </h3>
-                <span>1</span>
-                <span>^</span>
-            </div>
+            <ChatItem />
+            <ChatItem />
         </List>
 
         <h2>שיחות שהסתיימו</h2>
 
+        <List>
+            <ChatItem />
+            <ChatItem />
+        </List>
+
         <div>איתור נתמך נוסף</div>
 
-        <div>אני צריך תומך</div>
+        <SwitchRoleLink />
     </div>
   );
 };
