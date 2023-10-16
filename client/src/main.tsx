@@ -6,6 +6,7 @@ import './index.css';
 import SocketProvider from './context/socket/SocketProvider.tsx';
 import SignUpPage from './pages/SignUp.tsx';
 import SignInPage from './pages/SignIn.tsx';
+import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
 
 const router = createBrowserRouter([
@@ -22,8 +23,13 @@ const router = createBrowserRouter([
     element: <SignInPage />
   },
   {
+
+    path: '/login',
+    element: <QuickSignup />
+  },
     path: '/chat',
     element: <Chat />
+
   }
 ]);
 
