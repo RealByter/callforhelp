@@ -1,0 +1,19 @@
+.temp-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  margin: 0 2rem;
+  gap: 2rem;
+}
+
+.social {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
