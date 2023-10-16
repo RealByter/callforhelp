@@ -1,11 +1,11 @@
 import React from 'react';
 
-export interface MessageProps {
+export interface IMessageProps {
   isSender: boolean;
   content: string;
 }
 
-export const Message: FC<MessageProps> = ({ isSender, content }: MessageProps) => {
+export const Message: FC<IMessageProps> = ({ isSender, content }: IMessageProps) => {
   return (
     <div className={`massage-body ${isSender ? 'sender' : ''}`}>
       {content || ''}
