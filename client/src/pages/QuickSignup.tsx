@@ -5,20 +5,43 @@ import FacebookLogo from '../assets/FacebookLogo.png';
 import MailLogo from '../assets/Mail.svg';
 import OrBackground from '../assets/OrBackground.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase/connection';
+import { useEffect } from 'react';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
+  const [signInWithGoogle, , , error] = useSignInWithGoogle(auth);
+  const [signInWithFacebook] = useSignInWithFacebook(auth);
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
+
+  const signInWithGoogleHandler = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      navigate('/');
+    }
+  };
+
+  const signInWithFacebookHandler = async () => {
+    const user = await signInWithFacebook();
+    if (user) {
+      navigate('/');
+    }
+  };
 
   return (
     <div className={classes['temp-wrapper']}>
       <div className={classes.page}>
         <h1>הרשמה מהירה</h1>
         <div className={classes.social}>
-          <LoginButton onClick={() => {}}>
+          <LoginButton onClick={signInWithGoogleHandler}>
             <img src={GoogleLogo} alt="Google Logo" />
             להרשמה עם גוגל
           </LoginButton>
-          <LoginButton onClick={() => {}}>
+          <LoginButton onClick={signInWithFacebookHandler}>
             <img src={FacebookLogo} alt="Facebook Logo" width={25} height={24} />
             להרשמה עם פייסבוק
           </LoginButton>
@@ -43,7 +66,7 @@ const QuickSignup: React.FC = () => {
           <button className={classes.highlight} onClick={() => {}}>
             תנאי השימוש
           </button>{' '}
-          {/* Opens the terms modal */}
+          {/* should open the terms modal */}
         </p>
         <p dir="rtl">
           כבר יש לך חשבון?{' '}
