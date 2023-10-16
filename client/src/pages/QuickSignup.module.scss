@@ -17,3 +17,37 @@
   flex-direction: column;
   gap: 2.5rem;
 }
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: #6d69be;
+}
+
+.or {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+  width: 2.5rem;
+
+  span {
+    position: relative;
+    z-index: 1;
+    font-size: 0.625rem;
+    font-weight: 600;
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

@@ -21,12 +21,12 @@ const QuickSignup: React.FC = () => {
           </LoginButton>
         </div>
         <div className={classes.separator}>
-          <div />
+          <div className={classes.line} />
           <div className={classes.or}>
             <span>או</span>
             <img src={OrBackground} alt='' />
           </div>
-          <div />
+          <div className={classes.line} />
         </div>
         <LoginButton onClick={() => {}}>
           <img src={MailLogo} alt="Mail Logo" />
