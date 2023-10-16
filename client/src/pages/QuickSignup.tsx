@@ -7,16 +7,11 @@ import OrBackground from '../assets/OrBackground.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
-import { useEffect } from 'react';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
-  const [signInWithGoogle, , , error] = useSignInWithGoogle(auth);
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   const signInWithGoogleHandler = async () => {
     const user = await signInWithGoogle();
