@@ -1,4 +1,6 @@
+import './styles/variables.scss';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
+import './App.scss';
 import './styles/variables.scss';
 import './App.scss';
 import { auth } from './firebase/connection';
