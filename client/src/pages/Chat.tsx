@@ -3,7 +3,6 @@ import { Message, MessageProps } from '../components/Message';
 import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
-import '../styles/Chat.scss';
 
 export const Chat = () => {
   const [msg, setMsg] = useState<MessageProps[]>(MOCK_MESSAGES);
