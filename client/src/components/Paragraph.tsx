@@ -8,7 +8,7 @@ export interface ParagraphProps {
 
 const Paragraph: FC<ParagraphProps> = ({ children, isBold }: ParagraphProps) => {
     return (
-        <p className="generic-paragraph" style={{ fontSize: isBold ? "bold" : "initial" }}>
+        <p className="generic-paragraph" style={{ fontWeight: isBold ? "bold" : "initial" }}>
             {children}
         </p>
     )
