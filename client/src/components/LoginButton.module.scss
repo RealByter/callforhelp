@@ -1,0 +1,39 @@
+button {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  color: #113a8c;
+  font-size: 0.875rem;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  border: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+
+  &:focus {
+    outline: none;
+    
+    &::before {
+      outline: none;
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      background: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+  }
+}
