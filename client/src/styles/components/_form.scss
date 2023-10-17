@@ -3,13 +3,20 @@
   flex-direction: column;
   margin: 0 auto;
   max-width: 20rem;
+  padding: 0 2rem;
   gap: 2.25rem;
-  height: 100vh;
+  height: calc(100vh - 136px);
 
   .form {
     display: flex;
     flex-direction: column;
     text-align: end;
     gap: 1rem;
+    flex: 1;
+
+    button {
+      margin-top: auto;
+      margin-bottom: 4rem;
+    }
   }
 }

@@ -5,6 +5,7 @@ import {
   passwordSigninValidations,
   passwordSignupValidations
 } from '../consts/formValidations';
+import Button from './Button';
 import FormField from './FormField';
 import { useForm } from 'react-hook-form';
 
@@ -20,10 +21,9 @@ type FormProps = {
   name?: boolean;
   email?: boolean;
   password?: boolean;
-  title: string;
 };
 
-const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps) => {
+const Form = ({ onSubmit, name, email, password, submitLabel }: FormProps) => {
   const {
     register,
     handleSubmit,
@@ -32,7 +32,6 @@ const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps
 
   return (
     <div className="wrapper">
-      <h1>{title}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         {name && (
           <FormField
@@ -63,7 +62,7 @@ const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps
             error={errors.password}
           />
         )}
-        <button type="submit">{submitLabel}</button>
+        <Button type="submit">{submitLabel}</Button>
       </form>
     </div>
   );

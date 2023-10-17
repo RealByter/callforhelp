@@ -2,6 +2,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
+import Header from '../components/Header';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,12 @@ const SignInPage = () => {
     }
   };
 
-  return <Form title="התחברות" submitLabel="התחבר" email password onSubmit={handleFormSubmit} />;
+  return (
+    <>
+      <Header>התחברות</Header>
+      <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
+    </>
+  );
 };
 
 export default SignInPage;

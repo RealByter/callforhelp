@@ -2,6 +2,7 @@ import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-fireb
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
+import Header from '../components/Header';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -19,14 +20,10 @@ const SignUpPage = () => {
   };
 
   return (
-    <Form
-      title="הרשמה עם אימייל"
-      name
-      password
-      email
-      onSubmit={handleFormSubmit}
-      submitLabel="הרשמה"
-    />
+    <>
+      <Header>הרשמה עם אימייל</Header>
+      <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ export interface MessageProps {
   content: string;
 }
 
-export const Message: FC<MessageProps> = ({ isSender, content }: MessageProps) => {
+export const Message: React.FC<MessageProps> = ({ isSender, content }: MessageProps) => {
   return (
     <div className={`massage-body ${isSender ? 'sender' : ''}`}>
       {content || ''}
