@@ -7,6 +7,22 @@ function getUniqueId(length) {
     return id.substring(0, Math.min(length, id.length));
 }
 
+//get the current date in israel (you can't use just new Date()
+//because it will get the date of the location where the server is located) 
+function getCurrDateIsrael() {
+
+    let here = new Date();
+
+    // suppose the date is 12:00 UTC
+    let invdate = new Date(here.toLocaleString('en-US', { timeZone: "Israel" }));
+
+    // then invdate will be 07:00 in Toronto
+    // and the diff is 5 hours
+    let diff = here.getTime() - invdate.getTime();
+
+    return new Date(here.getTime() - diff);
+}
+
 let supportersQueue = [];
 let supportedQueue = [];
 
