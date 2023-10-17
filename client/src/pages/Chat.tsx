@@ -11,12 +11,15 @@ import { ChatBox } from '../components/ChatBox';
   in the page of all chats?
   in addition, is there a listener that's need to be held in the page of the 
   supporter search page?
+
+  TODO - also - take care of the disconnect events
 */
 
 interface IGetMsgData {
   chatID: string,
   message: string,
-  messageID: string
+  messageID: string,
+  messageDate: Date
 }
 
 interface IMsg extends IMessageProps {
@@ -31,12 +34,10 @@ export const Chat = () => {
   const { socket } = useSocketCtx();
 
   useEffect(() => {
-    //TODO - listen to events
     socket.on("get message", receiveMsg);
     socket.on("close chat", closeChat);
     socket.on("chat blocked", closeChat);
     return () => {
-      //TODO - off the listener on the events
       socket.off("get message");
       socket.off("close chat");
       socket.off("chat blocked");
@@ -47,14 +48,13 @@ export const Chat = () => {
     scrollingRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msg]);
 
-  const msgIsEmpty = msg.length === 0;
+  const msgIsEmpty = (msg.length === 0);
 
   const sendMsg = (message: string) => {
     socket.emit("send message", { msg: message, chatId: thisChatId }, (res: any) => {
       addToMsgList(message, true, res.messageId);
       return;
     });
-    // addToMsgList(message, true);
   };
 
   const receiveMsg = (data: IGetMsgData) => {
@@ -62,7 +62,6 @@ export const Chat = () => {
     if (chatID == thisChatId) {
       addToMsgList(message, false, messageID);
     }
-
   }
 
   const addToMsgList = (message: string, isSender: boolean, messageID: string) => {
@@ -94,7 +93,10 @@ export const Chat = () => {
         ) : (
             msg.map((m) => (
               <React.Fragment key={m.id}>
-                <Message isSender={m.isSender} content={m.content} />
+                <Message
+                  isSender={m.isSender}
+                  content={m.content}
+                  messageDate={m.messageDate} />
               </React.Fragment>
             ))
           )}
