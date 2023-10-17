@@ -90,8 +90,27 @@ module.exports = (io, socket) => {
         // TODO: implement function
     }
 
+    const disconnecting = () => {
+        //check if the socket is in one of the queues
+        //if so then remove him
+        for(let i = 0; i < supportersQueue.length; i++){
+            if(supportersQueue[i].id === socket.id){
+                supportersQueue.splice(i, 1);
+                break;
+            }
+        }
+
+        for(let i = 0; i < supportedQueue.length; i++){
+            if(supportedQueue[i].id === socket.id){
+                supportedQueue.splice(i, 1);
+                break;
+            }
+        }
+    }
+
     socket.on("search partner", searchPartner);
     socket.on("send message", sendMessage);
     socket.on("stop chat", stopChat);
     socket.on("block chat", blockChat);
+    socket.on("disconnecting", disconnecting);
 }
