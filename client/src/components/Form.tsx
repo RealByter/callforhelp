@@ -1,8 +1,5 @@
-import React from 'react';
 import FormField from './FormField';
-import { FieldErrors, useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
-import classes from './Form.module.scss';
+import { useForm } from 'react-hook-form';
 
 export type FormOptions = Partial<{
   name: string;
@@ -16,6 +13,7 @@ type FormProps = {
   name?: boolean;
   email?: boolean;
   password?: boolean;
+  title: string;
 };
 type ValidationType = string | undefined;
 
@@ -47,90 +45,46 @@ const passwordValidations = {
   }
 };
 
-const Errors = (name: string, errors: FieldErrors) => {
-  return (
-    <div className={classes['form-helper']}>
-      <ErrorMessage
-        errors={errors}
-        name={name}
-        render={({ messages }) =>
-          messages && Object.entries(messages).map(([type, message]) => <p key={type}>{message}</p>)
-        }
-      />
-    </div>
-  );
-};
-
-const Form = (props: FormProps) => {
-  const { onSubmit, name, email, password, submitLabel } = props;
+const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormOptions>({
-    criteriaMode: 'all'
-  });
-  const submitHandler = React.useCallback(
-    (data: FormOptions) => {
-      const dataToSubmit: FormOptions = {};
-      if (name) {
-        dataToSubmit.name = data.name;
-      }
-      if (email) {
-        dataToSubmit.email = data.email;
-      }
-      if (password) {
-        dataToSubmit.password = data.password;
-      }
-      onSubmit(dataToSubmit);
-    },
-    [onSubmit, name, email, password]
-  );
-  return (
-    <>
-      <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
-        <div className={classes.formContainer}>
-          {name && (
-            <>
-              <FormField
-                inputType="text"
-                inputProps={register('name', nameValidations)}
-                label="שם"
-                inputClass={errors.name && classes['input-error']}
-                placeHolder="שם מלא"
-              />
-              {errors.name && Errors('name', errors)}
-            </>
-          )}
-          {email && (
-            <>
-              <FormField
-                inputType="text"
-                inputProps={register('email', emailValidations)}
-                label="אימייל"
-                inputClass={errors.email && classes['input-error']}
-              />
-              {errors.email && Errors('email', errors)}
-            </>
-          )}
-          {password && (
-            <>
-              <FormField
-                inputType="password"
-                inputProps={register('password', passwordValidations)}
-                label="סיסמא"
-                inputClass={errors.password && classes['input-error']}
-              />
-              {errors.password && Errors('password', errors)}
-            </>
-          )}
-        </div>
+  } = useForm<FormOptions>();
 
-        <button type="submit" className={classes['form-submit-btn']}>
-          {submitLabel}
-        </button>
+  return (
+    <div className="wrapper">
+      <h1>{title}</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="form">
+        {name && (
+          <FormField
+            inputType="text"
+            inputProps={register('name', nameValidations)}
+            label="שם"
+            placeHolder="שם משתמש"
+            error={errors.name}
+          />
+        )}
+        {email && (
+          <FormField
+            inputType="text"
+            inputProps={register('email', emailValidations)}
+            label="אימייל"
+            error={errors.email}
+          />
+        )}
+        {password && (
+          <FormField
+            inputType="password"
+            inputProps={register('password', passwordValidations)}
+            label="סיסמא"
+            inputClass={errors.password && 'input-error'}
+            error={errors.password}
+          />
+        )}
+        <button type="submit">{submitLabel}</button>
       </form>
-    </>
+    </div>
   );
 };
 

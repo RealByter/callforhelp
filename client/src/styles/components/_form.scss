@@ -5,11 +5,11 @@
   max-width: 20rem;
   gap: 2.25rem;
   height: 100vh;
-}
 
-.form {
-  display: flex;
-  flex-direction: column;
-  text-align: end;
-  gap: 1rem;
+  .form {
+    display: flex;
+    flex-direction: column;
+    text-align: end;
+    gap: 1rem;
+  }
 }
