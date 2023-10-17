@@ -67,7 +67,18 @@ module.exports = (io, socket) => {
     }
 
     const sendMessage = (chatID, message, callback) => {
-        // TODO: implement function
+        let messageID = getUniqueId(6);
+        
+        let messageDate = getCurrDateIsrael();
+        let messageDateISOString = messageDate.toISOString();
+
+        //TODO: save message to the Database
+
+        //send the message to the other user in the chat
+        socket.to(chatID).emit("get message", chatID, messageID, message, messageDateISOString)
+
+        //call to callback with the necessary parameters
+        callback(messageID, messageDateISOString);
     }
 
     const stopChat = (chatID) => {
