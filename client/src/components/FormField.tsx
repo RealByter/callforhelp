@@ -41,7 +41,7 @@ export default function FormField({ label, inputType = 'text', inputProps, input
           </button>
         )}
       </div>
-      {error && <p className='error'>{error.message}</p>}
+      {error && <p className='error' dir='rtl'>{error.message}</p>}
     </div>
   );
 }

@@ -1,4 +1,10 @@
-import { emailValidations, nameValidations, passwordValidations } from '../consts/formValidations';
+import {
+  nameSignupValidations,
+  emailSigninValidations,
+  emailSignupValidations,
+  passwordSigninValidations,
+  passwordSignupValidations
+} from '../consts/formValidations';
 import FormField from './FormField';
 import { useForm } from 'react-hook-form';
 
@@ -31,7 +37,7 @@ const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps
         {name && (
           <FormField
             inputType="text"
-            inputProps={register('name', nameValidations)}
+            inputProps={register('name', nameSignupValidations)}
             label="שם"
             placeHolder="שם משתמש"
             error={errors.name}
@@ -40,7 +46,7 @@ const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps
         {email && (
           <FormField
             inputType="text"
-            inputProps={register('email', emailValidations)}
+            inputProps={register('email', name ? emailSignupValidations : emailSigninValidations)}
             label="אימייל"
             error={errors.email}
           />
@@ -48,7 +54,10 @@ const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps
         {password && (
           <FormField
             inputType="password"
-            inputProps={register('password', passwordValidations)}
+            inputProps={register(
+              'password',
+              name ? passwordSignupValidations : passwordSigninValidations
+            )}
             label="סיסמא"
             inputClass={errors.password && 'input-error'}
             error={errors.password}

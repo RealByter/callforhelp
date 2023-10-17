@@ -5,15 +5,14 @@ import Form, { FormOptions } from '../components/Form';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
-  const handleFormSubmit = ({ email, password }: FormOptions) => {
-    signInWithEmailAndPassword(email as string, password as string);
+  const handleFormSubmit = async ({ email, password }: FormOptions) => {
+    const user = await signInWithEmailAndPassword(email as string, password as string);
+    if (user) {
+      navigate('/');
+    }
   };
-
-  if (user) {
-    navigate('/');
-  }
 
   return <Form title="התחברות" submitLabel="התחבר" email password onSubmit={handleFormSubmit} />;
 };
