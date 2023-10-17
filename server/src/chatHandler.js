@@ -82,7 +82,8 @@ module.exports = (io, socket) => {
     }
 
     const stopChat = (chatID) => {
-        // TODO: implement function
+        //tell the other user in the chat to close the chat
+        socket.to(chatID).emit("close chat", chatID);
     }
 
     const blockChat = (chatID) => {
