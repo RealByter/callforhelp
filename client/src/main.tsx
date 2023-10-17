@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     element: <QuickSignup />
   },
   {
-    path: '/chat',
+    path: '/chat/:chatId',
     element: <Chat />
   }
 ]);

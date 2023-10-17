@@ -4,15 +4,17 @@ import CloseIcon from '@mui/icons-material/Close';
 interface IChatTopBarProps {
   isChatEnded: boolean;
   isSupporter: boolean;
-  endChat?: () => void;
-  changeChatRoom?: () => void;
+  endChat: () => void;
+  changeChatRoom: () => void;
+  goBackToChatsPage: () => void;
 }
 
 export const ChatTopBar: FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
   endChat,
-  changeChatRoom
+  changeChatRoom,
+  goBackToChatsPage
 }: IChatTopBarProps) => {
   return (
     <div className={`chat-top-bar ${isChatEnded ? 'ended' : ''}`}>
@@ -21,7 +23,7 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
           <span className="title">התומך המאושר</span>
           <span className="sub-title">אני פה בשבילך</span>
         </div>
-        <button className="top-bar-close">
+        <button className="top-bar-close" onClick={() => goBackToChatsPage()}>
           <CloseIcon />
         </button>
       </div>
@@ -29,23 +31,15 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
         {isChatEnded ? (
           <p>השיחה הסתיימה</p>
         ) : (
-          <div className="chat-top-bar-lower-buttons">
-            <button
-              onClick={() => {
-                changeChatRoom?.();
-              }}
-            >
-              {isSupporter ? 'איתור נתמך נוסף' : 'החלף תומך'}
-            </button>
-            <button
-              onClick={() => {
-                endChat?.();
-              }}
-            >
-              סיום שיחה
-            </button>
-          </div>
-        )}
+            <div className="chat-top-bar-lower-buttons">
+              <button onClick={() => changeChatRoom}>
+                {isSupporter ? 'איתור נתמך נוסף' : 'החלף תומך'}
+              </button>
+              <button onClick={() => endChat}>
+                סיום שיחה
+              </button>
+            </div>
+          )}
       </div>
     </div>
   );

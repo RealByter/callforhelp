@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Message, IMessageProps } from '../components/Message';
 import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
+import { useNavigate, useParams } from "react-router-dom";
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
 
@@ -13,6 +14,7 @@ import { ChatBox } from '../components/ChatBox';
   supporter search page?
 
   TODO - also - take care of the disconnect events
+  TODO - also - take care of cases in which the chat id doesnt exist
 */
 
 interface IGetMsgData {
@@ -27,13 +29,17 @@ interface IMsg extends IMessageProps {
 }
 
 export const Chat = () => {
-  const [thisChatId, setThisChatId] = useState("");
   const [msg, setMsg] = useState<IMsg[]>(MOCK_MESSAGES);
   const [didChatEnded, setDidChatEnded] = useState(false);
+  const [isSupporter, setIsSupporter] = useState(true);
   const scrollingRef = useRef(null);
   const { socket } = useSocketCtx();
+  const navigate = useNavigate();
+  const { chatId: thisChatId } = useParams();
+  const msgIsEmpty = (msg.length === 0);
 
   useEffect(() => {
+    // take care of all the socket events
     socket.on("get message", receiveMsg);
     socket.on("close chat", closeChat);
     socket.on("chat blocked", closeChat);
@@ -45,11 +51,11 @@ export const Chat = () => {
   }, [socket]);
 
   useEffect(() => {
+    // scroll to bottom of the chat from whhen getting a new msg
     scrollingRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msg]);
 
-  const msgIsEmpty = (msg.length === 0);
-
+  // send msg using socket
   const sendMsg = (message: string) => {
     socket.emit("send message", { msg: message, chatId: thisChatId }, (res: any) => {
       addToMsgList(message, true, res.messageId);
@@ -57,6 +63,7 @@ export const Chat = () => {
     });
   };
 
+  // receive msg using socket
   const receiveMsg = (data: IGetMsgData) => {
     const { chatID, message, messageID } = data;
     if (chatID == thisChatId) {
@@ -64,6 +71,7 @@ export const Chat = () => {
     }
   }
 
+  // add new msg to msg list
   const addToMsgList = (message: string, isSender: boolean, messageID: string) => {
     //see if maybe it is possible to get the msg id from the server
     setMsg((prev) => ([...prev, {
@@ -73,19 +81,43 @@ export const Chat = () => {
     }]));
   }
 
+  // finish the chat (permanently) using socket
   const closeChat = () => {
     setDidChatEnded(true);
     //some ending chat architecture
   }
 
+  // block the chat
   const blockSupporter = () => {
-    //send event of chat blocking
-    // socket.send("block chat", {});
+    socket.emit("block chat", {});
+  }
+
+  // go back to the page of all chats
+  const goBackToChatsPage = () => {
+    navigate("/");
+  }
+
+  // request to change partner
+  const changeChatRoom = () => {
+    // maybe create another event for re-searching?
+    socket.emit("search partner");
+  }
+
+  // finish current chat
+  const endChat = () => {
+    socket.emit("close chat", { chatID: thisChatId });
+    //alert?
+    goBackToChatsPage();
   }
 
   return (
     <div className="chat-page">
-      <ChatTopBar chatEnded={didChatEnded} isSupporter={true} />
+      <ChatTopBar
+        chatEnded={didChatEnded}
+        isSupporter={isSupporter}
+        endChat={endChat}
+        changeChatRoom={changeChatRoom}
+        goBackToChatsPage={goBackToChatsPage} />
 
       <div className="messages">
         {msgIsEmpty ? (
