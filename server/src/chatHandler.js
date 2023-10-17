@@ -38,6 +38,8 @@ module.exports = (io, socket) => {
                 let supportedSocket = supportedQueue.shift()
                 supportedSocket.join(chatID);
 
+                //TODO: create new chat in the Database
+
                 //send "start chat" message to all of the users in the chat
                 io.to(chatID).emit("start chat", chatID);
             }
@@ -55,6 +57,8 @@ module.exports = (io, socket) => {
                 socket.join(chatID);
                 let supporterSocket = supportersQueue.shift()
                 supporterSocket.join(chatID);
+
+                //TODO: create new chat in the Database
 
                 //send "start chat" message to all of the users in the chat
                 io.to(chatID).emit("start chat", chatID);
