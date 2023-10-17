@@ -6,6 +6,7 @@ $chat-input-bgd: #f4f1ff;
 $chat-first-part-msg-bgd: #ffffff;
 $chat-second-part-msg-bgd: #9360ff;
 $chat-send-btn-bgd: #e5dbff;
+$scrollbar-bgd: #e5dbff;
 
 //buttons
 $all-pages-btn-radius: 20px;
@@ -21,12 +22,15 @@ $ended-chats-color: #7f84a3;
 $waiting-page-text-color: #0e1c74;
 
 //font sizes
-$waiting-page-title-size: 32px;
-$waiting-page-text-size: 16px;
-$landing-page-text-size: 16px;
-$waiting-page-sub-title-size: 18px;
-$login-page-title-size: 24px;
-$login-page-all-text-size: 14px;
+$waiting-page-title-size: 2rem;
+$waiting-page-text-size: 1rem;
+$landing-page-text-size: 1rem;
+$waiting-page-sub-title-size: 1.2rem;
+$login-page-title-size: 2.2rem;
+$login-page-all-text-size: 0.8rem;
+$chat-msg-text-size: 1rem;
+$chat-title-text-size: 1.5rem;
+$chat-sub-title-text-size: 1rem;
 
 //borders
 $login-input-border: 1px solid #ffffff40;
@@ -34,15 +38,21 @@ $-border: 2px solid;
 $support-list-have-msg-border-img: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
 $chat-btn-border: 2px solid;
 $chat-btn-border-img: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
+$chat-upper-top-bar-border: 1px solid #e1e4e9;
+$chat-input-order: 2px solid $chat-send-btn-bgd;
 
 //opacity
 $login-input-opacity: 50%;
 $calls-ended-opacity: 25%;
 
+//colors
+$chat-icons-color: #1C297C;
+$login-hr-color: #6d69be;
+
 //general
 $font: Assistant;
 $login-hr-color: #6d69be;
-
 //input
 $input-outline-focus: 3px solid #6d69be;
 $input-outline-error: 1px solid red;
+$scrollbar-radius: 8px;
