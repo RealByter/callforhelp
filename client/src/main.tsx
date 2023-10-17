@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import SocketProvider from './context/socket/SocketProvider.tsx';
-import SignUpPage from './pages/SignUp.tsx';
-import SignInPage from './pages/SignIn.tsx';
+import Signin from './components/SecondVersion/Signin.tsx';
+import Signup from './components/SecondVersion/Signup.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
 import { StyledEngineProvider } from '@mui/material';
@@ -16,22 +16,21 @@ const router = createBrowserRouter([
     element: <App />
   },
   {
-    path: '/signup',
-    element: <SignUpPage />
-  },
-  {
     path: '/signin',
-    element: <SignInPage />
+
+    element: <Signin />
   },
   {
-
+    path: '/signup',
+    element: <Signup />
+  },
+  {
     path: '/login',
     element: <QuickSignup />
   },
   {
     path: '/chat',
     element: <Chat />
-
   }
 ]);
 
