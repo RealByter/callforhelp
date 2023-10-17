@@ -4,7 +4,6 @@ import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
-import '../styles/chat.scss';
 
 /*
   question - if we are in the application, and we get a message "start chat",

@@ -1,8 +1,5 @@
-import './styles/variables.scss';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
-import './App.scss';
-import './styles/variables.scss';
-import './App.scss';
+import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +17,8 @@ function App() {
     </p>
   ) : (
     <p>
-      You should <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
+      כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
+      <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
     </p>
   );
 }
