@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IPossibleFormValues } from '../../consts/formInputs';
+import { IPossibleFormValues } from '../../consts/formValidations';
 import Input from './Input';
 import classes from '../../styles/ExampleForm.module.scss';
 

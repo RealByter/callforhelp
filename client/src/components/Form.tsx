@@ -1,3 +1,4 @@
+import { emailValidations, nameValidations, passwordValidations } from '../consts/formValidations';
 import FormField from './FormField';
 import { useForm } from 'react-hook-form';
 
@@ -14,35 +15,6 @@ type FormProps = {
   email?: boolean;
   password?: boolean;
   title: string;
-};
-type ValidationType = string | undefined;
-
-const nameValidations = {
-  required: 'יש להכניס שם',
-  minLength: {
-    value: 2,
-    message: 'צריך להיות לפחות 2 תווים'
-  }
-};
-const emailValidations = {
-  required: 'יש להכניס מייל',
-  pattern: {
-    value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-    message: 'מייל לא תקין'
-  }
-};
-const passwordValidations = {
-  required: 'יש להכניס סיסמא',
-  validate: {
-    length: (value: ValidationType) => (value as string).length > 8 || 'צריכה להיות לפחות 8 תווים',
-    oneLowercase: (value: ValidationType) =>
-      value?.toUpperCase() !== value || 'צריכה להכיל אות קטנה ',
-    onUppercase: (value: ValidationType) =>
-      value?.toLowerCase() !== value || 'צריכה להכיל אות גדולה',
-    oneNumber: (value: ValidationType) => /\d/.test(value as string) || 'צריכה להכיל מספר',
-    specialCharacter: (value: ValidationType) =>
-      /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value as string) || 'צריכה להכיל סימן מיוחד'
-  }
 };
 
 const Form = ({ onSubmit, name, email, password, submitLabel, title }: FormProps) => {

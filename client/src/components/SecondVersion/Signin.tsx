@@ -1,7 +1,7 @@
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/connection';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IPossibleFormValues } from '../../consts/formInputs';
+import { IPossibleFormValues } from '../../consts/formValidations';
 import Input from './Input';
 import FormWrapper from './FormWrapper';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes, useState } from 'react';
 import { UseFormRegister, FieldError, RegisterOptions } from 'react-hook-form';
-import { IPossibleFormValues } from '../../consts/formInputs';
+import { IPossibleFormValues } from '../../consts/formValidations';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import classes from '../../styles/Input.module.scss';

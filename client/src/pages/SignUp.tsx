@@ -1,28 +1,32 @@
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
-import classes from './Sign.module.scss';
 import Form, { FormOptions } from '../components/Form';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile] = useUpdateProfile(auth);
 
-  const handleFormSubmit = ({ email, password }: FormOptions) => {
-    createUserWithEmailAndPassword(email as string, password as string);
+  const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
+    const user = await createUserWithEmailAndPassword(email as string, password as string);
+    if (user) {
+      const success = await updateProfile({ displayName: name });
+      if (success) {
+        navigate('/');
+      }
+    }
   };
 
-  if (user) {
-    navigate('/');
-  }
-
   return (
-    <div className={classes.outerContainer}>
-      <h1 className={classes.header}>הרשמה עם מייל</h1>
-      <div className={classes.formContainer}>
-        <Form name password email onSubmit={handleFormSubmit} submitLabel="הרשמה" />
-      </div>
-    </div>
+    <Form
+      title="הרשמה עם אימייל"
+      name
+      password
+      email
+      onSubmit={handleFormSubmit}
+      submitLabel="הרשמה"
+    />
   );
 };
 
