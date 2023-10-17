@@ -1,0 +1,8 @@
+.generic-button, .generic-button:focus {
+    background-color: $btn-bgd;
+    width: 100%;
+    color: $default-text-color;
+    border-radius: $all-pages-btn-radius;
+    font-size: $login-page-all-text-size;
+    outline: none;
+}
