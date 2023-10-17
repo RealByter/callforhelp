@@ -1,14 +1,17 @@
+import { FormEvent } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
-import Form, { FormOptions } from '../components/Form';
-import classes from './Sign.module.scss';
+
 const SignInPage = () => {
   const navigate = useNavigate();
   const [signInWithEmailAndPassword, user] = useSignInWithEmailAndPassword(auth);
 
-  const handleFormSubmit = ({ email, password }: FormOptions) => {
-    signInWithEmailAndPassword(email as string, password as string);
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    signInWithEmailAndPassword(formData.get('email') as string, formData.get('password') as string);
   };
 
   if (user) {
@@ -16,12 +19,19 @@ const SignInPage = () => {
   }
 
   return (
-    <div className={classes.outerContainer}>
-      <h1 className={classes.header}>התחברות</h1>
-      <div className={classes.formContainer}>
-        <Form submitLabel="התחבר" email password onSubmit={handleFormSubmit} />
-      </div>
-    </div>
+    <form onSubmit={handleFormSubmit}>
+      <h1>Sign In</h1>
+      <br />
+      <p>Email</p>
+      <br />
+      <input type="email" name="email" />
+      <br />
+      <p>Password</p>
+      <br />
+      <input type="password" name="password" />
+      <br />
+      <button type="submit">Submit</button>
+    </form>
   );
 };
 
