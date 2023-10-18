@@ -1,4 +1,5 @@
 // # imports
+import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
 const id = uuid();
 
@@ -24,12 +25,13 @@ function getCurrDateIsrael() {
     return new Date(here.getTime() - diff);
 }
 
-let supportersQueue = [];
-let supportedQueue = [];
 
-export default (io, socket) => {
+let supportersQueue:Array<any> = []; //!
+let supportedQueue:Array<any> = []; //!
 
-    const searchPartner = (userType) => {
+export default (io :Server, socket:Socket) => {
+
+    const searchPartner = (userType : string) => {
         if (userType === "supporter") {
             //check if there users to support
             if (supportedQueue.length > 0) {
@@ -71,7 +73,7 @@ export default (io, socket) => {
         }
     }
 
-    const sendMessage = (chatID, message, callback) => {
+    const sendMessage = (chatID:string, message:string, callback :Function) => {
         let messageID = getUniqueId(6);
 
         let messageDate = getCurrDateIsrael();
@@ -86,12 +88,12 @@ export default (io, socket) => {
         callback(messageID, messageDateISOString);
     }
 
-    const stopChat = (chatID) => {
+    const stopChat = (chatID:string) => {
         //tell the other user in the chat to close the chat
         socket.to(chatID).emit("close chat", chatID);
     }
 
-    const blockChat = (chatID) => {
+    const blockChat = (chatID:string) => {
         // TODO: implement function
     }
 
