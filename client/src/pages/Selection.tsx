@@ -1,12 +1,16 @@
+import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { collections } from '../firebase/connection';
-import { useCollectionOnce } from "react-firebase-hooks/firestore"
 
 const Selection: React.FC = () => {
-  const [snapshot] = useCollectionOnce(collections.chats);
+  const [role, setRole] = useState<"supporter" | "supportee" | null>(null);
 
-  console.log(snapshot?.docs.map((chat) => chat.data()))
+  useEffect(() => {
+    if (role) {
+      // attempt to join chat
+      console.log(role);
+    }
+  }, [role]);
 
   return (
     <>
@@ -15,12 +19,12 @@ const Selection: React.FC = () => {
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"
           buttonText="אני צריכ/ה תמיכה"
-          onClick={() => {}} // This is where we start the assignment process
+          onClick={() => setRole("supportee")} // This is where we start the assignment process
         />
         <Choice
           paragraphText="יש גם אפשרות לתמוך ולהיות שם עבור מי שצריכ/ה"
           buttonText="אני רוצה לתמוך"
-          onClick={() => {}} // This is where we start the assignment process
+          onClick={() => setRole("supporter")} // This is where we start the assignment process
         />
       </div>
     </>
