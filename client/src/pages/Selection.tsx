@@ -93,7 +93,7 @@ const Selection: React.FC = () => {
         const chatId = await findChatToFill(role);
         if (chatId) {
           await joinChatFirebase(userId, role, chatId);
-          socket.emit('join_chat', chatId);
+          socket.emit('join_chat', { chatId, username: user!.displayName });
           navigate('/room');
         } else {
           const newChatId = await createChat(userId, role);
