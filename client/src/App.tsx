@@ -2,6 +2,7 @@ import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
+import DisclaimerPopup from './components/DisclaimerPopup';
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -16,10 +17,12 @@ function App() {
       User logged in - <button onClick={signOut}>Logout</button>
     </p>
   ) : (
-    <p>
-      כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
-      <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
-    </p>
+    <>
+      <p>
+        כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם
+        <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
+      </p>
+    </>
   );
 }
 
