@@ -6,7 +6,7 @@ export interface IMessageProps {
   messageDate: string
 }
 
-export const Message: FC<IMessageProps> = ({ isSender, content, messageDate }: IMessageProps) => {
+export const Message: React.FC<IMessageProps> = ({ isSender, content, messageDate }: IMessageProps) => {
 
   const formatDate = (date: string) => {
     const newDate = new Date(date);

@@ -4,10 +4,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import SocketProvider from './context/socket/SocketProvider.tsx';
-import Signin from './components/SecondVersion/Signin.tsx';
-import Signup from './components/SecondVersion/Signup.tsx';
+import Signin from './pages/SignIn.tsx';
+import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
+import { StyledEngineProvider } from '@mui/material';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SocketProvider>
-      <RouterProvider router={router} />
+      <StyledEngineProvider injectFirst>
+        <RouterProvider router={router} />
+      </StyledEngineProvider>
     </SocketProvider>
   </React.StrictMode>
 );
