@@ -33,7 +33,7 @@ const Selection: React.FC = () => {
     }
   }, [user, navigate, loading]);
 
-  const findChatToFill = async (role: Role): Promise<string | null> => {
+  const findChatToFill = async (role: Role): Promise<Chat | null> => {
     const roleFieldName = getRoleFieldName(role);
     const queryChatToFill = query(
       collections.chats,
@@ -46,7 +46,7 @@ const Selection: React.FC = () => {
     if (querySnapshot.size === 0) {
       return null;
     } else {
-      return querySnapshot.docs[0].data().id;
+      return querySnapshot.docs[0].data();
     }
   };
 
@@ -58,7 +58,7 @@ const Selection: React.FC = () => {
     return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
   };
 
-  const createChat = async (userId: string, role: Role): Promise<string> => {
+  const createChat = async (userId: string, role: Role): Promise<Chat> => {
     const newChatValues = {
       id: '', // because the id is empty, firestore is still going to generate an id by itself
       createdAt: Timestamp.now(),
@@ -68,7 +68,7 @@ const Selection: React.FC = () => {
 
     const chatRef = await addDoc(collections.chats, newChatValues);
 
-    return chatRef.id;
+    return {...newChatValues, id: chatRef.id};
   };
 
   const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
@@ -77,7 +77,8 @@ const Selection: React.FC = () => {
     });
   };
 
-  const joinChatRooms = (chatIds: string[], username: string) => {
+  const joinChatRooms = (chats: Chat | Chat[], username: string) => {
+    const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
     socket.emit('join-chat', chatIds, username);
     navigate('/room');
   }
@@ -87,18 +88,16 @@ const Selection: React.FC = () => {
       const myChats = await findMyChats(userId, role);
 
       if (myChats.length !== 0) {
-        const chatIds = myChats.map((chat) => chat.id);
-        joinChatRooms(chatIds, user!.displayName!);
+        joinChatRooms(myChats, user!.displayName!);
       } else {
-        const chatId = await findChatToFill(role);
+        const chatToFill = await findChatToFill(role);
 
-        if (chatId) {
-          await joinChatFirebase(userId, role, chatId);
-          joinChatRooms([chatId], user!.displayName!);
-
+        if (chatToFill) {
+          await joinChatFirebase(userId, role, chatToFill.id);
+          joinChatRooms(chatToFill, user!.displayName!);
         } else {
-          const newChatId = await createChat(userId, role);
-          joinChatRooms([newChatId], user!.displayName!);
+          const chat = await createChat(userId, role);
+          joinChatRooms(chat, user!.displayName!);
         }
       }
     };
