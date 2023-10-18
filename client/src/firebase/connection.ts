@@ -1,7 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
 const DEV_AUTH_HOST = 'http://127.0.0.1:9099';
+const DEV_FIRESTORE_HOST = 'http://127.0.0.1';
+const DEV_FIRESTORE_PORT = 8080;
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'default',
@@ -15,9 +18,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+const firestore = getFirestore(app);
 
 if (import.meta.env.DEV) {
   connectAuthEmulator(auth, DEV_AUTH_HOST);
+  connectFirestoreEmulator(firestore, DEV_FIRESTORE_HOST, DEV_FIRESTORE_PORT); 
 }
 
-export { auth };
+export { auth, firestore };
