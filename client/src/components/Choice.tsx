@@ -9,9 +9,13 @@ type ChoiceProps = {
 
 const Choice: React.FC<ChoiceProps> = ({ paragraphText, buttonText, onClick }) => {
   return (
-    <div className='choice'>
-      <Paragraph>{paragraphText}</Paragraph>
-      <Button onClick={onClick}>{buttonText}</Button>
+    <div className="choice">
+      <Paragraph dir="rtl" isBold>
+        {paragraphText}
+      </Paragraph>
+      <div className="button-wrapper">
+        <Button onClick={onClick}>{buttonText}</Button>
+      </div>
     </div>
   );
 };
