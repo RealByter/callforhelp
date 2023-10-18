@@ -2,6 +2,7 @@ import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
+import Button from './components/Button';
 
 function App() {
   const [user, loading] = useAuthState(auth);

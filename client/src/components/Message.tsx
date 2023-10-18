@@ -12,7 +12,7 @@ export const Message: React.FC<IMessageProps> = ({ isSender, content, messageDat
     const newDate = new Date(date);
     const hour = newDate.getHours();
     const minute = newDate.getMinutes();
-    return (`${hour}:${minute}`);
+    return (`${hour}:${minute >= 10 ? minute : "0" + minute}`);
   }
 
   return (

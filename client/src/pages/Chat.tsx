@@ -17,11 +17,16 @@ import { ChatBox } from '../components/ChatBox';
   TODO - also - take care of cases in which the chat id doesnt exist
 */
 
+/*
+  In start of all entrance we have to connect the user to all the rooms he belongs to 
+  Or maybe, when entering a chat he will be joined automatically to the room
+*/
+
 interface IGetMsgData {
   chatID: string,
   message: string,
   messageID: string,
-  messageDate: Date
+  messageDate: string
 }
 
 interface IMsg extends IMessageProps {
@@ -40,6 +45,7 @@ export const Chat = () => {
 
   useEffect(() => {
     // take care of all the socket events
+    socket.on("connect", joinChatRoom);
     socket.on("get message", receiveMsg);
     socket.on("close chat", closeChat);
     socket.on("chat blocked", closeChat);
@@ -55,29 +61,36 @@ export const Chat = () => {
     scrollingRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msg]);
 
+  // join the socket room of the current room
+  const joinChatRoom = () => {
+    socket.emit("join", { name: thisChatId });
+  }
+
   // send msg using socket
   const sendMsg = (message: string) => {
-    socket.emit("send message", { msg: message, chatId: thisChatId }, (res: any) => {
-      addToMsgList(message, true, res.messageId);
+    socket.emit("send message", { msg: message, chatID: thisChatId }, undefined, (messageID: string, messageDateISOString: string) => {
+      addToMsgList(message, true, messageID, messageDateISOString);
       return;
     });
   };
 
   // receive msg using socket
   const receiveMsg = (data: IGetMsgData) => {
-    const { chatID, message, messageID } = data;
-    if (chatID == thisChatId) {
-      addToMsgList(message, false, messageID);
-    }
+    const { chatID, message, messageID, messageDate } = data;
+    console.log('chatID: ', chatID);
+    // if (chatID == thisChatId) {
+    addToMsgList(message, false, messageID, messageDate);
+    // }
   }
 
   // add new msg to msg list
-  const addToMsgList = (message: string, isSender: boolean, messageID: string) => {
+  const addToMsgList = (message: string, isSender: boolean, messageID: string, date: string) => {
     //see if maybe it is possible to get the msg id from the server
     setMsg((prev) => ([...prev, {
       id: messageID || (prev.length + 1),
       content: message,
-      isSender
+      isSender,
+      messageDate: date
     }]));
   }
 
