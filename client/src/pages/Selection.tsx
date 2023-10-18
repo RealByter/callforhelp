@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { Timestamp } from 'firebase/firestore';
+import { limit, orderBy, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
 
 type Role = "supporter" | "supportee";
-
-
 
 const Selection: React.FC = () => {
   const [role, setRole] = useState<Role | null>(null);
 
   const findChatToFill = async (role: Role): Promise<Chat | null> => {
-    return null;
+    const roleFieldName = role === "supporter" ? "supporterId" : "supporteeId";
+    const queryChatToFill = query(collections.chats, where(roleFieldName, "==", null), orderBy("createdAt"), limit(1));
+    const querySnapshot = await getDocs(queryChatToFill);
+
+    if (querySnapshot.size === 0) {
+      return null;
+    } else {
+      return querySnapshot.docs[0].data();
+    }
   }
 
   const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
