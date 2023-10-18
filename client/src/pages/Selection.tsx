@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { limit, orderBy, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { limit, orderBy, query, where, getDocs, Timestamp, addDoc } from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 
-type Role = "supporter" | "supportee";
-const getRoleFieldName = (role: Role) =>  role === "supporter" ? "supporterId" : "supporteeId";
-
+type Role = 'supporter' | 'supportee';
+const getRoleFieldName = (role: Role) => (role === 'supporter' ? 'supporterId' : 'supporteeId');
 
 const Selection: React.FC = () => {
   const navigate = useNavigate();
@@ -17,32 +16,44 @@ const Selection: React.FC = () => {
   const [user] = useAuthState(auth);
 
   if (!user) {
-    navigate("/");
+    navigate('/');
   }
 
-  const findChatToFill = async (role: Role): Promise<Chat | null> => {
+  const findChatToFill = async (role: Role): Promise<string | null> => {
     const roleFieldName = getRoleFieldName(role);
-    const queryChatToFill = query(collections.chats, where(roleFieldName, "==", null), orderBy("createdAt"), limit(1));
+    const queryChatToFill = query(
+      collections.chats,
+      where(roleFieldName, '==', null),
+      orderBy('createdAt'),
+      limit(1)
+    );
     const querySnapshot = await getDocs(queryChatToFill);
 
     if (querySnapshot.size === 0) {
       return null;
     } else {
-      return querySnapshot.docs[0].data();
+      return querySnapshot.docs[0].data().id;
     }
-  }
+  };
 
   const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
     const roleFieldName = getRoleFieldName(role);
-    const queryMyChats = query(collections.chats, where(roleFieldName, "==", userId));
+    const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
     const querySnapshot = await getDocs(queryMyChats);
 
     return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-  }
+  };
 
-  const createChat = async (userId: string, role: Role): Promise<Chat> => {
-    return {id: "", createdAt: Timestamp.now()}
-  }
+  const createChat = async (userId: string, role: Role): Promise<string> => {
+    const newChatValues = {
+      createdAt: Timestamp.now(),
+      [getRoleFieldName(role)]: userId
+    };
+
+    const chatRef = await addDoc(collections.chats, newChatValues);
+
+    return chatRef.id;
+  };
 
   const joinChat = async (userId: string, role: Role) => {
     const myChats = await findMyChats(userId, role);
@@ -50,10 +61,10 @@ const Selection: React.FC = () => {
     if (myChats.length !== 0) {
       // ask the socket to join the room
     } else {
-      const chat = await findChatToFill(role) || await createChat(userId, role);
+      const chat = (await findChatToFill(role)) || (await createChat(userId, role));
       // ask the socket to join the created room
     }
-  }
+  };
 
   useEffect(() => {
     if (role) {
@@ -68,12 +79,12 @@ const Selection: React.FC = () => {
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"
           buttonText="אני צריכ/ה תמיכה"
-          onClick={() => setRole("supportee")} // This is where we start the assignment process
+          onClick={() => setRole('supportee')} // This is where we start the assignment process
         />
         <Choice
           paragraphText="יש גם אפשרות לתמוך ולהיות שם עבור מי שצריכ/ה"
           buttonText="אני רוצה לתמוך"
-          onClick={() => setRole("supporter")} // This is where we start the assignment process
+          onClick={() => setRole('supporter')} // This is where we start the assignment process
         />
       </div>
     </>
