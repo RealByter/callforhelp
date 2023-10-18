@@ -10,6 +10,8 @@ const SignUpPage = () => {
   const [updateProfile] = useUpdateProfile(auth);
 
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
+    console.log('here');
+    
     const user = await createUserWithEmailAndPassword(email as string, password as string);
     if (user) {
       const success = await updateProfile({ displayName: name });
