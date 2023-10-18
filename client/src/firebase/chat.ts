@@ -15,9 +15,9 @@ const chatFirestoreConverter: FirestoreDataConverter<Chat> = {
     return chat;
   },
   fromFirestore(snapshot, options) {
-    const { supporteeId, supporterId, createdAt } = snapshot.data(options);
+    const rawData = {id: snapshot.id, ...snapshot.data(options)}
 
-    return { id: snapshot.id, supporteeId, supporterId, createdAt };
+    return chatSchema.parse(rawData);
   }
 };
 
