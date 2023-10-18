@@ -10,6 +10,7 @@ import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
+import Room from './pages/Room.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/selection',
     element: <Selection />
+  },
+  {
+    path: '/room', // For assignment testing purposes
+    element: <Room />
   }
 ]);
 

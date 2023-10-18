@@ -1,23 +1,37 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { limit, orderBy, query, where, getDocs, Timestamp, addDoc } from 'firebase/firestore';
+import {
+  limit,
+  orderBy,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+  addDoc,
+  updateDoc,
+  doc
+} from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
+import { useSocketCtx } from '../context/socket/useSocketCtx';
 
 type Role = 'supporter' | 'supportee';
 const getRoleFieldName = (role: Role) => (role === 'supporter' ? 'supporterId' : 'supporteeId');
 
 const Selection: React.FC = () => {
+  const { socket } = useSocketCtx();
   const navigate = useNavigate();
   const [role, setRole] = useState<Role | null>(null);
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
-  if (!user) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [user, navigate, loading]);
 
   const findChatToFill = async (role: Role): Promise<string | null> => {
     const roleFieldName = getRoleFieldName(role);
@@ -46,8 +60,10 @@ const Selection: React.FC = () => {
 
   const createChat = async (userId: string, role: Role): Promise<string> => {
     const newChatValues = {
+      id: '', // because the id is empty, firestore is still going to generate an id by itself
       createdAt: Timestamp.now(),
-      [getRoleFieldName(role)]: userId
+      [getRoleFieldName(role)]: userId,
+      [role === 'supportee' ? 'supporterId' : 'supporteeId']: null
     };
 
     const chatRef = await addDoc(collections.chats, newChatValues);
@@ -55,22 +71,43 @@ const Selection: React.FC = () => {
     return chatRef.id;
   };
 
-  const joinChat = async (userId: string, role: Role) => {
-    const myChats = await findMyChats(userId, role);
-
-    if (myChats.length !== 0) {
-      // ask the socket to join the room
-    } else {
-      const chat = (await findChatToFill(role)) || (await createChat(userId, role));
-      // ask the socket to join the created room
-    }
+  const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
+    await updateDoc(doc(collections.chats, chatId), {
+      [getRoleFieldName(role)]: userId
+    });
   };
 
   useEffect(() => {
+    const joinChat = async (userId: string, role: Role) => {
+      const myChats = await findMyChats(userId, role);
+
+      if (myChats.length !== 0) {
+        // nick: ask the socket to join the room
+        // avishay: that logic is handled in a different location and isn't exclusive to the 'else' part
+        // myChats.map((chat) => {
+        //   socket.emit('join_chat', chat.id);
+        //   console.log('joined room');
+        //   navigate('/room');
+        // });
+      } else {
+        const chatId = await findChatToFill(role);
+        if (chatId) {
+          await joinChatFirebase(userId, role, chatId);
+          socket.emit('join_chat', chatId);
+          navigate('/room');
+        } else {
+          const newChatId = await createChat(userId, role);
+          // ask the socket to join the created room
+          socket.emit('create_chat', newChatId);
+          navigate('/room');
+        }
+      }
+    };
+
     if (role) {
       joinChat(user!.uid, role);
     }
-  }, [role, user]);
+  }, [role, user, socket, navigate]);
 
   return (
     <>
@@ -79,12 +116,12 @@ const Selection: React.FC = () => {
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"
           buttonText="אני צריכ/ה תמיכה"
-          onClick={() => setRole('supportee')} // This is where we start the assignment process
+          onClick={() => setRole('supportee')}
         />
         <Choice
           paragraphText="יש גם אפשרות לתמוך ולהיות שם עבור מי שצריכ/ה"
           buttonText="אני רוצה לתמוך"
-          onClick={() => setRole('supporter')} // This is where we start the assignment process
+          onClick={() => setRole('supporter')}
         />
       </div>
     </>
