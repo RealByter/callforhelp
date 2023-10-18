@@ -1,7 +1,13 @@
 import Choice from '../components/Choice';
 import Header from '../components/Header';
+import { collections } from '../firebase/connection';
+import { useCollectionOnce } from "react-firebase-hooks/firestore"
 
 const Selection: React.FC = () => {
+  const [snapshot] = useCollectionOnce(collections.chats);
+
+  console.log(snapshot?.docs.map((chat) => chat.data()))
+
   return (
     <>
       <Header>היי שם משתמש</Header>

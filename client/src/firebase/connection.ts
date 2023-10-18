@@ -1,9 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator, collection } from 'firebase/firestore';
+import { chatFirestoreConverter } from './chat';
 
 const DEV_AUTH_HOST = 'http://127.0.0.1:9099';
-const DEV_FIRESTORE_HOST = 'http://127.0.0.1';
+const DEV_FIRESTORE_HOST = '127.0.0.1';
 const DEV_FIRESTORE_PORT = 8080;
 
 const firebaseConfig = {
@@ -25,4 +26,8 @@ if (import.meta.env.DEV) {
   connectFirestoreEmulator(firestore, DEV_FIRESTORE_HOST, DEV_FIRESTORE_PORT); 
 }
 
-export { auth, firestore };
+const collections = {
+  chats: collection(firestore, "chats").withConverter(chatFirestoreConverter)
+}
+
+export { auth, collections };
