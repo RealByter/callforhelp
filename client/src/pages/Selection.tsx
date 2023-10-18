@@ -8,6 +8,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 
 type Role = "supporter" | "supportee";
+const getRoleFieldName = (role: Role) =>  role === "supporter" ? "supporterId" : "supporteeId";
+
 
 const Selection: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const Selection: React.FC = () => {
   }
 
   const findChatToFill = async (role: Role): Promise<Chat | null> => {
-    const roleFieldName = role === "supporter" ? "supporterId" : "supporteeId";
+    const roleFieldName = getRoleFieldName(role);
     const queryChatToFill = query(collections.chats, where(roleFieldName, "==", null), orderBy("createdAt"), limit(1));
     const querySnapshot = await getDocs(queryChatToFill);
 
@@ -31,7 +33,11 @@ const Selection: React.FC = () => {
   }
 
   const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-    return [];
+    const roleFieldName = getRoleFieldName(role);
+    const queryMyChats = query(collections.chats, where(roleFieldName, "==", userId));
+    const querySnapshot = await getDocs(queryMyChats);
+
+    return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
   }
 
   const createChat = async (userId: string, role: Role): Promise<Chat> => {
@@ -41,7 +47,7 @@ const Selection: React.FC = () => {
   const joinChat = async (userId: string, role: Role) => {
     const myChats = await findMyChats(userId, role);
 
-    if (myChats.length != 0) {
+    if (myChats.length !== 0) {
       // ask the socket to join the room
     } else {
       const chat = await findChatToFill(role) || await createChat(userId, role);
