@@ -70,19 +70,20 @@ module.exports = (io, socket) => {
         }
     }
 
-    const sendMessage = (chatID, message, callback) => {
+    const sendMessage = (data, extra, callback) => {
+        const { chatID, msg: message } = data
+        console.log('chatID: ', chatID);
         let messageID = getUniqueId(6);
-        
-        let messageDate = getCurrDateIsrael();
-        let messageDateISOString = messageDate.toISOString();
 
-        //TODO: save message to the Database
+        let currentDateInIsrael = getCurrDateIsrael();
+        let messageDate = currentDateInIsrael.toISOString();
 
         //send the message to the other user in the chat
-        socket.to(chatID).emit("get message", chatID, messageID, message, messageDateISOString)
+        socket.to(chatID).emit("get message", { chatID, messageID, message, messageDate })
+        // socket.to('room1').emit("get message", { chatID, messageID, message, messageDate })
 
         //call to callback with the necessary parameters
-        callback(messageID, messageDateISOString);
+        callback(messageID, messageDate);
     }
 
     const stopChat = (chatID) => {
@@ -97,19 +98,24 @@ module.exports = (io, socket) => {
     const disconnecting = () => {
         //check if the socket is in one of the queues
         //if so then remove him
-        for(let i = 0; i < supportersQueue.length; i++){
-            if(supportersQueue[i].id === socket.id){
+        for (let i = 0; i < supportersQueue.length; i++) {
+            if (supportersQueue[i].id === socket.id) {
                 supportersQueue.splice(i, 1);
                 break;
             }
         }
 
-        for(let i = 0; i < supportedQueue.length; i++){
-            if(supportedQueue[i].id === socket.id){
+        for (let i = 0; i < supportedQueue.length; i++) {
+            if (supportedQueue[i].id === socket.id) {
                 supportedQueue.splice(i, 1);
                 break;
             }
         }
+    }
+
+    const joinRoom = (data) => {
+        const { name } = data;
+        socket.join(name);
     }
 
     socket.on("search partner", searchPartner);
@@ -117,4 +123,5 @@ module.exports = (io, socket) => {
     socket.on("stop chat", stopChat);
     socket.on("block chat", blockChat);
     socket.on("disconnecting", disconnecting);
+    socket.on("join", joinRoom);
 }

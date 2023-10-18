@@ -26,12 +26,12 @@ function getCurrDateIsrael() {
 }
 
 
-let supportersQueue:Array<any> = []; //!
-let supportedQueue:Array<any> = []; //!
+let supportersQueue: Array<any> = []; //!
+let supportedQueue: Array<any> = []; //!
 
-export default (io :Server, socket:Socket) => {
+export default (io: Server, socket: Socket) => {
 
-    const searchPartner = (userType : string) => {
+    const searchPartner = (userType: string) => {
         if (userType === "supporter") {
             //check if there users to support
             if (supportedQueue.length > 0) {
@@ -73,27 +73,27 @@ export default (io :Server, socket:Socket) => {
         }
     }
 
-    const sendMessage = (chatID:string, message:string, callback :Function) => {
+    const sendMessage = (data: any, extra: undefined, callback: Function) => {
+        const { chatID, msg: message } = data
         let messageID = getUniqueId(6);
 
-        let messageDate = getCurrDateIsrael();
-        let messageDateISOString = messageDate.toISOString();
-
-        //TODO: save message to the Database
+        let currentDateInIsrael = getCurrDateIsrael();
+        let messageDate = currentDateInIsrael.toISOString();
 
         //send the message to the other user in the chat
-        socket.to(chatID).emit("get message", chatID, messageID, message, messageDateISOString)
+        socket.to(chatID).emit("get message", { chatID, messageID, message, messageDate })
+        // socket.to('room1').emit("get message", { chatID, messageID, message, messageDate })
 
         //call to callback with the necessary parameters
-        callback(messageID, messageDateISOString);
+        callback(messageID, messageDate);
     }
 
-    const stopChat = (chatID:string) => {
+    const stopChat = (chatID: string) => {
         //tell the other user in the chat to close the chat
         socket.to(chatID).emit("close chat", chatID);
     }
 
-    const blockChat = (chatID:string) => {
+    const blockChat = (chatID: string) => {
         // TODO: implement function
     }
 
@@ -115,9 +115,15 @@ export default (io :Server, socket:Socket) => {
         }
     }
 
+    const joinRoom = (data: any) => {
+        const { name } = data;
+        socket.join(name);
+    }
+
     socket.on("search partner", searchPartner);
     socket.on("send message", sendMessage);
     socket.on("stop chat", stopChat);
     socket.on("block chat", blockChat);
     socket.on("disconnecting", disconnecting);
+    socket.on("join", joinRoom);
 }
