@@ -1,25 +1,21 @@
 import { FirestoreDataConverter } from 'firebase/firestore';
+import { z } from "zod";
 
-interface User {
-  id?: string;
-  name: string;
-  role?: 'supporter' | 'supportee';
-}
+const userSchema = z.object({
+  id: z.string().optional(),
+  name: z.string()
+})
+
+type User = z.infer<typeof userSchema>;
 
 const userFirestoreConverter: FirestoreDataConverter<User> = {
   toFirestore(user) {
-    const { id, role, name, ...rest } = user;
-
-    if (id) {
-      return { id, role, name, ...rest };
-    } else {
-      return { role, name, ...rest };
-    }
+    return user;
   },
   fromFirestore(snapshot, options) {
-    const { role, name } = snapshot.data(options);
+    const rawData = {id: snapshot.id, ...snapshot.data(options)};
 
-    return { id: snapshot.id, role, name };
+    return userSchema.parse(rawData);
   }
 };
 

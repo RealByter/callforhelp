@@ -3,8 +3,8 @@ import { z } from "zod"
 
 const chatSchema = z.object({
   id: z.string(),
-  supporterId: z.string().optional(),
-  supporteeId: z.string().optional(),
+  supporterId: z.string().nullable(),
+  supporteeId: z.string().nullable(),
   createdAt: z.instanceof(Timestamp),
 });
 

@@ -33,57 +33,56 @@ const Selection: React.FC = () => {
     }
   }, [user, navigate, loading]);
 
-  const findChatToFill = async (role: Role): Promise<Chat | null> => {
-    const roleFieldName = getRoleFieldName(role);
-    const queryChatToFill = query(
-      collections.chats,
-      where(roleFieldName, '==', null),
-      orderBy('createdAt'),
-      limit(1)
-    );
-    const querySnapshot = await getDocs(queryChatToFill);
-
-    if (querySnapshot.size === 0) {
-      return null;
-    } else {
-      return querySnapshot.docs[0].data();
-    }
-  };
-
-  const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-    const roleFieldName = getRoleFieldName(role);
-    const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
-    const querySnapshot = await getDocs(queryMyChats);
-
-    return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-  };
-
-  const createChat = async (userId: string, role: Role): Promise<Chat> => {
-    const newChatValues = {
-      id: '', // because the id is empty, firestore is still going to generate an id by itself
-      createdAt: Timestamp.now(),
-      [getRoleFieldName(role)]: userId,
-      [role === 'supportee' ? 'supporterId' : 'supporteeId']: null
-    };
-
-    const chatRef = await addDoc(collections.chats, newChatValues);
-
-    return {...newChatValues, id: chatRef.id};
-  };
-
-  const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
-    await updateDoc(doc(collections.chats, chatId), {
-      [getRoleFieldName(role)]: userId
-    });
-  };
-
-  const joinChatRooms = (chats: Chat | Chat[], username: string) => {
-    const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
-    socket.emit('join-chat', chatIds, username);
-    navigate('/room');
-  }
-
   useEffect(() => {
+    const findChatToFill = async (role: Role): Promise<Chat | null> => {
+      const roleFieldName = getRoleFieldName(role);
+      const queryChatToFill = query(
+        collections.chats,
+        where(roleFieldName, '==', null),
+        orderBy('createdAt'),
+        limit(1)
+      );
+      const querySnapshot = await getDocs(queryChatToFill);
+  
+      if (querySnapshot.size === 0) {
+        return null;
+      } else {
+        return querySnapshot.docs[0].data();
+      }
+    };
+  
+    const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
+      const roleFieldName = getRoleFieldName(role);
+      const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
+      const querySnapshot = await getDocs(queryMyChats);
+  
+      return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
+    };
+  
+    const createChat = async (userId: string, role: Role): Promise<Chat> => {
+      const newChatValues = {
+        createdAt: Timestamp.now(),
+        [getRoleFieldName(role)]: userId,
+        [role === 'supportee' ? 'supporterId' : 'supporteeId']: null
+      };
+  
+      const chatRef = await addDoc(collections.chats, newChatValues);
+  
+      return {...newChatValues, id: chatRef.id} as Chat;
+    };
+  
+    const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
+      await updateDoc(doc(collections.chats, chatId), {
+        [getRoleFieldName(role)]: userId
+      });
+    };
+  
+    const joinChatRooms = (chats: Chat | Chat[], username: string) => {
+      const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
+      socket.emit('join-chat', chatIds, username);
+      navigate('/room');
+    }
+
     const joinChat = async (userId: string, role: Role) => {
       const myChats = await findMyChats(userId, role);
 
@@ -91,6 +90,7 @@ const Selection: React.FC = () => {
         joinChatRooms(myChats, user!.displayName!);
       } else {
         const chatToFill = await findChatToFill(role);
+        console.log(chatToFill)
 
         if (chatToFill) {
           await joinChatFirebase(userId, role, chatToFill.id);
