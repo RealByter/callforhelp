@@ -7,7 +7,7 @@ type ChatItemProps = {
 
 const ChatItem: React.FC<ChatItemProps> = () => {
   return (
-    <div className='chat-item'>
+    <div className='chat-item'>        
         <div className='content'>
             <span className='name' >שם מלא</span>
             <span className='last-message'>תגובה אחרונה <span>00:00</span>

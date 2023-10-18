@@ -10,7 +10,7 @@
   & > .content {
     position: fixed;
     width: 100vw;  
-    height: 80vh;
+    height: 82vh;
     overflow-x: hidden;
     overflow-y: scroll;
   }
@@ -27,8 +27,7 @@
   }
 
   .chat-item {
-    background-color: white;
-    // opacity: 70%;
+    background: rgba($color: white, $alpha: 0.8);
     padding: 1rem;
     margin: 0 9vw 1rem 9vw;
     border-radius: 10px;
@@ -40,7 +39,6 @@
 
     .content
     {
-      // opacity: 100%;
       display: flex;
       flex-direction: column;
       line-height: 1.1rem;
@@ -69,18 +67,23 @@
     }
   }
 
+  .chat-item:hover
+  {
+    border: $chat-item-hover-border;
+  }
+
   .ended-chats .content .name{
     color: $chat-su-title-color;
   }
 
   .footer
   {
+    box-shadow: 0px -20px 35px $dark-purple;
     background-color: $dark-purple;
-    // opacity: 90%;
     position: fixed;
     bottom: 0;
     width: 100vw;
-    height: 20vh;
+    height: 18vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -101,16 +104,7 @@
       font-weight: bold;
       color: $default-text-color;
       text-decoration: underline;
+      margin-bottom: 1rem;
     }
   }
-}
-
-
-@media screen and (min-width: 380px) {
-}
-
-@media screen and (min-width: 480px) {
-}
-
-@media screen and (min-width: 700px) {
 }
