@@ -9,13 +9,7 @@ interface Chat {
 
 const chatFirestoreConverter: FirestoreDataConverter<Chat> = {
   toFirestore(chat) {
-    const { id, supporteeId, supporterId, createdAt, ...rest } = chat;
-
-    if (id) {
-      return { id, supporteeId, supporterId, createdAt, ...rest };
-    } else {
-      return { supporteeId, supporterId, createdAt, ...rest };
-    }
+    return chat;
   },
   fromFirestore(snapshot, options) {
     const { supporteeId, supporterId, createdAt } = snapshot.data(options);

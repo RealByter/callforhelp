@@ -77,29 +77,28 @@ const Selection: React.FC = () => {
     });
   };
 
+  const joinChatRooms = (chatIds: string[], username: string) => {
+    socket.emit('join-chat', chatIds, username);
+    navigate('/room');
+  }
+
   useEffect(() => {
     const joinChat = async (userId: string, role: Role) => {
       const myChats = await findMyChats(userId, role);
 
       if (myChats.length !== 0) {
-        // nick: ask the socket to join the room
-        // avishay: that logic is handled in a different location and isn't exclusive to the 'else' part
-        // myChats.map((chat) => {
-        //   socket.emit('join_chat', chat.id);
-        //   console.log('joined room');
-        //   navigate('/room');
-        // });
+        const chatIds = myChats.map((chat) => chat.id);
+        joinChatRooms(chatIds, user!.displayName!);
       } else {
         const chatId = await findChatToFill(role);
+
         if (chatId) {
           await joinChatFirebase(userId, role, chatId);
-          socket.emit('join_chat', { chatId, username: user!.displayName });
-          navigate('/room');
+          joinChatRooms([chatId], user!.displayName!);
+
         } else {
           const newChatId = await createChat(userId, role);
-          // ask the socket to join the created room
-          socket.emit('create_chat', newChatId);
-          navigate('/room');
+          joinChatRooms([newChatId], user!.displayName!);
         }
       }
     };

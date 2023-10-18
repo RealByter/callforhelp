@@ -1,17 +1,12 @@
 import { Server, Socket } from 'socket.io';
 
 const registerAssignmentHandlers = (io: Server, socket: Socket) => {
-  const joinChat = ({ chatId, username }: { chatId: string; username: string }) => {
-    socket.join(chatId);
-    socket.broadcast.to(chatId).emit('user_connected', username);
+  const joinChat = (chatIds: string[], username: string) => {
+    socket.join(chatIds);
+    socket.broadcast.to(chatIds).emit('user-joined', username);
   };
 
-  const createChat = (chatId: string) => {
-    socket.join(chatId);
-  };
-
-  socket.on('join_chat', joinChat);
-  socket.on('create_chat', createChat);
+  socket.on('join-chat', joinChat);
 };
 
 export default registerAssignmentHandlers;

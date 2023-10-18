@@ -5,12 +5,12 @@ const Room: React.FC = () => {
   const { socket } = useSocketCtx();
 
   useEffect(() => {
-    socket.on('user_connected', (username: string) => {
+    socket.on('user-joined', (username: string) => {
       console.log('user joined: ', username);
     });
 
     return () => {
-      socket.off('user_connected');
+      socket.off('user-joined');
     };
   }, [socket]);
 
