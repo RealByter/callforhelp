@@ -1,10 +1,110 @@
 @import './variables.scss';
 
+//todo: fix variables, colors, icons, convensions, responsiveness
+
 .supporteds-list-page {
   height: 100vh;
   width: 100vw;
-  position: relative;
+  position: fixed;
+
+  & > .content {
+    position: fixed;
+    width: 100vw;  
+    height: 80vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  h1 {
+    margin: 3rem 2rem 2rem 0;
+    font-size: 2rem;
+    color: $default-text-color;
+  }
+
+  h2 {
+    margin: 1rem 2rem 0 0;
+    color: $ended-chats-color;
+  }
+
+  .chat-item {
+    background-color: white;
+    // opacity: 70%;
+    padding: 1rem;
+    margin: 0 9vw 1rem 9vw;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0;
+
+    .content
+    {
+      // opacity: 100%;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1rem;
+      color: $sub-text-color;
+
+      .name
+      {
+        color: $default-text-color;
+        font-weight: bold;
+      }
+    }
+
+    .rest {
+      display: flex;
+      align-items: center;
+    }
+
+    .unread-messages
+    {
+      background-color: #9360ff;
+      color: white;
+      font-weight: bold;
+      padding: 0.25rem 0.75rem 0.25rem 0.75rem;
+      border-radius: 50%;
+      margin-left: 0.75rem;
+    }
+  }
+
+  .ended-chats .content .name{
+    color: $chat-su-title-color;
+  }
+
+  .footer
+  {
+    background-color: $dark-purple;
+    // opacity: 90%;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-evenly;
+
+    .locate-supported
+    {
+      background-color: white;
+      color: $default-text-color;
+      width: 80vw;
+      padding: 0.75rem;
+      text-align: center;
+      border-radius: 30px;
+    }
+
+    .switch-role-link
+    {
+      font-weight: bold;
+      color: $default-text-color;
+      text-decoration: underline;
+    }
+  }
 }
+
 
 @media screen and (min-width: 380px) {
 }

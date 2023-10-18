@@ -5,7 +5,7 @@ type SwitchRoleLinkProps = {
     
     const SwitchRoleLink: React.FC<SwitchRoleLinkProps> = () => {
       return (
-        <div>אני צריך תומך</div>
+        <div className='switch-role-link'>אני צריך תומך</div>
       );
     };
     
