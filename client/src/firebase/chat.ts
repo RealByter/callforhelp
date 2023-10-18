@@ -1,11 +1,14 @@
 import { FirestoreDataConverter, Timestamp } from 'firebase/firestore';
+import { z } from "zod"
 
-interface Chat {
-  id: string;
-  supporterId?: string;
-  supporteeId?: string;
-  createdAt: Timestamp;
-}
+const chatSchema = z.object({
+  id: z.string(),
+  supporterId: z.string().optional(),
+  supporteeId: z.string().optional(),
+  createdAt: z.instanceof(Timestamp),
+});
+
+type Chat = z.infer<typeof chatSchema>;
 
 const chatFirestoreConverter: FirestoreDataConverter<Chat> = {
   toFirestore(chat) {
