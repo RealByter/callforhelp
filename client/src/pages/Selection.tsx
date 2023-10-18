@@ -1,14 +1,42 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
+import { Timestamp } from 'firebase/firestore';
+import { Chat } from '../firebase/chat';
+
+type Role = "supporter" | "supportee";
+
+
 
 const Selection: React.FC = () => {
-  const [role, setRole] = useState<"supporter" | "supportee" | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
+
+  const findChatToFill = async (role: Role): Promise<Chat | null> => {
+    return null;
+  }
+
+  const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
+    return [];
+  }
+
+  const createChat = async (userId: string, role: Role): Promise<Chat> => {
+    return {id: "", createdAt: Timestamp.now()}
+  }
+
+  const joinChat = async (userId: string, role: Role) => {
+    const myChats = await findMyChats(userId, role);
+
+    if (myChats.length != 0) {
+      // ask the socket to join the room
+    } else {
+      const chat = await findChatToFill(role) || await createChat(userId, role);
+      // ask the socket to join the created room
+    }
+  }
 
   useEffect(() => {
     if (role) {
-      // attempt to join chat
-      console.log(role);
+      joinChat("adadwa", role);
     }
   }, [role]);
 
