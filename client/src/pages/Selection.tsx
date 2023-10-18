@@ -2,13 +2,21 @@ import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
 import { limit, orderBy, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { collections } from '../firebase/connection';
+import { auth, collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
 
 type Role = "supporter" | "supportee";
 
 const Selection: React.FC = () => {
+  const navigate = useNavigate();
   const [role, setRole] = useState<Role | null>(null);
+  const [user] = useAuthState(auth);
+
+  if (!user) {
+    navigate("/");
+  }
 
   const findChatToFill = async (role: Role): Promise<Chat | null> => {
     const roleFieldName = role === "supporter" ? "supporterId" : "supporteeId";
@@ -43,9 +51,9 @@ const Selection: React.FC = () => {
 
   useEffect(() => {
     if (role) {
-      joinChat("adadwa", role);
+      joinChat(user!.uid, role);
     }
-  }, [role]);
+  }, [role, user]);
 
   return (
     <>
