@@ -1,28 +1,41 @@
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/connection';
+import { useEffect, useState } from 'react';
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+} from 'react-firebase-hooks/auth';
+import { auth, collections } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
-import classes from './Sign.module.scss';
 import Form, { FormOptions } from '../components/Form';
+import Header from '../components/Header';
+import { doc, setDoc } from '@firebase/firestore';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const [user] = useAuthState(auth);
+  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
 
-  const handleFormSubmit = ({ email, password }: FormOptions) => {
-    createUserWithEmailAndPassword(email as string, password as string);
+  const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
+    setStage('updating');
+    const user = await createUserWithEmailAndPassword(email as string, password as string);
+    if (user) {
+      await setDoc(doc(collections.users, user.user.uid), { name: name! });
+      setStage('end');
+    }
   };
 
-  if (user) {
-    navigate('/');
-  }
+  useEffect(() => {
+    // Only redirect if the user existed before creating the user and after creating the user and assigning him the username
+    if (user && stage !== 'updating') {
+      navigate('/');
+    }
+  }, [user, navigate, stage]);
 
   return (
-    <div className={classes.outerContainer}>
-      <h1 className={classes.header}>הרשמה עם מייל</h1>
-      <div className={classes.formContainer}>
-        <Form name password email onSubmit={handleFormSubmit} submitLabel="הרשמה" />
-      </div>
-    </div>
+    <>
+      <Header>הרשמה עם אימייל</Header>
+      <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
+    </>
   );
 };
 
