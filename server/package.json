@@ -7,6 +7,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "devDependencies": {
+    "@types/uuid": "^9.0.5",
     "nodemon": "^3.0.1",
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
