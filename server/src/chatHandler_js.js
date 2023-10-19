@@ -123,5 +123,5 @@ module.exports = (io, socket) => {
     socket.on("stop chat", stopChat);
     socket.on("block chat", blockChat);
     socket.on("disconnecting", disconnecting);
-    socket.on("join", joinRoom);
+    socket.on("join-chat", joinRoom);
 }

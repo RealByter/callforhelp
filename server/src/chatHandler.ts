@@ -30,7 +30,8 @@ let supportersQueue: Array<any> = []; //!
 let supportedQueue: Array<any> = []; //!
 
 export default (io: Server, socket: Socket) => {
-
+    
+    // !I don't think we need that function
     const searchPartner = (userType: string) => {
         if (userType === "supporter") {
             //check if there users to support
@@ -81,22 +82,24 @@ export default (io: Server, socket: Socket) => {
         let messageDate = currentDateInIsrael.toISOString();
 
         //send the message to the other user in the chat
-        socket.to(chatID).emit("get message", { chatID, messageID, message, messageDate })
-        // socket.to('room1').emit("get message", { chatID, messageID, message, messageDate })
+        socket.broadcast.to(chatID).emit("get message", { chatID, messageID, message, messageDate })
 
         //call to callback with the necessary parameters
         callback(messageID, messageDate);
     }
 
-    const stopChat = (chatID: string) => {
+    const stopChat = (data: any) => {
+        const { chatID } = data;
         //tell the other user in the chat to close the chat
-        socket.to(chatID).emit("close chat", chatID);
+        socket.broadcast.to(chatID).emit("close chat", chatID);
     }
 
-    const blockChat = (chatID: string) => {
+    const blockChat = (data: any) => {
+        const { chatID } = data;
         // TODO: implement function
     }
 
+    // !I don't think we need that function
     const disconnecting = () => {
         //check if the socket is in one of the queues
         //if so then remove him
@@ -125,5 +128,5 @@ export default (io: Server, socket: Socket) => {
     socket.on("stop chat", stopChat);
     socket.on("block chat", blockChat);
     socket.on("disconnecting", disconnecting);
-    socket.on("join", joinRoom);
+    socket.on("join-chat", joinRoom);
 }

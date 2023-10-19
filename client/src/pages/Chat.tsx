@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Message, IMessageProps } from '../components/Message';
 import { MOCK_MESSAGES } from '../mock-data/chat-mock-data';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
 
@@ -35,12 +35,13 @@ interface IMsg extends IMessageProps {
 
 export const Chat = () => {
   const [msg, setMsg] = useState<IMsg[]>(MOCK_MESSAGES);
-  const [didChatEnded, setDidChatEnded] = useState(false);
+  const [didChatEnd, setDidChatEnd] = useState(false);
   const [isSupporter, setIsSupporter] = useState(true);
   const scrollingRef = useRef(null);
   const { socket } = useSocketCtx();
   const navigate = useNavigate();
   const { chatId: thisChatId } = useParams();
+  const location = useLocation();//currently using params but we will use location
   const msgIsEmpty = (msg.length === 0);
 
   useEffect(() => {
@@ -63,7 +64,7 @@ export const Chat = () => {
 
   // join the socket room of the current room
   const joinChatRoom = () => {
-    socket.emit("join", { name: thisChatId });
+    socket.emit("join-chat", { name: thisChatId });
   }
 
   // send msg using socket
@@ -85,7 +86,6 @@ export const Chat = () => {
 
   // add new msg to msg list
   const addToMsgList = (message: string, isSender: boolean, messageID: string, date: string) => {
-    //see if maybe it is possible to get the msg id from the server
     setMsg((prev) => ([...prev, {
       id: messageID || (prev.length + 1),
       content: message,
@@ -96,8 +96,8 @@ export const Chat = () => {
 
   // finish the chat (permanently) using socket
   const closeChat = () => {
-    setDidChatEnded(true);
-    //some ending chat architecture
+    setDidChatEnd(true);
+    //some ending chat architecture - maybe alert, maybe redirect
   }
 
   // block the chat
@@ -118,7 +118,7 @@ export const Chat = () => {
 
   // finish current chat
   const endChat = () => {
-    socket.emit("close chat", { chatID: thisChatId });
+    socket.emit("stop chat", { chatID: thisChatId });
     //alert?
     goBackToChatsPage();
   }
@@ -126,7 +126,7 @@ export const Chat = () => {
   return (
     <div className="chat-page">
       <ChatTopBar
-        chatEnded={didChatEnded}
+        isChatEnded={didChatEnd}
         isSupporter={isSupporter}
         endChat={endChat}
         changeChatRoom={changeChatRoom}

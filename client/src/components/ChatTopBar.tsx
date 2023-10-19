@@ -35,7 +35,7 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
               <button onClick={() => changeChatRoom}>
                 {isSupporter ? 'איתור נתמך נוסף' : 'החלף תומך'}
               </button>
-              <button onClick={() => endChat}>
+              <button onClick={() => endChat()}>
                 סיום שיחה
               </button>
             </div>
