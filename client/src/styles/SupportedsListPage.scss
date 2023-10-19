@@ -7,9 +7,9 @@
   width: 100vw;
   position: fixed;
 
-  & > .content {
+  &>.content {
     position: fixed;
-    width: 100vw;  
+    width: 100vw;
     height: 82vh;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -42,15 +42,13 @@
     align-items: center;
     column-gap: 0;
 
-    .content
-    {
+    .content {
       display: flex;
       flex-direction: column;
       line-height: 1.1rem;
       color: $sub-text-color;
 
-      .name
-      {
+      .name {
         color: $default-text-color;
         font-weight: bold;
       }
@@ -61,28 +59,33 @@
       align-items: center;
     }
 
-    .unread-messages
-    {
-      background-color: #9360ff;
+    .notification {
+      display: flex;
+    }
+
+    .notification {
+      position: relative;
+    }
+
+    .unread-messages {
       color: white;
-      font-weight: bold;
-      padding: 0.25rem 0.75rem 0.25rem 0.75rem;
-      border-radius: 50%;
-      margin-left: 0.75rem;
+      font-weight: bolder;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
-  .chat-item:hover
-  {
+  .chat-item:hover {
     border: $chat-item-hover-border;
   }
 
-  .ended-chats .content .name{
+  .ended-chats .content .name {
     color: $chat-su-title-color;
   }
 
-  .footer
-  {
+  .footer {
     box-shadow: 0px -20px 35px $dark-purple;
     background-color: $dark-purple;
     position: fixed;
@@ -92,10 +95,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content:space-evenly;
+    justify-content: space-evenly;
 
-    .locate-supported
-    {
+    .locate-supported {
       background-color: white;
       color: $default-text-color;
       width: 80vw;
@@ -104,8 +106,7 @@
       border-radius: 30px;
     }
 
-    .switch-role-link
-    {
+    .switch-role-link {
       font-weight: bold;
       color: $default-text-color;
       text-decoration: underline;

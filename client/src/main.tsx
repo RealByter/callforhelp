@@ -36,13 +36,17 @@ const router = createBrowserRouter([
   {
     path: '/supportedsList',
     element: <SupportedsListPage />
+  },
+  {
+    path: '/FindSupporter', //there is a to link here from SwitchRoleLink component
+    element: <div>temp find supporter</div>
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <SocketProvider>
       <RouterProvider router={router} />
     </SocketProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

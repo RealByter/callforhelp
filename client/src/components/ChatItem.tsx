@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import OrBackground from '../assets/OrBackground.svg';
 
 export interface ChatItemProps {
     name: string,
@@ -10,7 +11,7 @@ export interface ChatItemProps {
 };
 
 export const ChatItem: React.FC<ChatItemProps> = ({
-    name, lastMessageTiming, unreadMessages, isEnded, chatId}: ChatItemProps) => {
+    name, lastMessageTiming, unreadMessages, isEnded, chatId }: ChatItemProps) => {
 
     const OnItemClick = (chatId: number) => {
         // go into the right chat
@@ -18,17 +19,21 @@ export const ChatItem: React.FC<ChatItemProps> = ({
     }
 
     return (
-    <div className='chat-item' onClick={() => OnItemClick(chatId)}>        
-        <div className='content'>
-            <span className='name'>{name}</span>
-            <span className='last-message'>תגובה אחרונה <span>{lastMessageTiming}</span>
-            </span>
-        </div>
+        <div className='chat-item' onClick={() => OnItemClick(chatId)}>
+            <div className='content'>
+                <span className='name'>{name}</span>
+                <span className='last-message'>תגובה אחרונה <span>{lastMessageTiming}</span>
+                </span>
+            </div>
 
-        <div className='rest'>
-            {unreadMessages && !isEnded ? <span className='unread-messages'>{unreadMessages}</span> : null}
-            <KeyboardArrowLeftIcon />
+            <div className='rest'>
+                {unreadMessages && !isEnded ?
+                    <div className='notification'>
+                        <img src={OrBackground} alt="notification-icon" />
+                        <span className='unread-messages'>{unreadMessages}</span>
+                    </div> : null}
+                <KeyboardArrowLeftIcon />
+            </div>
         </div>
-    </div>
-  );
+    );
 };
