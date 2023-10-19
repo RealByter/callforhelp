@@ -2,12 +2,13 @@ import React from 'react';
 
 export interface ParagraphProps {
     children: React.ReactNode;
-    isBold: boolean
+    isBold: boolean;
+    dir: 'ltr' | 'rtl' | 'auto'
 }
 
-const Paragraph: FC<ParagraphProps> = ({ children, isBold }: ParagraphProps) => {
+const Paragraph: React.FC<ParagraphProps> = ({ children, isBold, dir='ltr' }: ParagraphProps) => {
     return (
-        <p className="generic-paragraph" style={{ fontWeight: isBold ? "bold" : "initial" }}>
+        <p className="generic-paragraph" dir={dir} style={{ fontWeight: isBold ? "bold" : "initial" }}>
             {children}
         </p>
     )

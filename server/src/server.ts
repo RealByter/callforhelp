@@ -48,7 +48,6 @@ export class CallForHelpServer {
     console.log(`Listening for connections on ${this.port}`);
 
     this.io.on('connection', (socket: Socket) => {
-      socket.join('room1');
       console.log(`New connection from ${socket.handshake.address}`);
       this.onConnectCallback(this.io, socket);
     });

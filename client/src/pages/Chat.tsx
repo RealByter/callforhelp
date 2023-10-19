@@ -9,6 +9,7 @@ import { ChatBox } from '../components/ChatBox';
 /*
   TODO - also - take care of the disconnect events
   TODO - also - take care of cases in which the chat id doesnt exist
+  TODO - leave socket room on exiting
 */
 
 interface IGetMsgData {

@@ -21,6 +21,7 @@
   `firebase login`
 
 - **Create a new project**: create a new firebase project using the [firebase console](https://console.firebase.google.com/)
+- **Environment Variables**: create a `.env` file within the client folder with the next variable- `VITE_FIREBASE_PROJECT_ID=your-project-id`
 - **Open the firebase folder**:
 
   `cd ./client/src/firebase`
