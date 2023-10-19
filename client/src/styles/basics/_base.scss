@@ -4,4 +4,12 @@
   width: 100vw;
   font-family: 'Assistant', sans-serif;
   direction: rtl;
+  font-size: 16px;
+
+  * {
+    box-sizing: border-box;
+  }
+
 }
+
+.firebase-emulator-warning { display: none; } // removes the annoying warning
