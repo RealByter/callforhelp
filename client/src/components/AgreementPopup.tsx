@@ -9,6 +9,7 @@ upon implementation - insert correct texts and implement
 the handleAgree function
 */
 
+import React from 'react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
