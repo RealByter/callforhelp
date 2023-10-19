@@ -1,11 +1,6 @@
-type SwitchRoleLinkProps = {
-    //   children: React.ReactNode;
-    //   onClick: React.MouseEventHandler<HTMLButtonElement>;
-    };
-    
-    const SwitchRoleLink: React.FC<SwitchRoleLinkProps> = () => {
+      const SwitchRoleLink = () => {
       return (
-        <div className='switch-role-link'>אני צריך תומך</div>
+        <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a>
       );
     };
     

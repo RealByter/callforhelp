@@ -26,6 +26,11 @@
     color: $ended-chats-color;
   }
 
+  .loading {
+    color: $default-text-color;
+    margin-right: 2rem;
+  }
+
   .chat-item {
     background: rgba($color: white, $alpha: 0.8);
     padding: 1rem;
