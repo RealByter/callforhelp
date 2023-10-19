@@ -13,7 +13,10 @@ export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg, blockSupporter }: ICha
   const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //add validation of input
-    sendChatMsg?.(currentMsg);
+    if (currentMsg !== '') {
+      sendChatMsg(currentMsg);
+      setCurrentMsg("");
+    }
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {

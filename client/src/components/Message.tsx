@@ -1,14 +1,28 @@
 import React from 'react';
 
-export interface MessageProps {
-  isSender: boolean;
-  content: string;
+export interface IMessageProps {
+  isSender: boolean,
+  content: string,
+  messageDate: string
 }
 
-export const Message: React.FC<MessageProps> = ({ isSender, content }: MessageProps) => {
+export const Message: React.FC<IMessageProps> = ({ isSender, content, messageDate }: IMessageProps) => {
+
+  const formatDate = (date: string) => {
+    const newDate = new Date(date);
+    const hour = newDate.getHours();
+    const minute = newDate.getMinutes();
+    return (`${hour}:${minute >= 10 ? minute : "0" + minute}`);
+  }
+
   return (
     <div className={`massage-body ${isSender ? 'sender' : ''}`}>
-      {content || ''}
+      <div className="content">
+        {content || ''}
+      </div>
+      <div className="date">
+        {formatDate(messageDate)}
+      </div>
     </div>
   );
 };
