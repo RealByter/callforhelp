@@ -21,7 +21,8 @@ import { useSocketCtx } from '../context/socket/useSocketCtx';
 
 type Role = 'supporter' | 'supportee';
 const getRoleFieldName = (role: Role) => (role === 'supporter' ? 'supporterId' : 'supporteeId');
-const getOppositeRoleFieldName = (role: Role) => role === "supporter" ? "supporteeId" : "supporterId";
+const getOppositeRoleFieldName = (role: Role) =>
+  role === 'supporter' ? 'supporteeId' : 'supporterId';
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
@@ -45,19 +46,19 @@ const Selection: React.FC = () => {
         limit(1)
       );
       const querySnapshot = await getDocs(queryChatToFill);
-  
+
       if (querySnapshot.size === 0) {
         return null;
       } else {
         return querySnapshot.docs[0].data();
       }
     };
-  
+
     const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
       const roleFieldName = getRoleFieldName(role);
       const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
       const querySnapshot = await getDocs(queryMyChats);
-  
+
       return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
     };
 
@@ -69,44 +70,51 @@ const Selection: React.FC = () => {
       } else {
         return userSnapshot.data().name;
       }
-    }
-  
+    };
+
     const createChat = async (userId: string, role: Role): Promise<Chat> => {
       const newChatValues = {
         createdAt: Timestamp.now(),
         [getRoleFieldName(role)]: userId,
         [getOppositeRoleFieldName(role)]: null
       };
-  
+
       const chatRef = await addDoc(collections.chats, newChatValues);
-  
-      return {...newChatValues, id: chatRef.id} as Chat;
+
+      return { ...newChatValues, id: chatRef.id } as Chat;
     };
-  
+
     const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
       await updateDoc(doc(collections.chats, chatId), {
         [getRoleFieldName(role)]: userId
       });
     };
-  
-    const joinChatRooms = (chats: Chat | Chat[], username: string, companionName?: string | String[]) => {
+
+    const joinChatRooms = (
+      chats: Chat | Chat[],
+      username: string,
+      companionName?: string | string[]
+    ) => {
       const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
       socket.emit('join-chat', chatIds, username);
-      navigate('/room', {state: { companionName }});
-    }
+      navigate('/room', { state: { companionName } });
+    };
 
     const joinChat = async (userId: string, role: Role) => {
       const [myName, myChats] = await Promise.all([getNameById(userId), findMyChats(userId, role)]);
 
       if (myChats.length !== 0) {
-        const myCompanions = await Promise.all(myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string)));
+        const myCompanions = await Promise.all(
+          myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string))
+        );
         joinChatRooms(myChats, myName, myCompanions);
       } else {
         const chatToFill = await findChatToFill(role);
 
         if (chatToFill) {
           await joinChatFirebase(userId, role, chatToFill.id);
-          joinChatRooms(chatToFill, myName);
+          const companion = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
+          joinChatRooms(chatToFill, myName, companion);
         } else {
           const chat = await createChat(userId, role);
           joinChatRooms(chat, myName);
