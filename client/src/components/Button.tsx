@@ -2,14 +2,24 @@ import * as React from 'react';
 import MuiButton from '@mui/material/Button';
 
 export interface ButtonProps {
-  type?: 'button' | 'reset' | 'submit';
   children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  type?: 'button' | 'reset' | 'submit';
 }
 
-const Button: React.FC<ButtonProps> = ({ children, type = 'button', className }: ButtonProps) => {
+const Button: React.FC<ButtonProps> = ({
+  children,
+  type = 'button',
+  className,
+  onClick
+}: ButtonProps) => {
   return (
-    <MuiButton type={type} variant="text" className={`generic-button ${className}`}>
+    <MuiButton
+      type={type}
+      variant="text"
+      onClick={onClick}
+      className={`generic-button ${className}`}>
       {children}
     </MuiButton>
   );

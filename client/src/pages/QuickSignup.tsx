@@ -6,16 +6,23 @@ import MailLogo from '../assets/Mail.svg';
 import OrBackground from '../assets/OrBackground.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/connection';
+import { auth, collections } from '../firebase/connection';
+import { User } from '@firebase/auth';
+import { doc, setDoc } from '@firebase/firestore';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
+  const createUserDocument = async (user: User) => {
+    await setDoc(doc(collections.users, user.uid), { name: user.displayName as string });
+  };
+
   const signInWithGoogleHandler = async () => {
     const user = await signInWithGoogle();
     if (user) {
+      await createUserDocument(user.user);
       navigate('/');
     }
   };
@@ -23,6 +30,7 @@ const QuickSignup: React.FC = () => {
   const signInWithFacebookHandler = async () => {
     const user = await signInWithFacebook();
     if (user) {
+      await createUserDocument(user.user);
       navigate('/');
     }
   };

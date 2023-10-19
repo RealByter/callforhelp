@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import {
   useAuthState,
   useCreateUserWithEmailAndPassword,
-  useUpdateProfile
 } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/connection';
+import { auth, collections } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
+import { doc, setDoc } from '@firebase/firestore';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
-  const [updateProfile] = useUpdateProfile(auth);
   const [user] = useAuthState(auth);
   const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
 
@@ -20,10 +19,8 @@ const SignUpPage = () => {
     setStage('updating');
     const user = await createUserWithEmailAndPassword(email as string, password as string);
     if (user) {
-      const success = await updateProfile({ displayName: name });
-      if (success) {
-        setStage('end');
-      }
+      await setDoc(doc(collections.users, user.user.uid), { name: name! });
+      setStage('end');
     }
   };
 
