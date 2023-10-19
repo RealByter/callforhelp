@@ -61,7 +61,7 @@ const Selection: React.FC = () => {
       return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
     };
 
-    const getCompanionName = async (companionId: string): Promise<string> => {
+    const getNameById = async (companionId: string): Promise<string> => {
       const userSnapshot = await getDoc(doc(collections.users, companionId));
 
       if (!userSnapshot.exists()) {
@@ -96,10 +96,10 @@ const Selection: React.FC = () => {
     }
 
     const joinChat = async (userId: string, role: Role) => {
-      const [myName, myChats] = await Promise.all([getCompanionName(userId), findMyChats(userId, role)]);
+      const [myName, myChats] = await Promise.all([getNameById(userId), findMyChats(userId, role)]);
 
       if (myChats.length !== 0) {
-        const myCompanions = await Promise.all(myChats.map((chat) => getCompanionName(chat[getOppositeRoleFieldName(role)] as string)));
+        const myCompanions = await Promise.all(myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string)));
         joinChatRooms(myChats, myName, myCompanions);
       } else {
         const chatToFill = await findChatToFill(role);
