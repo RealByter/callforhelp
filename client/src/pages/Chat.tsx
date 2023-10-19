@@ -15,16 +15,12 @@ import { ChatBox } from '../components/ChatBox';
 interface IGetMsgData {
   chatID: string,
   message: string,
-  messageID: string,
   messageDate: string
 }
 
-interface IMsg extends IMessageProps {
-  id: number | string
-}
 
 export const Chat = () => {
-  const [msg, setMsg] = useState<IMsg[]>(MOCK_MESSAGES);
+  const [msg, setMsg] = useState<IMessageProps[]>(MOCK_MESSAGES);
   const [didChatEnd, setDidChatEnd] = useState(false);
   const [isSupporter, setIsSupporter] = useState(true); //in the future - pars of location params
   const scrollingRef = useRef(null);
@@ -63,26 +59,34 @@ export const Chat = () => {
     socket.emit("join-chat", { chatID: thisChatId });
   }
 
+  // get current date in IOS string
+  const getCurrDateIsrael = () => {
+    const here = new Date();
+    const invDate = new Date(here.toLocaleString('en-US', { timeZone: "Israel" }));
+    const diff = here.getTime() - invDate.getTime();
+    return (new Date(here.getTime() - diff)).toISOString();
+  }
+
   // send msg using socket
   const sendMsg = (message: string) => {
-    socket.emit("send message", { msg: message, chatID: thisChatId }, undefined, (messageID: string, messageDateISOString: string) => {
-      addToMsgList(message, true, messageID, messageDateISOString);
-      return;
+    const messageDate = getCurrDateIsrael();
+    socket.emit("send message", { msg: message, chatID: thisChatId, messageDate }, undefined, () => {
+      //firebase architecture
     });
+    addToMsgList(message, true, messageDate);
   };
 
   // receive msg using socket
   const receiveMsg = (data: IGetMsgData) => {
-    const { chatID, message, messageID, messageDate } = data;
+    const { chatID, message, messageDate } = data;
     if (chatID == thisChatId) { //will be useless if entering only the current chat room
-      addToMsgList(message, false, messageID, messageDate);
+      addToMsgList(message, false, messageDate);
     }
   }
 
   // add new msg to msg list
-  const addToMsgList = (message: string, isSender: boolean, messageID: string, date: string) => {
+  const addToMsgList = (message: string, isSender: boolean, date: string) => {
     setMsg((prev) => ([...prev, {
-      id: messageID || (prev.length + 1),
       content: message,
       isSender,
       messageDate: date
@@ -130,8 +134,8 @@ export const Chat = () => {
         {msgIsEmpty ? (
           <span className="no-msg">עוד אין הודעות</span>
         ) : (
-            msg.map((m) => (
-              <React.Fragment key={m.id}>
+            msg.map((m, index) => (
+              <React.Fragment key={index}>
                 <Message
                   isSender={m.isSender}
                   content={m.content}
