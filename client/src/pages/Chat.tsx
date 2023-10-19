@@ -7,19 +7,8 @@ import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
 
 /*
-  question - if we are in the application, and we get a message "start chat",
-  do we want to prompt a message? or do we want to do things only when we are
-  in the page of all chats?
-  in addition, is there a listener that's need to be held in the page of the 
-  supporter search page?
-
   TODO - also - take care of the disconnect events
   TODO - also - take care of cases in which the chat id doesnt exist
-*/
-
-/*
-  In start of all entrance we have to connect the user to all the rooms he belongs to 
-  Or maybe, when entering a chat he will be joined automatically to the room
 */
 
 interface IGetMsgData {
@@ -36,17 +25,22 @@ interface IMsg extends IMessageProps {
 export const Chat = () => {
   const [msg, setMsg] = useState<IMsg[]>(MOCK_MESSAGES);
   const [didChatEnd, setDidChatEnd] = useState(false);
-  const [isSupporter, setIsSupporter] = useState(true);
+  const [isSupporter, setIsSupporter] = useState(true); //in the future - pars of location params
   const scrollingRef = useRef(null);
   const { socket } = useSocketCtx();
   const navigate = useNavigate();
   const { chatId: thisChatId } = useParams();
-  const location = useLocation();//currently using params but we will use location
+  // const location = useLocation(); //currently using params but we will use location
   const msgIsEmpty = (msg.length === 0);
 
   useEffect(() => {
+    // connect to chat room on entrance
+    joinChatRoom();
+  }, [])
+
+  useEffect(() => {
     // take care of all the socket events
-    socket.on("connect", joinChatRoom);
+    socket.on("reconnect", joinChatRoom); //reconnecting
     socket.on("get message", receiveMsg);
     socket.on("close chat", closeChat);
     socket.on("chat blocked", closeChat);
@@ -54,17 +48,18 @@ export const Chat = () => {
       socket.off("get message");
       socket.off("close chat");
       socket.off("chat blocked");
+      socket.off("connect", joinChatRoom);
     };
   }, [socket]);
 
   useEffect(() => {
-    // scroll to bottom of the chat from whhen getting a new msg
+    // scroll to bottom of the chat when getting a new msg
     scrollingRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msg]);
 
   // join the socket room of the current room
   const joinChatRoom = () => {
-    socket.emit("join-chat", { name: thisChatId });
+    socket.emit("join-chat", { chatID: thisChatId });
   }
 
   // send msg using socket
@@ -78,10 +73,9 @@ export const Chat = () => {
   // receive msg using socket
   const receiveMsg = (data: IGetMsgData) => {
     const { chatID, message, messageID, messageDate } = data;
-    console.log('chatID: ', chatID);
-    // if (chatID == thisChatId) {
-    addToMsgList(message, false, messageID, messageDate);
-    // }
+    if (chatID == thisChatId) { //will be useless if entering only the current chat room
+      addToMsgList(message, false, messageID, messageDate);
+    }
   }
 
   // add new msg to msg list
@@ -102,7 +96,7 @@ export const Chat = () => {
 
   // block the chat
   const blockSupporter = () => {
-    socket.emit("block chat", {});
+    socket.emit("block chat", { chatID: thisChatId });
   }
 
   // go back to the page of all chats
@@ -112,8 +106,7 @@ export const Chat = () => {
 
   // request to change partner
   const changeChatRoom = () => {
-    // maybe create another event for re-searching?
-    socket.emit("search partner");
+    // there is nothing to do for now
   }
 
   // finish current chat
