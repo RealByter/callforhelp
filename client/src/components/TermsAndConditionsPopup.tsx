@@ -16,10 +16,10 @@ import Button from './Button';
 
 interface TermsAndConditionsPopupProps {
   agreeNeeded?: boolean;
+  onClose: () => void;
 }
 
-const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded }) => {
-  const [showPopUp, setShowPopUp] = useState<boolean>(true);
+const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded, onClose }) => {
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,7 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
   const handleClose = (ev: React.MouseEvent<HTMLElement>) => {
     if (ev.currentTarget !== ev.target || agreeNeeded) return;
 
-    setShowPopUp(false);
+    onClose();
   };
 
   const handleAgree = () => {
@@ -47,43 +47,39 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const element = e.currentTarget;
-    console.log(element.scrollHeight + ' ' + element.scrollTop + ' ' + element.clientHeight);
 
-    if (element.scrollHeight - element.scrollTop - 1 === element.clientHeight) { // the -1 is for natural inaccuracy purposes
+    if (element.scrollHeight - element.scrollTop - 1 === element.clientHeight) {
+      // the -1 is for natural inaccuracy purposes
       setButtonEnabled(true);
     }
   };
 
   return (
-    <>
-      {showPopUp && (
-        <div className="pop-up-background" onClick={handleClose}>
-          <div dir="rtl" className="pop-up-window">
-            {!agreeNeeded && (
-              <AiOutlineClose
-                tabIndex={0}
-                className="pop-up-window__close-btn"
-                onClick={handleClose}
-                title="סגור"
-              />
-            )}
-            <p className="pop-up-window__content" onScroll={handleScroll} ref={contentRef}>
-              {contentText[agreeNeeded ? 1 : 0]}
-            </p>
-            {agreeNeeded && (
-              <div className="pop-up-window--bottom-nav">
-                <Button
-                  className="pop-up-window--bottom-nav__agree-btn"
-                  onClick={handleAgree}
-                  disabled={!buttonEnabled}>
-                  אני מסכים לתנאים
-                </Button>
-              </div>
-            )}
+    <div className="pop-up-background" onClick={handleClose}>
+      <div dir="rtl" className="pop-up-window">
+        {!agreeNeeded && (
+          <AiOutlineClose
+            tabIndex={0}
+            className="pop-up-window__close-btn"
+            onClick={onClose}
+            title="סגור"
+          />
+        )}
+        <p className="pop-up-window__content" onScroll={handleScroll} ref={contentRef}>
+          {contentText[agreeNeeded ? 1 : 0]}
+        </p>
+        {agreeNeeded && (
+          <div className="pop-up-window--bottom-nav">
+            <Button
+              className="pop-up-window--bottom-nav__agree-btn"
+              onClick={handleAgree}
+              disabled={!buttonEnabled}>
+              אני מסכים לתנאים
+            </Button>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 };
 
