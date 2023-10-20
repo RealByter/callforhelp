@@ -17,24 +17,21 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
-  const createUserDocument = async (user: User) => {
-    await setDoc(doc(collections.users, user.uid), { name: user.displayName as string });
+  const handleUserCreation = async (user: User | undefined) => {
+    if (user) {
+      await setDoc(doc(collections.users, user.uid), { name: user.displayName as string });
+      navigate('/selection');
+    }
   };
 
   const signInWithGoogleHandler = async () => {
     const user = await signInWithGoogle();
-    if (user) {
-      await createUserDocument(user.user);
-      navigate('/');
-    }
+    await handleUserCreation(user?.user);
   };
 
   const signInWithFacebookHandler = async () => {
     const user = await signInWithFacebook();
-    if (user) {
-      await createUserDocument(user.user);
-      navigate('/');
-    }
+    await handleUserCreation(user?.user);
   };
 
   return (
