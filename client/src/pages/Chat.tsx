@@ -33,7 +33,7 @@ interface IMessageData {
 export const Chat = () => {
   const location = useLocation();
   const thisChatId = Array.isArray(location.state.chatId)
-    ? location.state.chatId[0]
+    ? location.state.chatId[0].chatId
     : location.state.chatId;
   const [messagesData, loadingMessages, error] = useCollectionDataOnce(
     query(collections.messages, where('chatId', '==', thisChatId))
@@ -48,11 +48,14 @@ export const Chat = () => {
 
   useEffect(() => {
     // redirect if user not logged in
-    if (!loading && !user) navigate('/');
+    if (!loading) {
+      if (!user) navigate('/');
+      else socket.emit('join-chat', { chatIds: thisChatId, username: user.displayName });
+    }
     if (error) {
       console.log(error);
     }
-  }, [loading, user, navigate, error]);
+  }, [loading, user, navigate, error, socket, thisChatId]);
 
   useEffect(() => {
     if (messagesData && !loadingMessages) {
@@ -211,7 +214,7 @@ export const Chat = () => {
           messages!.map((m, index) => (
             <React.Fragment key={index}>
               <Message
-                isSender={m.senderId === user?.uid}
+                isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}
               />

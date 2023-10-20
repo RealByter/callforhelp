@@ -91,35 +91,24 @@ const Selection: React.FC = () => {
       });
     };
 
-    const joinChatRooms = (
-      chats: Chat | Chat[],
-      username: string,
-      role: Role,
-      companionName?: string | string[]
-    ) => {
-      const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
-      socket.emit('join-chat', { chatIds, username });
-      navigate('/chat', { state: { companionName, chatId: chatIds, role } });
-    };
-
     const joinChat = async (userId: string, role: Role) => {
-      const [myName, myChats] = await Promise.all([getNameById(userId), findMyChats(userId, role)]);
+      const myChats = await findMyChats(userId, role);
 
       if (myChats.length !== 0) {
         const myCompanions = await Promise.all(
           myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string))
         );
-        joinChatRooms(myChats, myName, role, myCompanions);
+        navigate('/chat', { state: { companionName: myCompanions, chatId: myChats, role } });
       } else {
         const chatToFill = await findChatToFill(role);
 
         if (chatToFill) {
           await joinChatFirebase(userId, role, chatToFill.id);
-          const companion = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
-          joinChatRooms(chatToFill, myName, role, companion);
+          const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
+          navigate('/chat', { state: { companionName, chatId: chatToFill.id, role } });
         } else {
           const chat = await createChat(userId, role);
-          joinChatRooms(chat, myName, role);
+          navigate('/chat', { state: { chatId: chat.id, role } });
         }
       }
     };

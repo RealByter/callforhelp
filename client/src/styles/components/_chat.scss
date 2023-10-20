@@ -157,14 +157,14 @@
       border-radius: $scrollbar-radius;
     }
 
-    .massage-body {
+    .message-body {
       max-width: 81vw;
       width: fit-content;
       height: fit-content;
       padding: 0.8rem;
       background: #f1ebff;
-      border-radius: 8px 8px 0px 8px;
-      align-self: flex-start;
+      border-radius: 8px 8px 8px 0;
+      align-self: flex-end;
       font-size: $chat-msg-text-size;
       color: $chat-msg-text-color;
       display: flex;
@@ -177,11 +177,11 @@
       }
     }
 
-    .massage-body.sender {
+    .message-body.sender {
       background-color: #ffffff;
       background-blend-mode: screen;
-      border-radius: 8px 8px 8px 0;
-      align-self: flex-end;
+      border-radius: 8px 8px 0 8px;
+      align-self: flex-start;
     }
 
     .no-msg {
