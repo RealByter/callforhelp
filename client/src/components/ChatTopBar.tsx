@@ -17,7 +17,7 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
   endChat,
   changeChatRoom,
   goBackToChatsPage
-}: IChatTopBarProps) => {
+}: IChatTopBarProps) => {  
   return (
     <div className={`chat-top-bar ${isChatEnded ? 'ended' : ''}`}>
       <div className="chat-top-bar-upper">

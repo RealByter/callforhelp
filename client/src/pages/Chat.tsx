@@ -40,7 +40,10 @@ export const Chat = () => {
   );
   const [messages, setMessages] = useState<IMessageData[]>([]);
   const [didChatEnd, setDidChatEnd] = useState<boolean>(false);
-  const [companionName, setCompanionName] = useState(location.state.companionName || '');
+  const thisCompanionName = Array.isArray(location.state.companionName)
+    ? location.state.companionName[0]
+    : location.state.companionName;
+  const [companionName, setCompanionName] = useState(thisCompanionName || '');
   const [user, loading] = useAuthState(auth);
   const { socket } = useSocketCtx();
   const scrollingRef = useRef(null);
@@ -181,7 +184,6 @@ export const Chat = () => {
     socket.on('close chat', closeChat);
     socket.on('chat blocked', closeChat);
     socket.on('user-joined', (username: string) => {
-      console.log('username: ', username);
       setCompanionName(username);
     });
     return () => {

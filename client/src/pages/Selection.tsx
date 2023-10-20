@@ -61,18 +61,22 @@ const Selection: React.FC = () => {
     const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
       const roleFieldName = getRoleFieldName(role);
       const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
+
       const querySnapshot = await getDocs(queryMyChats);
 
       return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
     };
 
     const getNameById = async (companionId: string): Promise<string> => {
-      const userSnapshot = await getDoc(doc(collections.users, companionId));
-
-      if (!userSnapshot.exists()) {
-        throw new Error(`Companion with the id ${companionId} wasn't found`);
+      if (companionId) {
+        const userSnapshot = await getDoc(doc(collections.users, companionId));
+        if (!userSnapshot.exists()) {
+          throw new Error(`Companion with the id ${companionId} wasn't found`);
+        } else {
+          return userSnapshot.data().name;
+        }
       } else {
-        return userSnapshot.data().name;
+        return ''
       }
     };
 
