@@ -33,13 +33,21 @@ const QuickSignup: React.FC = () => {
   };
 
   const signInWithGoogleHandler = async () => {
-    const user = await signInWithGoogle();
-    await createUserDocument(user?.user);
+    try {
+      const user = await signInWithGoogle();
+      await createUserDocument(user?.user);
+    } catch (e) {
+      setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות עם גוגל' });
+    }
   };
 
   const signInWithFacebookHandler = async () => {
-    const user = await signInWithFacebook();
-    await createUserDocument(user?.user);
+    try {
+      const user = await signInWithFacebook();
+      await createUserDocument(user?.user);
+    } catch (e) {
+      setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות עם פייסבוק' });
+    }
   };
 
   return (
