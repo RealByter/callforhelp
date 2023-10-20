@@ -44,16 +44,17 @@ const Selection: React.FC = () => {
       const queryChatToFill = query(
         collections.chats,
         where(roleFieldName, '==', null),
-        where(oppositeRoleFieldName, '!=', user!.uid),
         orderBy('createdAt'),
         limit(1)
       );
       const querySnapshot = await getDocs(queryChatToFill);
+      const queryData = querySnapshot.docs.map((doc) => doc.data());
+      const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== user!.uid);
 
-      if (querySnapshot.size === 0) {
+      if (filteredQueryData.length === 0) {
         return null;
       } else {
-        return querySnapshot.docs[0].data();
+        return filteredQueryData[0];
       }
     };
 

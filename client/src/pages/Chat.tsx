@@ -33,7 +33,7 @@ interface IMessageData {
 export const Chat = () => {
   const location = useLocation();
   const thisChatId = Array.isArray(location.state.chatId)
-    ? location.state.chatId[0].chatId
+    ? location.state.chatId[0].id
     : location.state.chatId;
   const [messagesData, loadingMessages, error] = useCollectionDataOnce(
     query(collections.messages, where('chatId', '==', thisChatId))
