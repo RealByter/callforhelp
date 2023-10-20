@@ -4,6 +4,7 @@ import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
+import React from 'react';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -14,9 +15,9 @@ const SignInPage = () => {
     signInWithEmailAndPassword(email as string, password as string);
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/selection');
     }
   }, [user, navigate]);
 
