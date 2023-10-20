@@ -217,16 +217,22 @@ export const Chat = () => {
         {noMessages ? (
           <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
         ) : (
-          messages!.map((m, index) => (
-            <React.Fragment key={index}>
-              <Message
-                isSender={m.senderId === user!.uid}
-                content={m.content}
-                messageDate={m.date}
-                messageState={m.status}
-              />
-            </React.Fragment>
-          ))
+          messages!
+            .sort((a, b) => {
+              const aDate = new Date(a.date);
+              const bDate = new Date(b.date);
+              return aDate.getTime() - bDate.getTime();
+            })
+            .map((m, index) => (
+              <React.Fragment key={index}>
+                <Message
+                  isSender={m.senderId === user!.uid}
+                  content={m.content}
+                  messageDate={m.date}
+                  messageState={m.status}
+                />
+              </React.Fragment>
+            ))
         )}
         <span ref={scrollingRef}></span>
       </div>
