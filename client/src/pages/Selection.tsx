@@ -40,9 +40,11 @@ const Selection: React.FC = () => {
   useEffect(() => {
     const findChatToFill = async (role: Role): Promise<Chat | null> => {
       const roleFieldName = getRoleFieldName(role);
+      const oppositeRoleFieldName = getOppositeRoleFieldName(role);
       const queryChatToFill = query(
         collections.chats,
         where(roleFieldName, '==', null),
+        where(oppositeRoleFieldName, '!=', user!.uid),
         orderBy('createdAt'),
         limit(1)
       );
