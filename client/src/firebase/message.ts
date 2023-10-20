@@ -3,14 +3,14 @@ import { z } from "zod";
 
 export type messageStatusType = "sent" | "received" | "loading";
 
-const statusEnum: z.ZodType<messageStatusType> = z.enum(['sent', 'SENT', 'received', 'RECEIVED', 'loading', 'LOADING']);
+const statusEnum: z.ZodType<messageStatusType> = z.enum(['sent', 'received', 'loading']);
 
 const messageSchema = z.object({
     id: z.string().optional(),
     content: z.string(),
     senderId: z.string(), //need to add relations
     chatId: z.string(), //need to add relations
-    status: statusEnum.default('SENT'),
+    status: statusEnum.default('sent'),
     date: z.string(), //IOS string
 });
 
