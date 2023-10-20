@@ -22,7 +22,7 @@ const SignUpPage = () => {
     setStage('updating');
     const user = await createUserWithEmailAndPassword(email as string, password as string);
     if (user) {
-      await setDoc(doc(collections.users, user.user.uid), { name: name! });
+      await setDoc(doc(collections.users, user.user.uid), { name: name!, acceptedTerms: true });
       await updateProfile({ displayName: name });
       setStage('end');
     }

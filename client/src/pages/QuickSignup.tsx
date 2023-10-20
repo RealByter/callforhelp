@@ -8,7 +8,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
-import { doc, setDoc } from '@firebase/firestore';
+import { doc, setDoc, getDoc } from '@firebase/firestore';
 import React from 'react';
 import Header from '../components/Header';
 
@@ -17,10 +17,16 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
-  const handleUserCreation = async (user: User | undefined) => {
+  const createUserDocument = async (user: User) => {
     if (user) {
-      await setDoc(doc(collections.users, user.uid), { name: user.displayName as string });
-      navigate('/selection');
+      const oldUser = await getDoc(doc(collections.users, user.uid));
+      if (!oldUser.exists()) {
+        await setDoc(doc(collections.users, user.uid), {
+          name: user.displayName as string,
+          acceptedTerms: false
+        });
+        navigate('/selection');
+      }
     }
   };
 
@@ -64,13 +70,6 @@ const QuickSignup: React.FC = () => {
             <img src={MailLogo} alt="Mail Logo" />
             להרשמה עם אימייל
           </LoginButton>
-          <p dir="rtl">
-            בהרשמתך הנך מתחייב שקראת את{' '}
-            <button className={classes.highlight} onClick={() => {}}>
-              תנאי השימוש
-            </button>{' '}
-            {/* should open the terms modal */}
-          </p>
           <p dir="rtl">
             כבר יש לך חשבון?{' '}
             <NavLink to="/signin" className={classes.highlight}>

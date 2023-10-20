@@ -1,6 +1,7 @@
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
+import React from 'react';
 import Selection from './pages/Selection';
 
 function App() {
@@ -20,11 +21,11 @@ function App() {
       </span>
     </div>
   ) : (
-      <p>
-        כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
-        <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
-      </p>
-    );
+     <p>
+       כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
+       <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
+     </p>
+  );
 }
 
 export default App;
