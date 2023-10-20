@@ -17,7 +17,7 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
-  const createUserDocument = async (user: User) => {
+  const createUserDocument = async (user?: User) => {
     if (user) {
       const oldUser = await getDoc(doc(collections.users, user.uid));
       if (!oldUser.exists()) {
@@ -32,12 +32,12 @@ const QuickSignup: React.FC = () => {
 
   const signInWithGoogleHandler = async () => {
     const user = await signInWithGoogle();
-    await handleUserCreation(user?.user);
+    await createUserDocument(user?.user);
   };
 
   const signInWithFacebookHandler = async () => {
     const user = await signInWithFacebook();
-    await handleUserCreation(user?.user);
+    await createUserDocument(user?.user);
   };
 
   return (

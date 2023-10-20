@@ -11,6 +11,7 @@ import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
+import Disclaimer from './components/Disclaimer.tsx';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <SocketProvider>
       <StyledEngineProvider injectFirst>
         <AuthenticationWrapper>
+          <Disclaimer />
           <RouterProvider router={router} />
         </AuthenticationWrapper>
       </StyledEngineProvider>
