@@ -14,11 +14,11 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import Button from './Button';
 
-interface AgreementPopupProps {
+interface TermsAndConditionsPopupProps {
   agreeNeeded?: boolean;
 }
 
-const AgreementPopup: FC<AgreementPopupProps> = ({ agreeNeeded }) => {
+const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded }) => {
   const [showPopUp, setShowPopUp] = useState<boolean>(true);
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const AgreementPopup: FC<AgreementPopupProps> = ({ agreeNeeded }) => {
   );
 };
 
-export default AgreementPopup;
+export default TermsAndConditionsPopup;

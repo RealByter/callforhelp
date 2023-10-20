@@ -2,7 +2,7 @@ import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
-import AgreementPopup from './components/AgreementPopup';
+import TermsAndConditionsPopup from './components/TermsAndConditionsPopup';
 import React from 'react';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     </p>
   ) : (
     <>
-      <AgreementPopup />
+      <TermsAndConditionsPopup agreeNeeded />
       <p>
         כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
         <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>
