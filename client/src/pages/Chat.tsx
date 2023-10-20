@@ -110,18 +110,23 @@ export const Chat = () => {
         })();
       }
     );
-    addToMsgList(message, user!.uid || '', messageDate);
+    addToMsgList(message, user!.uid || '', messageDate, 'received');
   };
 
   // add new msg to msg list
-  const addToMsgList = (message: string, senderId: string, date: string) => {
+  const addToMsgList = (
+    message: string,
+    senderId: string,
+    date: string,
+    status: 'sent' | 'loading' | 'received'
+  ) => {
     setMessages((prev) => [
       ...prev,
       {
         content: message,
         senderId,
-        date: date,
-        status: 'sent'
+        date,
+        status
       }
     ]);
   };
@@ -174,7 +179,7 @@ export const Chat = () => {
       const { chatID, message, messageDate } = data;
       if (chatID === thisChatId) {
         //will be useless if entering only the current chat room
-        addToMsgList(message, '', messageDate); //need to get senderId
+        addToMsgList(message, '', messageDate, 'received'); //need to get senderId
       }
     };
 
@@ -218,6 +223,7 @@ export const Chat = () => {
                 isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}
+                messageState={m.status}
               />
             </React.Fragment>
           ))
