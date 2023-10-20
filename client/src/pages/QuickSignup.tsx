@@ -10,6 +10,7 @@ import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
 import { doc, setDoc } from '@firebase/firestore';
 import React from 'react';
+import { getDoc } from 'firebase/firestore';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +18,13 @@ const QuickSignup: React.FC = () => {
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
   const createUserDocument = async (user: User) => {
-    await setDoc(doc(collections.users, user.uid), { name: user.displayName as string });
+    const oldUser = await getDoc(doc(collections.users, user.uid));
+    if (!oldUser.exists()) {
+      await setDoc(doc(collections.users, user.uid), {
+        name: user.displayName as string,
+        acceptedTerms: false
+      });
+    }
   };
 
   const signInWithGoogleHandler = async () => {

@@ -1,19 +1,28 @@
-.generic-button, .generic-button:focus, .generic-button:hover {
+.generic-button {
+  color: $default-text-color;
+  border-radius: $all-pages-btn-radius;
+  font-size: $login-page-all-text-size;
+  outline: none;
+  background-color: $btn-bgd;
+  width: 100%;
+
+  &.generic-button:focus,
+  &.generic-button:hover {
+    color: $default-text-color;
+    border-radius: $all-pages-btn-radius;
+    font-size: $login-page-all-text-size;
+    outline: none;
+    background-color: $btn-bgd;
+  }
+}
+
+@media (hover: none) {
+  .generic-button {
     background-color: $btn-bgd;
     width: 100%;
     color: $default-text-color;
     border-radius: $all-pages-btn-radius;
     font-size: $login-page-all-text-size;
     outline: none;
-}
-
-@media (hover: none) {
-    .generic-button {
-        background-color: $btn-bgd;
-        width: 100%;
-        color: $default-text-color;
-        border-radius: $all-pages-btn-radius;
-        font-size: $login-page-all-text-size;
-        outline: none;
-    }
+  }
 }

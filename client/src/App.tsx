@@ -19,7 +19,6 @@ function App() {
     </p>
   ) : (
     <>
-      <TermsAndConditionsPopup agreeNeeded />
       <p>
         כל בני אדם נולדו בני חורין ושווים בערכם ובזכויותיהם You should{' '}
         <Link to="/signin">sign in</Link> or <Link to="/signup">sign up</Link>

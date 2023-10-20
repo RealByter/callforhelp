@@ -11,6 +11,7 @@ import { Chat } from './pages/Chat';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import Room from './pages/Room.tsx';
+import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 
 const router = createBrowserRouter([
   {
@@ -48,7 +49,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SocketProvider>
       <StyledEngineProvider injectFirst>
-        <RouterProvider router={router} />
+        <AuthenticationWrapper>
+          <RouterProvider router={router} />
+        </AuthenticationWrapper>
       </StyledEngineProvider>
     </SocketProvider>
   </React.StrictMode>

@@ -34,10 +34,6 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
     onClose();
   };
 
-  const handleAgree = () => {
-    //enter logic for clicking agree
-  };
-
   useEffect(() => {
     const element = contentRef.current;
     if (element && element.scrollHeight <= element.clientHeight) {
@@ -72,7 +68,7 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
           <div className="pop-up-window--bottom-nav">
             <Button
               className="pop-up-window--bottom-nav__agree-btn"
-              onClick={handleAgree}
+              onClick={onClose}
               disabled={!buttonEnabled}>
               אני מסכים לתנאים
             </Button>
