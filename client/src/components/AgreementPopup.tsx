@@ -15,7 +15,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import Button from './Button';
 
 interface AgreementPopupProps {
-  agreeNeeded: boolean;
+  agreeNeeded?: boolean;
 }
 
 const AgreementPopup: FC<AgreementPopupProps> = ({ agreeNeeded }) => {
@@ -61,6 +61,7 @@ const AgreementPopup: FC<AgreementPopupProps> = ({ agreeNeeded }) => {
           <div dir="rtl" className="pop-up-window">
             {!agreeNeeded && (
               <AiOutlineClose
+                tabIndex={0}
                 className="pop-up-window__close-btn"
                 onClick={handleClose}
                 title="סגור"
