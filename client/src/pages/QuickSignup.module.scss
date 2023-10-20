@@ -1,14 +1,16 @@
-.temp-wrapper {
+.wrapper {
   display: flex;
-  justify-content: center;
-  width: 100vw;
+  flex-direction: column;
+  max-width: 24rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: calc(100vh - 136px);
 }
 
 .page {
   display: flex;
   flex-direction: column;
-  max-width: 20rem;
-  margin: 0 2rem;
+ 
   height: 100vh;
 
   p {

@@ -1,11 +1,16 @@
 import { FirestoreDataConverter, Timestamp } from 'firebase/firestore';
-import { z } from "zod"
+import { z } from "zod";
+
+type chatStatus = 'active' | 'ended' | 'blocked';
+
+const statusEnum: z.ZodType<chatStatus> = z.enum(['active', 'ACTIVE', 'ended', 'ENDED', 'blocked', 'BLOCKED']);
 
 const chatSchema = z.object({
   id: z.string(),
   supporterId: z.string().nullable(),
   supporteeId: z.string().nullable(),
   createdAt: z.instanceof(Timestamp),
+  status: statusEnum.default('ACTIVE')
 });
 
 type Chat = z.infer<typeof chatSchema>;

@@ -16,7 +16,7 @@ export const Message: React.FC<IMessageProps> = ({ isSender, content, messageDat
   }
 
   return (
-    <div className={`massage-body ${isSender ? 'sender' : ''}`}>
+    <div className={`message-body ${isSender ? 'sender' : ''}`}>
       <div className="content">
         {content || ''}
       </div>

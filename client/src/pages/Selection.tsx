@@ -18,6 +18,7 @@ import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
+import React from 'react';
 
 type Role = 'supporter' | 'supportee';
 const getRoleFieldName = (role: Role) => (role === 'supporter' ? 'supporterId' : 'supporteeId');
@@ -39,6 +40,7 @@ const Selection: React.FC = () => {
   useEffect(() => {
     const findChatToFill = async (role: Role): Promise<Chat | null> => {
       const roleFieldName = getRoleFieldName(role);
+      const oppositeRoleFieldName = getOppositeRoleFieldName(role);
       const queryChatToFill = query(
         collections.chats,
         where(roleFieldName, '==', null),
@@ -46,29 +48,35 @@ const Selection: React.FC = () => {
         limit(1)
       );
       const querySnapshot = await getDocs(queryChatToFill);
+      const queryData = querySnapshot.docs.map((doc) => doc.data());
+      const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== user!.uid);
 
-      if (querySnapshot.size === 0) {
+      if (filteredQueryData.length === 0) {
         return null;
       } else {
-        return querySnapshot.docs[0].data();
+        return filteredQueryData[0];
       }
     };
 
     const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
       const roleFieldName = getRoleFieldName(role);
       const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
+
       const querySnapshot = await getDocs(queryMyChats);
 
       return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
     };
 
     const getNameById = async (companionId: string): Promise<string> => {
-      const userSnapshot = await getDoc(doc(collections.users, companionId));
-
-      if (!userSnapshot.exists()) {
-        throw new Error(`Companion with the id ${companionId} wasn't found`);
+      if (companionId) {
+        const userSnapshot = await getDoc(doc(collections.users, companionId));
+        if (!userSnapshot.exists()) {
+          throw new Error(`Companion with the id ${companionId} wasn't found`);
+        } else {
+          return userSnapshot.data().name;
+        }
       } else {
-        return userSnapshot.data().name;
+        return ''
       }
     };
 
@@ -90,34 +98,24 @@ const Selection: React.FC = () => {
       });
     };
 
-    const joinChatRooms = (
-      chats: Chat | Chat[],
-      username: string,
-      companionName?: string | string[]
-    ) => {
-      const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
-      socket.emit('join-chat', chatIds, username);
-      navigate('/room', { state: { companionName } });
-    };
-
     const joinChat = async (userId: string, role: Role) => {
-      const [myName, myChats] = await Promise.all([getNameById(userId), findMyChats(userId, role)]);
+      const myChats = await findMyChats(userId, role);
 
       if (myChats.length !== 0) {
         const myCompanions = await Promise.all(
           myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string))
         );
-        joinChatRooms(myChats, myName, myCompanions);
+        navigate('/chat', { state: { companionName: myCompanions, chatId: myChats, role } });
       } else {
         const chatToFill = await findChatToFill(role);
 
         if (chatToFill) {
           await joinChatFirebase(userId, role, chatToFill.id);
-          const companion = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
-          joinChatRooms(chatToFill, myName, companion);
+          const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
+          navigate('/chat', { state: { companionName, chatId: chatToFill.id, role } });
         } else {
           const chat = await createChat(userId, role);
-          joinChatRooms(chat, myName);
+          navigate('/chat', { state: { chatId: chat.id, role } });
         }
       }
     };
