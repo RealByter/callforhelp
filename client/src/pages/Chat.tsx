@@ -32,8 +32,11 @@ interface IMessageData {
 
 export const Chat = () => {
   const location = useLocation();
-  const [messagesData, loadingMessages] = useCollectionDataOnce(
-    query(collections.messages, where('chatId', '==', location.state.chatId))
+  const thisChatId = Array.isArray(location.state.chatId)
+    ? location.state.chatId[0]
+    : location.state.chatId;
+  const [messagesData, loadingMessages, error] = useCollectionDataOnce(
+    query(collections.messages, where('chatId', '==', thisChatId))
   );
   const [messages, setMessages] = useState<IMessageData[]>([]);
   const [didChatEnd, setDidChatEnd] = useState<boolean>(false);
@@ -42,12 +45,14 @@ export const Chat = () => {
   const { socket } = useSocketCtx();
   const scrollingRef = useRef(null);
   const navigate = useNavigate();
-  const thisChatId = location.state?.chatId?.[0];
 
   useEffect(() => {
     // redirect if user not logged in
     if (!loading && !user) navigate('/');
-  }, [loading, user, navigate]);
+    if (error) {
+      console.log(error);
+    }
+  }, [loading, user, navigate, error]);
 
   useEffect(() => {
     if (messagesData && !loadingMessages) {
