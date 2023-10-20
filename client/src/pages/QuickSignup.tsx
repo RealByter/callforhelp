@@ -9,15 +9,17 @@ import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks
 import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
 import { doc, setDoc, getDoc } from '@firebase/firestore';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
+import ErrorModal from '../components/ErrorModal';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
+  const [error, setError] = useState<{ title: string; content: string }>();
 
-  const createUserDocument = async (user: User) => {
+  const createUserDocument = async (user?: User) => {
     if (user) {
       const oldUser = await getDoc(doc(collections.users, user.uid));
       if (!oldUser.exists()) {
@@ -32,16 +34,17 @@ const QuickSignup: React.FC = () => {
 
   const signInWithGoogleHandler = async () => {
     const user = await signInWithGoogle();
-    await handleUserCreation(user?.user);
+    await createUserDocument(user?.user);
   };
 
   const signInWithFacebookHandler = async () => {
     const user = await signInWithFacebook();
-    await handleUserCreation(user?.user);
+    await createUserDocument(user?.user);
   };
 
   return (
     <>
+      {error && <ErrorModal {...error} onClose={() => setError(undefined)} />}
       <Header>הרשמה מהירה</Header>
       <div className={classes.wrapper}>
         <div className={classes.page}>
