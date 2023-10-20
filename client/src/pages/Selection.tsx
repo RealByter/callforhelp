@@ -18,6 +18,7 @@ import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
+import React from 'react';
 
 type Role = 'supporter' | 'supportee';
 const getRoleFieldName = (role: Role) => (role === 'supporter' ? 'supporterId' : 'supporteeId');

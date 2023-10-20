@@ -1,5 +1,4 @@
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
-import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
 import Selection from './pages/Selection';
