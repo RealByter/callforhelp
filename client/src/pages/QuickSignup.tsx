@@ -37,7 +37,7 @@ const QuickSignup: React.FC = () => {
   return (
     <>
       <Header>הרשמה מהירה</Header>
-      <div className={classes['temp-wrapper']}>
+      <div className={classes.wrapper}>
         <div className={classes.page}>
           <div className={classes.social}>
             <LoginButton onClick={signInWithGoogleHandler}>

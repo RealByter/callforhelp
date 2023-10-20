@@ -8,8 +8,8 @@ const statusEnum: z.ZodType<messageStatusType> = z.enum(['sent', 'received', 'lo
 const messageSchema = z.object({
     id: z.string().optional(),
     content: z.string(),
-    senderId: z.string(), //need to add relations
-    chatId: z.string(), //need to add relations
+    senderId: z.string(),
+    chatId: z.string(),
     status: statusEnum.default('sent'),
     date: z.string(), //IOS string
 });

@@ -11,8 +11,6 @@ function App() {
     return <p>Attempt to connect user</p>;
   }
 
-  // TODO - currently, if the user has a chat already - show him that chat 
-
   return user ? (
     <div>
       <Selection />

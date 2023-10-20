@@ -172,7 +172,7 @@ export const Chat = () => {
     // receive msg using socket
     const receiveMsg = (data: IGetMsgData) => {
       const { chatID, message, messageDate } = data;
-      if (chatID == thisChatId) {
+      if (chatID === thisChatId) {
         //will be useless if entering only the current chat room
         addToMsgList(message, '', messageDate); //need to get senderId
       }
@@ -202,7 +202,7 @@ export const Chat = () => {
       <ChatTopBar
         isChatEnded={didChatEnd}
         companionName={companionName}
-        isSupporter={location.state.role === 'supporter'} //maybe - if chatData.supporterId === user.uid
+        isSupporter={location.state.role === 'supporter'}
         endChat={endChat}
         changeChatRoom={changeChatRoom}
         goBackToChatsPage={goBackToChatsPage}
@@ -212,7 +212,6 @@ export const Chat = () => {
         {noMessages ? (
           <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
         ) : (
-          //add the 'there is no supporter yet' part
           messages!.map((m, index) => (
             <React.Fragment key={index}>
               <Message
