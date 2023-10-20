@@ -138,7 +138,7 @@ export const Chat = () => {
 
   // go back to the page of all chats
   const goBackToChatsPage = () => {
-    navigate('/');
+    navigate('/selection');
   };
 
   // request to change partner
