@@ -57,6 +57,7 @@
         outline: none;
         border: none;
         color: $chat-icons-color;
+        background: transparent;
       }
     }
 
@@ -74,6 +75,7 @@
         width: 100%;
 
         button {
+          background-color: white;
           position: relative;
           outline: none;
           width: 45%;
@@ -221,6 +223,7 @@
 
       &-box {
         background-color: $chat-input-bgd;
+        color: black;
         width: 85%;
         height: 100%;
         outline: none;
@@ -228,8 +231,9 @@
         border-radius: 0 $chat-input-radius $chat-input-radius 0;
         box-sizing: border-box;
         display: inline-block;
-        padding-right: 10px;
-        font-size: $chat-msg-text-size;
+        padding-right: 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 400;
       }
 
       &-send {
