@@ -9,6 +9,7 @@ import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks
 import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
 import { doc, setDoc } from '@firebase/firestore';
+import React from 'react';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
@@ -64,13 +65,6 @@ const QuickSignup: React.FC = () => {
           <img src={MailLogo} alt="Mail Logo" />
           להרשמה עם אימייל
         </LoginButton>
-        <p dir="rtl">
-          בהרשמתך הנך מתחייב שקראת את{' '}
-          <button className={classes.highlight} onClick={() => {}}>
-            תנאי השימוש
-          </button>{' '}
-          {/* should open the terms modal */}
-        </p>
         <p dir="rtl">
           כבר יש לך חשבון?{' '}
           <NavLink to="/signin" className={classes.highlight}>

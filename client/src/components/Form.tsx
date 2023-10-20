@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   nameSignupValidations,
   emailSigninValidations,
@@ -29,9 +30,10 @@ const Form = ({ onSubmit, name, email, password, submitLabel }: FormProps) => {
     handleSubmit,
     formState: { errors }
   } = useForm<FormOptions>();
+  const [marked, setMarked] = useState(!name);
 
   return (
-    <div className="wrapper">
+    <div className="form-wrapper">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         {name && (
           <FormField
@@ -62,7 +64,16 @@ const Form = ({ onSubmit, name, email, password, submitLabel }: FormProps) => {
             error={errors.password}
           />
         )}
-        <Button type="submit">{submitLabel}</Button>
+        {name && (
+          <div className="container">
+            בהרשמתך הנך מתחייב שקראת את <span className="highlighted">תנאי השימוש</span>
+            <button
+              className={`checkmark ${marked && 'marked'}`}
+              type="button"
+              onClick={() => setMarked((prev) => !prev)}></button>
+          </div>
+        )}
+        <Button type="submit" disabled={!marked}>{submitLabel}</Button>
       </form>
     </div>
   );
