@@ -3,6 +3,7 @@ import './styles/App.scss';
 import { auth } from './firebase/connection';
 import { Link } from 'react-router-dom';
 import AgreementPopup from './components/AgreementPopup';
+import React from 'react';
 
 function App() {
   const [user, loading] = useAuthState(auth);

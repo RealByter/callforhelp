@@ -2,8 +2,9 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  padding: 2.5rem 1.5rem;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -12,17 +13,15 @@
 
 .pop-up-window {
   background-color: #ffffff;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-  height: 80dvh;
-  position: relative;
+  padding: 1.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
 
   &__close-btn {
     fill: black;
-    position: absolute;
-    top: 20px;
-    left: 20px;
 
     &:hover {
       cursor: pointer;
@@ -30,35 +29,32 @@
   }
 
   &__content {
-    margin-top: 30px;
     color: black;
     overflow-y: scroll;
-    height: 90%;
     font-family: 'Heebo', sans-serif;
     font-weight: 400;
+    margin-bottom: 2rem;
 
     scrollbar-width: none;
     -ms-overflow-style: none;
-
     &::-webkit-scrollbar {
       display: none;
     }
   }
 
   &--bottom-nav {
-    height: auto;
+    margin-top: auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 0.75rem;
 
     &__agree-btn {
       background-color: #ffffff;
       color: #0e1c74;
       border-radius: $all-pages-btn-radius;
-      box-shadow:
-        0 4px 8px 0 rgba(0, 0, 0, 0.2),
-        0 6px 20px 0 rgba(0, 0, 0, 0.19);
-      padding: 8px 16px;
+      box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.10);
+      padding: 0.5rem 1rem;
       height: 36px;
       width: 168px;
       font-weight: 600;
