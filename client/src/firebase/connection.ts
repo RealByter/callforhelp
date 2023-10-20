@@ -3,6 +3,7 @@ import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator, collection } from 'firebase/firestore';
 import { chatFirestoreConverter } from './chat';
 import { userFirestoreConverter } from './user';
+import { messageFirestoreConverter } from './message';
 
 const DEV_AUTH_HOST = 'http://127.0.0.1:9099';
 const DEV_FIRESTORE_HOST = '127.0.0.1';
@@ -29,7 +30,8 @@ if (import.meta.env.DEV) {
 
 const collections = {
   chats: collection(firestore, 'chats').withConverter(chatFirestoreConverter),
-  users: collection(firestore, 'users').withConverter(userFirestoreConverter)
+  users: collection(firestore, 'users').withConverter(userFirestoreConverter),
+  messages: collection(firestore, 'messages').withConverter(messageFirestoreConverter)
 };
 
 export { auth, collections };

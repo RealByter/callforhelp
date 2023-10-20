@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 interface IChatTopBarProps {
   isChatEnded: boolean;
   isSupporter: boolean;
+  companionName: string;
   endChat: () => void;
   changeChatRoom: () => void;
   goBackToChatsPage: () => void;
@@ -12,6 +13,7 @@ interface IChatTopBarProps {
 export const ChatTopBar: FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
+  companionName,
   endChat,
   changeChatRoom,
   goBackToChatsPage
@@ -20,7 +22,7 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
     <div className={`chat-top-bar ${isChatEnded ? 'ended' : ''}`}>
       <div className="chat-top-bar-upper">
         <div className="top-bar-text">
-          <span className="title">התומך המאושר</span>
+          <span className="title">{companionName || "התומך המאושר"}</span>
           <span className="sub-title">אני פה בשבילך</span>
         </div>
         <button className="top-bar-close" onClick={() => goBackToChatsPage()}>

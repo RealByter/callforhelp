@@ -21,6 +21,7 @@ export default (io: Server, socket: Socket) => {
     const joinRoom = (data: any) => {
         const { chatID } = data;
         socket.join(chatID);
+        socket.broadcast.to(chatID).emit('user-joined');
     }
 
     socket.on("send message", sendMessage);

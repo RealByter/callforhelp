@@ -97,7 +97,7 @@ const Selection: React.FC = () => {
     ) => {
       const chatIds = Array.isArray(chats) ? chats.map((chat) => chat.id) : chats.id;
       socket.emit('join-chat', chatIds, username);
-      navigate('/room', { state: { companionName } });
+      navigate('/chat', { state: { companionName, chatId: chatIds } });
     };
 
     const joinChat = async (userId: string, role: Role) => {

@@ -8,7 +8,6 @@ export type SocketFunction = (io: Server, socket: Socket) => void;
 const onConnect: SocketFunction = (io: Server, socket: Socket): void => {
   // register handlers here, see https://socket.io/docs/v4/server-application-structure/ for structure
   chatHandler(io, socket);
-  registerAssignmentHandlers(io, socket);
 };
 
 const app = new CallForHelpServer(onConnect);
