@@ -10,7 +10,7 @@ interface IChatTopBarProps {
   goBackToChatsPage: () => void;
 }
 
-export const ChatTopBar: FC<IChatTopBarProps> = ({
+export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
   companionName,
