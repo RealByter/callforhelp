@@ -60,7 +60,7 @@ const SignUpPage = () => {
 
   return (
     <>
-      {error && <ErrorModal {...error} onClose={() => setError(undefined)} />}
+      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
     </>

@@ -33,7 +33,7 @@ const SignInPage = () => {
 
   return (
     <>
-      {error && <ErrorModal {...error} onClose={() => setError(undefined)} />}
+      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>התחברות</Header>
       <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
     </>

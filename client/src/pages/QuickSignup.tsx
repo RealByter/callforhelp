@@ -52,7 +52,7 @@ const QuickSignup: React.FC = () => {
 
   return (
     <>
-      {error && <ErrorModal {...error} onClose={() => setError(undefined)} />}
+      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>הרשמה מהירה</Header>
       <div className={classes.wrapper}>
         <div className={classes.page}>
