@@ -63,8 +63,10 @@ const Selection: React.FC = () => {
       const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
 
       const querySnapshot = await getDocs(queryMyChats);
+      const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
+      const filteredData = data.filter(doc => doc.status === 'active');
 
-      return querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
+      return filteredData;
     };
 
     const getNameById = async (companionId: string): Promise<string> => {
@@ -84,7 +86,8 @@ const Selection: React.FC = () => {
       const newChatValues = {
         createdAt: Timestamp.now(),
         [getRoleFieldName(role)]: userId,
-        [getOppositeRoleFieldName(role)]: null
+        [getOppositeRoleFieldName(role)]: null,
+        status: 'active'
       };
 
       const chatRef = await addDoc(collections.chats, newChatValues);
