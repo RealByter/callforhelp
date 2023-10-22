@@ -7,13 +7,13 @@ import Header from '../components/Header';
 import { deleteDoc, doc, setDoc } from '@firebase/firestore';
 import React from 'react';
 import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
-import ErrorModal from '../components/ErrorModal';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
-  const [error, setError] = useState<{ title: string; content: string }>();
+  const [error, setError] = useState<ErrorInfo>();
 
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
     setStage('updating');

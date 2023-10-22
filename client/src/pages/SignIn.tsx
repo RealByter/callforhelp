@@ -6,12 +6,12 @@ import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
 import React from 'react';
 import { signInWithEmailAndPassword } from '@firebase/auth';
-import ErrorModal from '../components/ErrorModal';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 
 const SignInPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [error, setError] = useState<{ title: string; content: string }>();
+  const [error, setError] = useState<ErrorInfo>();
 
   const handleFormSubmit = async ({ email, password }: FormOptions) => {
     try {

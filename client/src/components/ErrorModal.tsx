@@ -8,6 +8,11 @@ type ErrorModalProps = {
   onClose: () => void;
 };
 
+export type ErrorInfo = {
+  title: string;
+  content: string;
+}
+
 const ErrorModal: React.FC<ErrorModalProps> = ({ title, content, onClose }) => {
   return (
     <div className="error-modal">

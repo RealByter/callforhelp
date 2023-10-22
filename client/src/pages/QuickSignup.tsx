@@ -11,13 +11,13 @@ import { User } from '@firebase/auth';
 import { doc, setDoc, getDoc } from '@firebase/firestore';
 import React, { useState } from 'react';
 import Header from '../components/Header';
-import ErrorModal from '../components/ErrorModal';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
-  const [error, setError] = useState<{ title: string; content: string }>();
+  const [error, setError] = useState<ErrorInfo>();
 
   const createUserDocument = async (user?: User) => {
     if (user) {
