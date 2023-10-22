@@ -1,5 +1,4 @@
 import LoginButton from '../components/LoginButton';
-import classes from './QuickSignup.module.scss';
 import GoogleLogo from '../assets/logo_googleg_48dp.svg';
 import FacebookLogo from '../assets/FacebookLogo.png';
 import MailLogo from '../assets/Mail.svg';
@@ -55,9 +54,9 @@ const QuickSignup: React.FC = () => {
     <>
       {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>הרשמה מהירה</Header>
-      <div className={classes.wrapper}>
-        <div className={classes.page}>
-          <div className={classes.social}>
+      <div className="quick-signup-wrapper">
+        <div className="page">
+          <div className="social">
             <LoginButton onClick={signInWithGoogleHandler}>
               <img src={GoogleLogo} alt="Google Logo" />
               להרשמה עם גוגל
@@ -67,13 +66,13 @@ const QuickSignup: React.FC = () => {
               להרשמה עם פייסבוק
             </LoginButton>
           </div>
-          <div className={classes.separator}>
-            <div className={classes.line} />
-            <div className={classes.or}>
+          <div className="separator">
+            <div className="line" />
+            <div className="or">
               <span>או</span>
               <img src={OrBackground} alt="" />
             </div>
-            <div className={classes.line} />
+            <div className="line" />
           </div>
           <LoginButton
             onClick={() => {
@@ -84,7 +83,7 @@ const QuickSignup: React.FC = () => {
           </LoginButton>
           <p dir="rtl">
             כבר יש לך חשבון?{' '}
-            <NavLink to="/signin" className={classes.highlight}>
+            <NavLink to="/signin" className="highlight">
               להתחברות
             </NavLink>
           </p>
