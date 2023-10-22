@@ -2,6 +2,7 @@ import {
   Timestamp,
   addDoc,
   doc,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -50,6 +51,25 @@ export const createChat = async (userId: string, role: Role): Promise<Chat> => {
   const chatRef = await addDoc(collections.chats, newChatValues);
 
   return { ...newChatValues, id: chatRef.id } as Chat;
+};
+
+export const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
+  await updateDoc(doc(collections.chats, chatId), {
+    [getRoleFieldName(role)]: userId
+  });
+};
+
+export const getNameById = async (companionId: string): Promise<string> => {
+  if (companionId) {
+    const userSnapshot = await getDoc(doc(collections.users, companionId));
+    if (!userSnapshot.exists()) {
+      throw new Error(`Companion with the id ${companionId} wasn't found`);
+    } else {
+      return userSnapshot.data().name;
+    }
+  } else {
+    return '';
+  }
 };
 
 export const finishChat = async (socket: Socket, chatId: string) => {

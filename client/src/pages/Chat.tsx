@@ -10,7 +10,14 @@ import { ChatBox } from '../components/ChatBox';
 import { auth, collections } from '../firebase/connection';
 import { messageStatusType } from '../firebase/message';
 import { updateDoc } from 'firebase/firestore';
-import { finishChat } from '../helpers/chatFunctions';
+import {
+  createChat,
+  findChatToFill,
+  finishChat,
+  getNameById,
+  getOppositeRoleFieldName,
+  joinChatFirebase
+} from '../helpers/chatFunctions';
 
 /*
   TODO - take care of the disconnect events
@@ -41,10 +48,11 @@ export const Chat = () => {
   );
   const [messages, setMessages] = useState<IMessageData[]>([]);
   const [didChatEnd, setDidChatEnd] = useState<boolean>(false);
-  const thisCompanionName = Array.isArray(location.state.companionName)
-    ? location.state.companionName[0]
-    : location.state.companionName;
-  const [companionName, setCompanionName] = useState(thisCompanionName || '');
+  const [companionName, setCompanionName] = useState(
+    (Array.isArray(location.state.companionName)
+      ? location.state.companionName[0]
+      : location.state.companionName) || ''
+  );
   const [user, loading] = useAuthState(auth);
   const { socket } = useSocketCtx();
   const scrollingRef = useRef(null);
@@ -53,6 +61,8 @@ export const Chat = () => {
   useEffect(() => {
     // redirect if user not logged in
     if (!loading) {
+      console.log('here');
+
       if (!user) navigate('/');
       else socket.emit('join-chat', { chatIds: chatId, username: user.displayName });
     }
@@ -145,7 +155,23 @@ export const Chat = () => {
 
   // request to change partner
   const changeChatRoom = async () => {
-    finishChat(socket, chatId)
+    finishChat(socket, chatId);
+
+    const role = location.state.role;
+    const userId = user!.uid;
+
+    const chatToFill = await findChatToFill(role, userId);
+
+    if (chatToFill) {
+      await joinChatFirebase(userId, role, chatToFill.id);
+      const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
+      setCompanionName(companionName);
+      setChatId(chatToFill.id);
+    } else {
+      const chat = await createChat(userId, role);
+      setCompanionName('');
+      setChatId(chat.id);
+    }
   };
 
   // finish current chat

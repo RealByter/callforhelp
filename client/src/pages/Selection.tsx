@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { query, where, getDocs, updateDoc, doc, getDoc } from 'firebase/firestore';
+import { query, where, getDocs } from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,8 +12,10 @@ import {
   Role,
   createChat,
   findChatToFill,
+  getNameById,
   getOppositeRoleFieldName,
-  getRoleFieldName
+  getRoleFieldName,
+  joinChatFirebase
 } from '../helpers/chatFunctions';
 
 const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
@@ -25,25 +27,6 @@ const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
   const filteredData = data.filter((doc) => doc.status === 'active');
 
   return filteredData;
-};
-
-const getNameById = async (companionId: string): Promise<string> => {
-  if (companionId) {
-    const userSnapshot = await getDoc(doc(collections.users, companionId));
-    if (!userSnapshot.exists()) {
-      throw new Error(`Companion with the id ${companionId} wasn't found`);
-    } else {
-      return userSnapshot.data().name;
-    }
-  } else {
-    return '';
-  }
-};
-
-const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
-  await updateDoc(doc(collections.chats, chatId), {
-    [getRoleFieldName(role)]: userId
-  });
 };
 
 const Selection: React.FC = () => {
