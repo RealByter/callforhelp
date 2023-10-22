@@ -8,6 +8,7 @@ import { deleteDoc, doc, setDoc } from '@firebase/firestore';
 import React from 'react';
 import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { signUpErrors } from '../consts/errorMessages';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -38,15 +39,9 @@ const SignUpPage = () => {
       }
     } catch (e) {
       if (e.code === 'auth/email-already-in-use') {
-        setError({
-          title: 'המשתמש כבר קיים',
-          content: 'אי אפשר ליצור יותר ממשתמש אחד עם אותו אימייל'
-        });
+        setError(signUpErrors.userAlreadyExists);
       } else {
-        setError({
-          title: 'שגיאה',
-          content: 'אירעה שגיאה בעת התחברות בעזרת אימייל'
-        });
+        setError(signUpErrors.generalError);
       }
     }
   };

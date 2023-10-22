@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import React from 'react';
 import { signInWithEmailAndPassword } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { signInErrors } from '../consts/errorMessages';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -18,9 +19,9 @@ const SignInPage = () => {
       await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e) {
       if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
-        setError({ title: 'פרטים לא נכונים', content: 'לא נמצא משתמש עם האימייל והסיסמא הנתונים' });
+        setError(signInErrors.invalidCredentials);
       } else {
-        setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות באמצעות אימייל' });
+        setError(signInErrors.generalError);
       }
     }
   };

@@ -12,6 +12,7 @@ import { doc, setDoc, getDoc } from '@firebase/firestore';
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { quickSignupErrors } from '../consts/errorMessages';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const QuickSignup: React.FC = () => {
       const user = await signInWithGoogle();
       await createUserDocument(user?.user);
     } catch (e) {
-      setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות עם גוגל' });
+      setError(quickSignupErrors.signUpWithGoogle);
     }
   };
 
@@ -46,7 +47,7 @@ const QuickSignup: React.FC = () => {
       const user = await signInWithFacebook();
       await createUserDocument(user?.user);
     } catch (e) {
-      setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות עם פייסבוק' });
+      setError(quickSignupErrors.signUpWithFacebook);
     }
   };
 
