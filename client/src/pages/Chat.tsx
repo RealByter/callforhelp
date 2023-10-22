@@ -61,8 +61,6 @@ export const Chat = () => {
   useEffect(() => {
     // redirect if user not logged in
     if (!loading) {
-      console.log('here');
-
       if (!user) navigate('/');
       else socket.emit('join-chat', { chatIds: chatId, username: user.displayName });
     }
@@ -146,6 +144,7 @@ export const Chat = () => {
     } catch (err) {
       console.log('err: ', err);
     }
+    navigate('/selection');
   };
 
   // go back to the page of all chats
