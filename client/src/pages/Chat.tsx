@@ -10,6 +10,14 @@ import { ChatBox } from '../components/ChatBox';
 import { auth, collections } from '../firebase/connection';
 import { messageStatusType } from '../firebase/message';
 import { updateDoc } from 'firebase/firestore';
+import {
+  createChat,
+  findChatToFill,
+  finishChat,
+  getNameById,
+  getOppositeRoleFieldName,
+  joinChatFirebase
+} from '../helpers/chatFunctions';
 
 /*
   TODO - take care of the disconnect events
@@ -32,18 +40,19 @@ interface IMessageData {
 
 export const Chat = () => {
   const location = useLocation();
-  const thisChatId = Array.isArray(location.state.chatId)
-    ? location.state.chatId[0].id
-    : location.state.chatId;
+  const [chatId, setChatId] = useState(
+    Array.isArray(location.state.chatId) ? location.state.chatId[0].id : location.state.chatId
+  );
   const [messagesData, loadingMessages, error] = useCollectionDataOnce(
-    query(collections.messages, where('chatId', '==', thisChatId))
+    query(collections.messages, where('chatId', '==', chatId))
   );
   const [messages, setMessages] = useState<IMessageData[]>([]);
   const [didChatEnd, setDidChatEnd] = useState<boolean>(false);
-  const thisCompanionName = Array.isArray(location.state.companionName)
-    ? location.state.companionName[0]
-    : location.state.companionName;
-  const [companionName, setCompanionName] = useState(thisCompanionName || '');
+  const [companionName, setCompanionName] = useState(
+    (Array.isArray(location.state.companionName)
+      ? location.state.companionName[0]
+      : location.state.companionName) || ''
+  );
   const [user, loading] = useAuthState(auth);
   const { socket } = useSocketCtx();
   const scrollingRef = useRef(null);
@@ -53,12 +62,12 @@ export const Chat = () => {
     // redirect if user not logged in
     if (!loading) {
       if (!user) navigate('/');
-      else socket.emit('join-chat', { chatIds: thisChatId, username: user.displayName });
+      else socket.emit('join-chat', { chatIds: chatId, username: user.displayName });
     }
     if (error) {
       console.log(error);
     }
-  }, [loading, user, navigate, error, socket, thisChatId]);
+  }, [loading, user, navigate, error, socket, chatId]);
 
   useEffect(() => {
     if (messagesData && !loadingMessages) {
@@ -93,23 +102,18 @@ export const Chat = () => {
   // send msg using socket
   const sendMsg = (message: string) => {
     const messageDate = getCurrDateIsrael();
-    socket.emit(
-      'send message',
-      { msg: message, chatID: thisChatId, messageDate },
-      undefined,
-      () => {
-        const newMsgData = {
-          content: message,
-          senderId: user!.uid,
-          chatId: thisChatId,
-          date: messageDate,
-          status: 'received'
-        };
-        (async function () {
-          await addDoc(collections.messages, newMsgData);
-        })();
-      }
-    );
+    socket.emit('send message', { msg: message, chatID: chatId, messageDate }, undefined, () => {
+      const newMsgData = {
+        content: message,
+        senderId: user!.uid,
+        chatId: chatId,
+        date: messageDate,
+        status: 'received'
+      };
+      (async function () {
+        await addDoc(collections.messages, newMsgData);
+      })();
+    });
     addToMsgList(message, user!.uid || '', messageDate, 'received');
   };
 
@@ -139,12 +143,13 @@ export const Chat = () => {
 
   // block the chat
   const blockSupporter = async () => {
-    socket.emit('block chat', { chatID: thisChatId });
+    socket.emit('block chat', { chatID: chatId });
     try {
-      await updateDoc(doc(collections.chats, thisChatId), { status: 'blocked' });
+      await updateDoc(doc(collections.chats, chatId), { status: 'blocked' });
     } catch (err) {
       console.log('err: ', err);
     }
+    navigate('/selection');
   };
 
   // go back to the page of all chats
@@ -153,31 +158,42 @@ export const Chat = () => {
   };
 
   // request to change partner
-  const changeChatRoom = () => {
-    // there is nothing to do for now
+  const changeChatRoom = async () => {
+    finishChat(socket, chatId);
+
+    const role = location.state.role;
+    const userId = user!.uid;
+
+    const chatToFill = await findChatToFill(role, userId);
+
+    if (chatToFill) {
+      await joinChatFirebase(userId, role, chatToFill.id);
+      const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
+      setCompanionName(companionName);
+      setChatId(chatToFill.id);
+    } else {
+      const chat = await createChat(userId, role);
+      setCompanionName('');
+      setChatId(chat.id);
+    }
   };
 
   // finish current chat
-  const endChat = async () => {
-    socket.emit('stop chat', { chatID: thisChatId });
-    try {
-      await updateDoc(doc(collections.chats, thisChatId), { status: 'ended' });
-    } catch (err) {
-      console.log('err: ', err);
-    }
+  const endChat = () => {
+    finishChat(socket, chatId);
     goBackToChatsPage();
   };
 
   useEffect(() => {
     // join the socket room of the current room
     const joinChatRoom = () => {
-      socket.emit('join-chat', { chatID: thisChatId });
+      socket.emit('join-chat', { chatID: chatId });
     };
 
     // receive msg using socket
     const receiveMsg = (data: IGetMsgData) => {
       const { chatID, message, messageDate } = data;
-      if (chatID === thisChatId) {
+      if (chatID === chatId) {
         //will be useless if entering only the current chat room
         addToMsgList(message, '', messageDate, 'received'); //need to get senderId
       }
@@ -198,7 +214,7 @@ export const Chat = () => {
       socket.off('chat blocked');
       socket.off('connect', joinChatRoom);
     };
-  }, [socket, thisChatId]);
+  }, [socket, chatId]);
 
   const noMessages = messages?.length === 0;
 
