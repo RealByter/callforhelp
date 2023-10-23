@@ -13,13 +13,12 @@ export interface ChatItemProps {
 export const ChatItem: React.FC<ChatItemProps> = ({
     name, lastMessageTiming, unreadMessages, isEnded, chatId }: ChatItemProps) => {
 
-    const OnItemClick = (chatId: number) => {
+    const OnItemClick = () => {
         // go into the right chat
-        console.log(chatId);
     }
 
     return (
-        <div className='chat-item' onClick={() => OnItemClick(chatId)}>
+        <div className='chat-item' onClick={OnItemClick}>
             <div className='content'>
                 <span className='name'>{name}</span>
                 <span className='last-message'>תגובה אחרונה <span>{lastMessageTiming}</span>

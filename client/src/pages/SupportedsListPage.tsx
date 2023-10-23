@@ -17,8 +17,8 @@ export const SupportedsListPage = () => {
     const tempChats = [];
     const tempEndedChats = [];
 
-    for (var i = 0; i < MOCK_CHATS.length; i++) {
-      var chat = MOCK_CHATS[i];
+    for (let i = 0; i < MOCK_CHATS.length; i++) {
+      let chat = MOCK_CHATS[i];
       chat.isEnded ? tempEndedChats.push(chat) : tempChats.push(chat);
     }
 
