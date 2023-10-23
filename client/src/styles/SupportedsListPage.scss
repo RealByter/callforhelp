@@ -1,6 +1,4 @@
-@import './variables.scss';
-
-//todo: fix variables, colors, icons, convensions, responsiveness
+@import '../styles/setup/variables.scss';
 
 .supporteds-list-page {
   height: 100vh;
@@ -82,7 +80,7 @@
   }
 
   .ended-chats .content .name {
-    color: $chat-su-title-color;
+    color: $chat-sub-title-color;
   }
 
   .footer {
