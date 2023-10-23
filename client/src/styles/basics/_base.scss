@@ -1,16 +1,15 @@
-@import './styles/variables.scss';
-
 #root {
   background: $all-grad-purple-bgd;
   height: 100vh;
   width: 100vw;
+  font-family: 'Assistant', sans-serif;
   direction: rtl;
   font-size: 16px;
 
   * {
     box-sizing: border-box;
-    // display: inline-block;
   }
+
 }
 
 .firebase-emulator-warning { display: none; } // removes the annoying warning

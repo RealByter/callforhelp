@@ -1,0 +1,44 @@
+.form-field-rtl {
+  align-items: flex-end;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  width: 100%;
+}
+
+.form-field-input {
+  background-color: $chat-input-bgd;
+}
+.form-field label {
+  margin-right: 20px;
+}
+.form-field-input {
+  background-color: $chat-input-bgd;
+  padding: 10px;
+  border-radius: $login-page-input-radius;
+  border: $login-input-border;
+  width: 100%;
+  box-sizing: border-box;
+  opacity: $login-input-opacity;
+}
+.form-field-input:focus {
+  outline: $input-outline-focus;
+  opacity: 1;
+}
+.form-field-input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.form-field-eye {
+  position: absolute;
+  width: null;
+  left: 10px;
+  top: 50%; /* Vertically center the icon within the input field */
+  transform: translateY(-50%);
+}
