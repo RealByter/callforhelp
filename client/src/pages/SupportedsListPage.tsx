@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/SupportedsListPage.scss';
 import { ChatItem, ChatItemProps } from '../components/ChatItem';
 import SwitchRoleLink from '../components/SwitchRoleLink';
 import { MOCK_CHATS } from '../mock-data/chats-mock-data';
