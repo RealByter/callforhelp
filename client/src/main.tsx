@@ -11,7 +11,7 @@ import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
-import InfoModal from './components/InfoModal.tsx';
+import InfoModalExample from './components/InfoModalExample.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: '/selection',
     element: <Selection />
+  },
+  {
+    path: '/example',
+    element: <InfoModalExample />
   }
 ]);
 
@@ -42,12 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <SocketProvider>
       <StyledEngineProvider injectFirst>
         <AuthenticationWrapper>
-          {/* <RouterProvider router={router} /> */}
-          <InfoModal
-            title="מה כדאי לדעת כתומך"
-            subtext="הנה מספר דגשים ונקודות שכדאי לשים לב אליהם במהלך שיחה ">
-            <></>
-          </InfoModal>
+          <RouterProvider router={router} />
         </AuthenticationWrapper>
       </StyledEngineProvider>
     </SocketProvider>

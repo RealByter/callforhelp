@@ -17,6 +17,7 @@
   .close-button {
     align-self: end;
     margin-bottom: 1.75rem;
+    cursor: pointer;
   }
 
   .title {
@@ -31,6 +32,12 @@
     font-weight: 300;
     text-align: center;
     margin: 0 0 2rem;
+  }
+
+  .info {
+    margin-top: auto;
+    margin-bottom: 5rem;
+    width: 100%;
   }
 
   .continue-button {
