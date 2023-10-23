@@ -1,0 +1,30 @@
+.disclaimer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  background: $all-grad-purple-bgd;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 0 1.5rem;
+
+    p {
+      padding: 0;
+      text-align: start;
+      overflow-y: auto;
+      color: black;
+    }
+
+    button {
+      margin-top: auto;
+      margin-bottom: 4rem;
+    }
+  }
+}

@@ -114,18 +114,23 @@ export const Chat = () => {
         await addDoc(collections.messages, newMsgData);
       })();
     });
-    addToMsgList(message, user!.uid || '', messageDate);
+    addToMsgList(message, user!.uid || '', messageDate, 'received');
   };
 
   // add new msg to msg list
-  const addToMsgList = (message: string, senderId: string, date: string) => {
+  const addToMsgList = (
+    message: string,
+    senderId: string,
+    date: string,
+    status: 'sent' | 'loading' | 'received'
+  ) => {
     setMessages((prev) => [
       ...prev,
       {
         content: message,
         senderId,
-        date: date,
-        status: 'sent'
+        date,
+        status
       }
     ]);
   };
@@ -190,7 +195,7 @@ export const Chat = () => {
       const { chatID, message, messageDate } = data;
       if (chatID === chatId) {
         //will be useless if entering only the current chat room
-        addToMsgList(message, '', messageDate); //need to get senderId
+        addToMsgList(message, '', messageDate, 'received'); //need to get senderId
       }
     };
 
@@ -228,15 +233,22 @@ export const Chat = () => {
         {noMessages ? (
           <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
         ) : (
-          messages!.map((m, index) => (
-            <React.Fragment key={index}>
-              <Message
-                isSender={m.senderId === user!.uid}
-                content={m.content}
-                messageDate={m.date}
-              />
-            </React.Fragment>
-          ))
+          messages!
+            .sort((a, b) => {
+              const aDate = new Date(a.date);
+              const bDate = new Date(b.date);
+              return aDate.getTime() - bDate.getTime();
+            })
+            .map((m, index) => (
+              <React.Fragment key={index}>
+                <Message
+                  isSender={m.senderId === user!.uid}
+                  content={m.content}
+                  messageDate={m.date}
+                  messageState={m.status}
+                />
+              </React.Fragment>
+            ))
         )}
         <span ref={scrollingRef}></span>
       </div>
