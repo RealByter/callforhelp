@@ -1,0 +1,40 @@
+.info-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $all-grad-purple-bgd;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem;
+  align-items: center;
+
+  @media screen and (max-width: 335px) {
+    padding: 2rem; // On screens with this max width the title wraps
+  }
+
+  .close-button {
+    align-self: end;
+    margin-bottom: 1.75rem;
+  }
+
+  .title {
+    color: #0e1c74;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtext {
+    color: #0e1c74;
+    font-weight: 300;
+    text-align: center;
+    margin: 0 0 2rem;
+  }
+
+  .continue-button {
+    margin-top: auto;
+    margin-bottom: 1.25rem;
+  }
+}
