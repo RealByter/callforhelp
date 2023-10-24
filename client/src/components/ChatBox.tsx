@@ -7,7 +7,7 @@ export interface IChatBoxProps {
   blockSupporter: () => void
 }
 
-export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg, blockSupporter }: IChatBoxProps) => {
+export const ChatBox: React.FC<IChatBoxProps> = ({ sendChatMsg, blockSupporter }: IChatBoxProps) => {
   const [currentMsg, setCurrentMsg] = useState<string>('');
 
   const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +20,7 @@ export const ChatBox: FC<IChatBoxProps> = ({ sendChatMsg, blockSupporter }: ICha
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setCurrentMsg(e.target.value);
+    setCurrentMsg(e.currentTarget.value);
   };
 
   return (

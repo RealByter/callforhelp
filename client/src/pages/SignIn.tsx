@@ -17,8 +17,9 @@ const SignInPage = () => {
   const handleFormSubmit = async ({ email, password }: FormOptions) => {
     try {
       await signInWithEmailAndPassword(auth, email!, password!);
-    } catch (e) {
-      if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+    } catch (e: unknown) {
+      const error = e as { code: string };
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
         setError(signInErrors.invalidCredentials);
       } else {
         setError(signInErrors.generalError);
