@@ -14,6 +14,7 @@ export const GeneralCarousel: React.FC<GeneralCarouselProps> = ({ items }) => {
     <Carousel
       duration={2000}
       animation="slide"
+      className='carousel'
       navButtonsAlwaysInvisible
       sx={{ height: '100%', width: '100%' }}
       indicatorIconButtonProps={carouselIndicatorIconButtonProps}
