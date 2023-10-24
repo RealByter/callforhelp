@@ -24,21 +24,22 @@ const SignUpPage = () => {
       if (user) {
         try {
           await setDoc(doc(collections.users, user.user.uid), { name: name!, acceptedTerms: true });
-        } catch (e) {
+        } catch (e: unknown) {
           await deleteUser(user.user);
           throw { code: 'error' };
         }
         try {
           await updateProfile(user.user, { displayName: name });
-        } catch (e) {
+        } catch (e: unknown) {
           await deleteDoc(doc(collections.users, user.user.uid));
           await deleteUser(user.user);
           throw { code: 'error' };
         }
         setStage('end');
       }
-    } catch (e) {
-      if (e.code === 'auth/email-already-in-use') {
+    } catch (e: unknown) {
+      const error = e as {code: string}
+      if (error.code === 'auth/email-already-in-use') {
         setError(signUpErrors.userAlreadyExists);
       } else {
         setError(signUpErrors.generalError);
