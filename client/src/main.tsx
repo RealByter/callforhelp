@@ -7,11 +7,13 @@ import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
+import { SupportedsListPage } from './pages/SupportedsListPage.tsx';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
 import InfoModalExample from './components/InfoModalExample.tsx';
+import Disclaimer from './components/Disclaimer.tsx';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,15 @@ const router = createBrowserRouter([
   {
     path: '/chat',
     element: <Chat />
+
+  },
+  {
+    path: '/supportedsList',
+    element: <SupportedsListPage />
+  },
+  {
+    path: '/FindSupporter', //there is a to link here from SwitchRoleLink component
+    element: <div>temp find supporter</div>
   },
   {
     path: '/selection',
@@ -42,13 +53,14 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <SocketProvider>
       <StyledEngineProvider injectFirst>
         <AuthenticationWrapper>
+          <Disclaimer />
           <RouterProvider router={router} />
         </AuthenticationWrapper>
       </StyledEngineProvider>
     </SocketProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
