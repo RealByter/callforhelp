@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import OrBackground from '../assets/OrBackground.svg';
+import { useNavigate } from 'react-router-dom';
 
 export interface ChatItemProps {
     name: string,
     lastMessageTiming: string,
     unreadMessages: number,
     isEnded: boolean,
-    chatId: number
+    chatId: string
 };
 
 export const ChatItem: React.FC<ChatItemProps> = ({
     name, lastMessageTiming, unreadMessages, isEnded, chatId }: ChatItemProps) => {
 
+    const navigate = useNavigate();
+
     const OnItemClick = () => {
-        // go into the right chat
+        navigate('/chat', { state: { chatId, companionName: name } });
     }
 
     return (

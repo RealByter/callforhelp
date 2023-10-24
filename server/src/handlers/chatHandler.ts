@@ -18,9 +18,13 @@ export default (io: Server, socket: Socket) => {
   };
 
   const joinChat = (data: { chatIds: string | string[]; username: string }) => {
+    const userRooms: { [key: string]: string } = {};
+    socket.rooms.forEach((r) => { userRooms[r] = r });
     const connectToRoom = (chatId: string) => {
-      socket.join(chatId);
-      socket.broadcast.to(chatId).emit('user-joined', username);
+      if (!userRooms[chatId]) {
+        socket.join(chatId);
+        socket.broadcast.to(chatId).emit('user-joined', username);
+      };
     };
 
     const { chatIds, username } = data;
