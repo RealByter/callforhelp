@@ -7,7 +7,7 @@ export interface ChatItemProps {
     lastMessageTiming: string,
     unreadMessages: number,
     isEnded: boolean,
-    chatId: number
+    chatId: string
 };
 
 export const ChatItem: React.FC<ChatItemProps> = ({

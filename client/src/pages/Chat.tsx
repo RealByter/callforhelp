@@ -122,7 +122,7 @@ export const Chat = () => {
     message: string,
     senderId: string,
     date: string,
-    status: 'sent' | 'loading' | 'received'
+    status: 'sent' | 'loading' | 'received' | 'read'
   ) => {
     setMessages((prev) => [
       ...prev,

@@ -4,7 +4,7 @@ export interface IMessageProps {
   isSender: boolean;
   content: string;
   messageDate: string;
-  messageState: 'sent' | 'received' | 'loading';
+  messageState: 'sent' | 'received' | 'loading' | 'read';
 }
 
 export const Message: React.FC<IMessageProps> = ({
