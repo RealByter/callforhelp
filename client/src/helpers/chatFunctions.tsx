@@ -20,6 +20,19 @@ export const getRoleFieldName = (role: Role) =>
 export const getOppositeRoleFieldName = (role: Role) =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
 
+export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> => {
+  const roleFieldName = getRoleFieldName(role);
+  const queryUserChats = query(
+    collections.chats,
+    where(roleFieldName, '==', userId),
+    orderBy('createdAt')
+  );
+  const querySnapshot = await getDocs(queryUserChats);
+  const queryData = querySnapshot.docs.map((doc) => doc.data());
+
+  return queryData;
+};
+
 export const findChatToFill = async (role: Role, userId: string): Promise<Chat | null> => {
   const roleFieldName = getRoleFieldName(role);
   const oppositeRoleFieldName = getOppositeRoleFieldName(role);

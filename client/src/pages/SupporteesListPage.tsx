@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { ChatItem, ChatItemProps } from '../components/ChatItem';
 import SwitchRoleLink from '../components/SwitchRoleLink';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, collections } from '../firebase/connection';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Role, getUserChats, getNameById, getOppositeRoleFieldName } from '../helpers/chatFunctions';
 import { MOCK_CHATS } from '../mock-data/chats-mock-data';
 
 export const SupporteesListPage = () => {
   const location = useLocation();
-  // const [chatId, setChatId] = useState(
-  //   Array.isArray(location.state.chatId) ? location.state.chatId[0].id : location.state.chatId
-  // );
+  const navigate = useNavigate();
+  const [user, loading] = useAuthState(auth);
+
+  // const [chatsData, loadingChats, error] = useCollectionDataOnce(
+  //   query(collections.chats, where('supporterId', '==', user!.uid))
+  // ); // todo: move to useEffect
+
+  const [chatsData, setChatsData] = useState<Chat[]>([]);
 
   const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
   const [chats, setChats] = useState<ChatItemProps[]>([]);
   const chatsIsEmpty = chats.length === 0;
   const endedChatsIsEmpty = endedChats.length === 0;
 
-  // happends once on mount
   useEffect(() => {
     // get chats from firebase 
-    console.log(location.state);
-
 
     // sort by time and date (and write "yesterday" if the date is of yesterday)
     const tempChats = [];
@@ -34,6 +39,37 @@ export const SupporteesListPage = () => {
     setEndedChats(tempEndedChats);
   }, []);
 
+  useEffect(() => {
+    // redirect if user not logged in
+    if (!loading) {
+      if (!user) navigate('/');
+    }
+    // if (error) {
+    //   console.log(error);
+    // }
+  }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      findUserChatsData(user!.uid, location.state.role);
+    }
+  }, [user])
+
+  const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => {
+
+    const userChats = await getUserChats(userId, role);
+    if (!userChats.length) return [];
+
+    const myCompanions = await Promise.all(
+      userChats.map((chat) => {
+        return getNameById(chat[getOppositeRoleFieldName(role)] as string)
+      })
+    );
+    console.log(myCompanions);
+    setChatsData(userChats);
+
+    return [];
+  }
 
   const OnButtonClick = () => {
     // find another supportee
@@ -48,12 +84,12 @@ export const SupporteesListPage = () => {
         {/* sort by date */}
         <div className='chats'>
           {chatsIsEmpty ?
-            <span className='loading' >טוען...</span> : 
+            <span className='loading' >טוען...</span> :
             chats.map((chat) =>
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageTiming={chat.lastMessageTiming}
+                lastMessageSentAt={chat.lastMessageSentAt}
                 unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
@@ -69,7 +105,7 @@ export const SupporteesListPage = () => {
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageTiming={chat.lastMessageTiming}
+                lastMessageSentAt={chat.lastMessageSentAt}
                 unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
