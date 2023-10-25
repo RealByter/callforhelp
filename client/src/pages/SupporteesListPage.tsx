@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ChatItem, ChatItemProps } from '../components/ChatItem';
 import SwitchRoleLink from '../components/SwitchRoleLink';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MOCK_CHATS } from '../mock-data/chats-mock-data';
 
-export const SupportedsListPage = () => {
+export const SupporteesListPage = () => {
+  const location = useLocation();
+  // const [chatId, setChatId] = useState(
+  //   Array.isArray(location.state.chatId) ? location.state.chatId[0].id : location.state.chatId
+  // );
+
   const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
   const [chats, setChats] = useState<ChatItemProps[]>([]);
   const chatsIsEmpty = chats.length === 0;
@@ -11,7 +17,10 @@ export const SupportedsListPage = () => {
 
   // happends once on mount
   useEffect(() => {
-    // get chats from firebase
+    // get chats from firebase 
+    console.log(location.state);
+
+
     // sort by time and date (and write "yesterday" if the date is of yesterday)
     const tempChats = [];
     const tempEndedChats = [];
@@ -23,15 +32,15 @@ export const SupportedsListPage = () => {
 
     setChats(tempChats);
     setEndedChats(tempEndedChats);
-
   }, []);
 
+
   const OnButtonClick = () => {
-    // find another supported
+    // find another supportee
   }
 
   return (
-    <div className="supporteds-list-page">
+    <div className="supportees-list-page">
 
       <div className='content'>
         <h1>רשימת נתמכים</h1>
@@ -69,7 +78,7 @@ export const SupportedsListPage = () => {
       </div>
 
       <div className='footer'>
-        <span className='locate-supported' onClick={OnButtonClick}>איתור נתמך נוסף</span>
+        <span className='locate-supportee' onClick={OnButtonClick}>איתור נתמך נוסף</span>
         <SwitchRoleLink />
       </div>
     </div>

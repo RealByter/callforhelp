@@ -7,7 +7,7 @@ import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
-import { SupportedsListPage } from './pages/SupportedsListPage.tsx';
+import { SupporteesListPage } from './pages/SupporteesListPage.tsx';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
@@ -34,8 +34,8 @@ const router = createBrowserRouter([
 
   },
   {
-    path: '/supportedsList',
-    element: <SupportedsListPage />
+    path: '/supporteesList',
+    element: <SupporteesListPage />
   },
   {
     path: '/FindSupporter', //there is a to link here from SwitchRoleLink component
