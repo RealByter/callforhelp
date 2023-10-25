@@ -154,7 +154,7 @@ export const Chat = () => {
 
   // go back to the page of all chats
   const goBackToChatsPage = () => {
-    navigate('/selection');
+    navigate('/supportedsList', { state: { companionName, chatId: chatId, role: location.state.role } });
   };
 
   // request to change partner
