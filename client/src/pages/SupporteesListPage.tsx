@@ -4,7 +4,14 @@ import SwitchRoleLink from '../components/SwitchRoleLink';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, collections } from '../firebase/connection';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Role, getUserChats, getNameById, getOppositeRoleFieldName } from '../helpers/chatFunctions';
+import {
+  Role,
+  getUserChats,
+  getNameById,
+  getOppositeRoleFieldName,
+  getChatLastMessage,
+  getNumOfUnreadMessagesInChat
+} from '../helpers/chatFunctions';
 import { MOCK_CHATS } from '../mock-data/chats-mock-data';
 
 export const SupporteesListPage = () => {
@@ -16,7 +23,7 @@ export const SupporteesListPage = () => {
   //   query(collections.chats, where('supporterId', '==', user!.uid))
   // ); // todo: move to useEffect
 
-  const [chatsData, setChatsData] = useState<Chat[]>([]);
+  const [chatsData, setChatsData] = useState<ChatItemProps[]>([]);
 
   const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
   const [chats, setChats] = useState<ChatItemProps[]>([]);
@@ -56,17 +63,19 @@ export const SupporteesListPage = () => {
   }, [user])
 
   const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => {
-
     const userChats = await getUserChats(userId, role);
     if (!userChats.length) return [];
 
-    const myCompanions = await Promise.all(
+    const names = await Promise.all(
       userChats.map((chat) => {
-        return getNameById(chat[getOppositeRoleFieldName(role)] as string)
+        return getChatLastMessage(chat.id);
+        // return getNumOfUnreadMessagesInChat(userId, chat.id);
+        // return getNameById(chat[getOppositeRoleFieldName(role)] as string)
       })
     );
-    console.log(myCompanions);
-    setChatsData(userChats);
+
+    console.log(names);
+    // setChatsData(names);
 
     return [];
   }
