@@ -12,9 +12,9 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "start": "node src/dist/index.js",
+    "start": "node server/dist/index.js",
     "dev": "nodemon dist/index.js",
-    "build": "tsc",
+    "build": "tsc ./server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write ."
   },
