@@ -1,9 +1,10 @@
+require('dotenv').config();
 import { Socket, Server } from 'socket.io';
 import { SocketFunction } from './index';
 
 export class CallForHelpServer {
   public static readonly PORT: string = '3000';
-  public static readonly CORS_ORIGIN = 'http://localhost:5173';
+  public static readonly CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
   private onConnectCallback: SocketFunction;
   private port: number;
