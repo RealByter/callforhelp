@@ -2,9 +2,11 @@ import { ReactNode, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { SocketCtx } from './SocketCtx';
 
-const URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+const URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'
 
 const SocketProvider = (props: { children?: ReactNode }) => {
+  console.log(URL);
+  
   const socketRef = useRef(io(URL, { autoConnect: true }));
 
   return (
