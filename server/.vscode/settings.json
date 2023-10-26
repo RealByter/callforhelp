@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/c53f91e9-8fcc-4a88-a50c-92dc1e6814e9/resourceGroups/callforhelp/providers/Microsoft.Web/sites/CallForHelpServer",
+  "appService.deploySubpath": "."
+}
