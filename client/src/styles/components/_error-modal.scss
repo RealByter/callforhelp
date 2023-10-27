@@ -1,0 +1,35 @@
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100vw;
+  height: 100vh;
+  background: $all-grad-purple-bgd;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+
+  h2 {
+    margin-top: 12.25rem;
+    font-weight: 300;
+    font-size: 2rem;
+    color: #0e1c74;
+  }
+
+  p {
+    padding: 0 1rem;
+  }
+
+  button {
+    background-color: #ffffff;
+    color: #0e1c74;
+    border-radius: $all-pages-btn-radius;
+    box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    height: 2.25rem;
+    width: 10.75rem;
+    font-weight: 600;
+  }
+}

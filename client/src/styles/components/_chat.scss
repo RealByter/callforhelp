@@ -178,10 +178,17 @@
     }
 
     .message-body.sender {
-      background-color: #ffffff;
       background-blend-mode: screen;
       border-radius: 8px 8px 0 8px;
       align-self: flex-start;
+
+      &.sent {
+        background: #ffffffbf;
+      }
+
+      &.received {
+        background: #ffffff;
+      }
     }
 
     .no-msg {

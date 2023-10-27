@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom';
 import { Message } from '../components/Message';
-import { useSocketCtx } from '../context/socket/useSocketCtx';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { doc, query, where, addDoc } from '@firebase/firestore';
 import { ChatTopBar } from '../components/ChatTopBar';
 import { ChatBox } from '../components/ChatBox';
 import { auth, collections } from '../firebase/connection';
-import { messageStatusType } from '../firebase/message';
-import { updateDoc } from 'firebase/firestore';
+import {
+  Role,
+  createChat,
+  findChatToFill,
+  finishChat,
+  getNameById,
+  getOppositeRoleFieldName,
+  joinChatFirebase
+} from '../helpers/chatFunctions';
 
 /*
   TODO - take care of the disconnect events
@@ -17,63 +23,46 @@ import { updateDoc } from 'firebase/firestore';
   TODO - leave socket room on exiting
 */
 
-interface IGetMsgData {
-  chatID: string;
-  message: string;
-  messageDate: string;
-}
-
-interface IMessageData {
-  senderId: string;
-  content: string;
-  date: string;
-  status: messageStatusType;
-}
-
 export const Chat = () => {
-  const location = useLocation();
-  const thisChatId = Array.isArray(location.state.chatId)
-    ? location.state.chatId[0].id
-    : location.state.chatId;
-  const [messagesData, loadingMessages, error] = useCollectionDataOnce(
-    query(collections.messages, where('chatId', '==', thisChatId))
+  const [searchParams, setSearchParams] = useSearchParams();
+  const chatId = searchParams.get('chatId');
+  const [messages, , error] = useCollectionData(
+    query(collections.messages, where('chatId', '==', chatId))
   );
-  const [messages, setMessages] = useState<IMessageData[]>([]);
-  const [didChatEnd, setDidChatEnd] = useState<boolean>(false);
-  const thisCompanionName = Array.isArray(location.state.companionName)
-    ? location.state.companionName[0]
-    : location.state.companionName;
-  const [companionName, setCompanionName] = useState(thisCompanionName || '');
+  const [chat] = useDocumentData(doc(collections.chats, chatId || 'empty'));
+  const [role, setRole] = useState<Role>(); // should be of use later
+  const [companionName, setCompanionName] = useState('');
   const [user, loading] = useAuthState(auth);
-  const { socket } = useSocketCtx();
   const scrollingRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // redirect if user not logged in
-    if (!loading) {
-      if (!user) navigate('/');
-      else socket.emit('join-chat', { chatIds: thisChatId, username: user.displayName });
+    if (!loading && !user) {
+      navigate('/');
     }
     if (error) {
       console.log(error);
     }
-  }, [loading, user, navigate, error, socket, thisChatId]);
+  }, [loading, user, navigate, error]);
 
   useEffect(() => {
-    if (messagesData && !loadingMessages) {
-      setMessages(
-        messagesData.map((message) => {
-          return {
-            senderId: message.senderId,
-            content: message.content,
-            date: message.date,
-            status: message.status
-          };
-        })
-      );
+    if (!chatId) navigate('/selection');
+  }, [chatId, navigate]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const userRole = chat!.supporteeId === user!.uid ? 'supportee' : 'supporter';
+      setRole(userRole);
+      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!);
+      setCompanionName(compName);
+    };
+
+    if (chat) {
+      if (chat.supporteeId !== user?.uid && chat.supporterId !== user?.uid) navigate('/selection');
+      getData();
     }
-  }, [messagesData, loadingMessages]);
+  }, [chat, user, navigate]);
 
   useEffect(() => {
     // scroll to bottom of the chat when getting a new msg
@@ -90,56 +79,16 @@ export const Chat = () => {
     return new Date(here.getTime() - diff).toISOString();
   };
 
-  // send msg using socket
-  const sendMsg = (message: string) => {
+  const sendMsg = async (message: string) => {
     const messageDate = getCurrDateIsrael();
-    socket.emit(
-      'send message',
-      { msg: message, chatID: thisChatId, messageDate },
-      undefined,
-      () => {
-        const newMsgData = {
-          content: message,
-          senderId: user!.uid,
-          chatId: thisChatId,
-          date: messageDate,
-          status: 'received'
-        };
-        (async function () {
-          await addDoc(collections.messages, newMsgData);
-        })();
-      }
-    );
-    addToMsgList(message, user!.uid || '', messageDate);
-  };
-
-  // add new msg to msg list
-  const addToMsgList = (message: string, senderId: string, date: string) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        content: message,
-        senderId,
-        date: date,
-        status: 'sent'
-      }
-    ]);
-  };
-
-  // finish the chat (permanently) using socket
-  const closeChat = () => {
-    setDidChatEnd(true);
-    //some ending chat architecture - maybe alert, maybe redirect
-  };
-
-  // block the chat
-  const blockSupporter = async () => {
-    socket.emit('block chat', { chatID: thisChatId });
-    try {
-      await updateDoc(doc(collections.chats, thisChatId), { status: 'blocked' });
-    } catch (err) {
-      console.log('err: ', err);
-    }
+    const newMsgData = {
+      content: message,
+      senderId: user!.uid,
+      chatId: chatId,
+      date: messageDate,
+      status: 'received'
+    };
+    await addDoc(collections.messages, newMsgData);
   };
 
   // go back to the page of all chats
@@ -148,61 +97,39 @@ export const Chat = () => {
   };
 
   // request to change partner
-  const changeChatRoom = () => {
-    // there is nothing to do for now
+  const changeChatRoom = async () => {
+    finishChat(chatId!);
+
+    const userId = user!.uid;
+
+    const chatToFill = await findChatToFill(role!, userId);
+
+    if (chatToFill) {
+      await joinChatFirebase(userId, role!, chatToFill.id);
+      const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role!)]!);
+      setCompanionName(companionName);
+      setSearchParams(createSearchParams({ chatId: chatToFill.id }));
+    } else {
+      const chat = await createChat(userId, role!);
+      setCompanionName('');
+      setSearchParams(createSearchParams({ chatId: chat.id }));
+    }
   };
 
   // finish current chat
-  const endChat = async () => {
-    socket.emit('stop chat', { chatID: thisChatId });
-    try {
-      await updateDoc(doc(collections.chats, thisChatId), { status: 'ended' });
-    } catch (err) {
-      console.log('err: ', err);
-    }
+  const endChat = () => {
+    finishChat(chatId!);
     goBackToChatsPage();
   };
 
-  useEffect(() => {
-    // join the socket room of the current room
-    const joinChatRoom = () => {
-      socket.emit('join-chat', { chatID: thisChatId });
-    };
-
-    // receive msg using socket
-    const receiveMsg = (data: IGetMsgData) => {
-      const { chatID, message, messageDate } = data;
-      if (chatID === thisChatId) {
-        //will be useless if entering only the current chat room
-        addToMsgList(message, '', messageDate); //need to get senderId
-      }
-    };
-
-    // take care of all the socket events
-    socket.on('connect', joinChatRoom);
-    socket.on('get message', receiveMsg);
-    socket.on('close chat', closeChat);
-    socket.on('chat blocked', closeChat);
-    socket.on('user-joined', (username: string) => {
-      setCompanionName(username);
-    });
-    return () => {
-      socket.off('get message');
-      socket.off('user-joined');
-      socket.off('close chat');
-      socket.off('chat blocked');
-      socket.off('connect', joinChatRoom);
-    };
-  }, [socket, thisChatId]);
-
-  const noMessages = messages?.length === 0;
+  const noMessages = messages ? messages.length === 0 : true;
 
   return (
     <div className="chat-page">
       <ChatTopBar
-        isChatEnded={didChatEnd}
+        isChatEnded={chat?.status === 'ended'}
         companionName={companionName}
-        isSupporter={location.state.role === 'supporter'}
+        isSupporter={role === 'supporter'}
         endChat={endChat}
         changeChatRoom={changeChatRoom}
         goBackToChatsPage={goBackToChatsPage}
@@ -212,20 +139,26 @@ export const Chat = () => {
         {noMessages ? (
           <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
         ) : (
-          messages!.map((m, index) => (
-            <React.Fragment key={index}>
+          messages!
+            .sort((a, b) => {
+              const aDate = new Date(a.date);
+              const bDate = new Date(b.date);
+              return aDate.getTime() - bDate.getTime();
+            })
+            .map((m, index) => (
               <Message
+                key={index}
                 isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}
+                messageState={m.status}
               />
-            </React.Fragment>
-          ))
+            ))
         )}
         <span ref={scrollingRef}></span>
       </div>
 
-      <ChatBox sendChatMsg={sendMsg} blockSupporter={blockSupporter} />
+      <ChatBox sendChatMsg={sendMsg} blockSupporter={() => {}} />
     </div>
   );
 };
