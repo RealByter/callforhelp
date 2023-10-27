@@ -31,12 +31,12 @@ const QuickSignup: React.FC = () => {
   };
 
   const signInWithGoogleHandler = async () => {
-    const user = await signInWithGoogle();
+    const user = await signInWithGoogle([], {prompt: 'select_account'});
     await handleUserCreation(user?.user);
   };
 
   const signInWithFacebookHandler = async () => {
-    const user = await signInWithFacebook();
+    const user = await signInWithFacebook([], {prompt: 'select_account'});
     await handleUserCreation(user?.user);
   };
 
