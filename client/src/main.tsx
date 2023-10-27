@@ -2,7 +2,6 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import SocketProvider from './context/socket/SocketProvider.tsx';
 import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
@@ -31,7 +30,6 @@ const router = createBrowserRouter([
   {
     path: '/chat',
     element: <Chat />
-
   },
   {
     path: '/supportedsList',
@@ -49,13 +47,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-    <SocketProvider>
-      <StyledEngineProvider injectFirst>
-        <AuthenticationWrapper>
-          <Disclaimer />
-          <RouterProvider router={router} />
-        </AuthenticationWrapper>
-      </StyledEngineProvider>
-    </SocketProvider>
+  <StyledEngineProvider injectFirst>
+    <AuthenticationWrapper>
+      <Disclaimer />
+      <RouterProvider router={router} />
+    </AuthenticationWrapper>
+  </StyledEngineProvider>
   // </React.StrictMode>
 );

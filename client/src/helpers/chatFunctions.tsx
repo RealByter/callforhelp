@@ -12,7 +12,6 @@ import {
 } from 'firebase/firestore';
 import { Chat } from '../firebase/chat';
 import { collections } from '../firebase/connection';
-import { Socket } from 'socket.io-client';
 
 export type Role = 'supporter' | 'supportee';
 export const getRoleFieldName = (role: Role) =>
@@ -72,8 +71,7 @@ export const getNameById = async (companionId: string): Promise<string> => {
   }
 };
 
-export const finishChat = async (socket: Socket, chatId: string) => {
-  socket.emit('stop chat', { chatID: chatId });
+export const finishChat = async (chatId: string) => {
   try {
     await updateDoc(doc(collections.chats, chatId), { status: 'ended' });
   } catch (err) {
