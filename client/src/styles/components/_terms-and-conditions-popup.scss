@@ -39,6 +39,19 @@
     margin: 0;
     flex: 1;
 
+    strong {
+      text-decoration: underline;
+    }
+
+    p {
+      display: flex;
+      flex-direction: column;
+
+      .sub {
+        margin-right: 1rem;
+      }
+    }
+
     &:not(:last-child) {
       margin-bottom: 2rem;
     }
@@ -53,15 +66,71 @@
   &--bottom-nav {
     margin-top: auto;
     display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.75rem;
+
+    .container {
+      color: #113a8c;
+      font-size: 0.875rem;
+      font-weight: 600;
+      position: relative;
+      text-align: start;
+      padding-right: 1.5rem;
+      align-self: start;
+
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      &.disabled {
+        color: lightgray;
+      }
+
+      .checkmark {
+        cursor: pointer;
+        position: absolute;
+        top: 2px;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #113a8c;
+        border-radius: 2px;
+        background: none;
+        outline: none;
+
+        &:disabled {
+          border-color: lightgray;
+          cursor: default;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border-radius: 2px;
+          display: none;
+          top: -2px;
+          left: -2px;
+          background: #113a8c;
+        }
+
+        &.marked::after {
+          display: block;
+        }
+      }
+    }
 
     &__agree-btn {
       background-color: #ffffff;
       color: #0e1c74;
       border-radius: $all-pages-btn-radius;
-      box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.10);
+      box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
       padding: 0.5rem 1rem;
       height: 36px;
       width: 168px;

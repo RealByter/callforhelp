@@ -27,8 +27,8 @@ const QuickSignup: React.FC = () => {
           name: user.displayName as string,
           acceptedTerms: false
         });
-        navigate('/selection');
       }
+      navigate('/selection');
     }
   };
 
