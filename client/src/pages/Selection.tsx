@@ -5,15 +5,13 @@ import { query, where, getDocs } from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
 import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
 import {
   Role,
   createChat,
   findChatToFill,
-  getNameById,
-  getOppositeRoleFieldName,
   getRoleFieldName,
   joinChatFirebase
 } from '../helpers/chatFunctions';
@@ -46,20 +44,25 @@ const Selection: React.FC = () => {
       const myChats = await findMyChats(userId, role);
 
       if (myChats.length !== 0) {
-        const myCompanions = await Promise.all(
-          myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string))
-        );
-        navigate('/chat', { state: { companionName: myCompanions, chatId: myChats, role } });
+        navigate({
+          pathname: '/chat',
+          search: createSearchParams({ chatId: myChats[0].id }).toString()
+        });
       } else {
         const chatToFill = await findChatToFill(role, user!.uid);
 
         if (chatToFill) {
           await joinChatFirebase(userId, role, chatToFill.id);
-          const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
-          navigate('/chat', { state: { companionName, chatId: chatToFill.id, role } });
+          navigate({
+            pathname: '/chat',
+            search: createSearchParams({ chatId: chatToFill.id }).toString()
+          });
         } else {
           const chat = await createChat(userId, role);
-          navigate('/chat', { state: { chatId: chat.id, role } });
+          navigate({
+            pathname: '/chat',
+            search: createSearchParams({ chatId: chat.id }).toString()
+          });
         }
       }
     };
