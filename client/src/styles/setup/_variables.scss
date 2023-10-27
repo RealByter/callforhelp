@@ -7,6 +7,7 @@ $chat-first-part-msg-bgd: #ffffff;
 $chat-second-part-msg-bgd: #9360ff;
 $chat-send-btn-bgd: #e5dbff;
 $scrollbar-bgd: #e5dbff;
+$dark-purple: #baa6f1; // todo: remove
 
 //buttons
 $all-pages-btn-radius: 20px;
@@ -41,6 +42,7 @@ $chat-btn-border: 2px solid;
 $chat-btn-border-img: linear-gradient(267.86deg, #736cff 6.51%, #0159ff 100%);
 $chat-upper-top-bar-border: 1px solid #e1e4e9;
 $chat-input-order: 2px solid $chat-send-btn-bgd;
+$chat-item-hover-border: 2px #736CFF solid;
 
 //opacity
 $login-input-opacity: 50%;

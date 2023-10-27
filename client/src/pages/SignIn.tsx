@@ -1,18 +1,30 @@
-import { useEffect } from 'react';
-import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
 import React from 'react';
+import { signInWithEmailAndPassword } from '@firebase/auth';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { signInErrors } from '../consts/errorMessages';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const [user] = useAuthState(auth);
+  const [error, setError] = useState<ErrorInfo>();
 
   const handleFormSubmit = async ({ email, password }: FormOptions) => {
-    signInWithEmailAndPassword(email as string, password as string);
+    try {
+      await signInWithEmailAndPassword(auth, email!, password!);
+    } catch (e: unknown) {
+      const error = e as { code: string };
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        setError(signInErrors.invalidCredentials);
+      } else {
+        setError(signInErrors.generalError);
+      }
+    }
   };
 
   useEffect(() => {
@@ -23,6 +35,7 @@ const SignInPage = () => {
 
   return (
     <>
+      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>התחברות</Header>
       <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
     </>

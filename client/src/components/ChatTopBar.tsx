@@ -10,7 +10,7 @@ interface IChatTopBarProps {
   goBackToChatsPage: () => void;
 }
 
-export const ChatTopBar: FC<IChatTopBarProps> = ({
+export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
   companionName,
@@ -25,7 +25,7 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
           <span className="title">{companionName || "התומך המאושר"}</span>
           <span className="sub-title">אני פה בשבילך</span>
         </div>
-        <button className="top-bar-close" onClick={() => goBackToChatsPage()}>
+        <button className="top-bar-close" onClick={goBackToChatsPage}>
           <CloseIcon />
         </button>
       </div>
@@ -34,10 +34,10 @@ export const ChatTopBar: FC<IChatTopBarProps> = ({
           <p>השיחה הסתיימה</p>
         ) : (
             <div className="chat-top-bar-lower-buttons">
-              <button onClick={() => changeChatRoom}>
+              <button onClick={changeChatRoom}>
                 {isSupporter ? 'איתור נתמך נוסף' : 'החלף תומך'}
               </button>
-              <button onClick={() => endChat()}>
+              <button onClick={endChat}>
                 סיום שיחה
               </button>
             </div>

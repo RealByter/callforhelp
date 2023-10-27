@@ -1,5 +1,4 @@
 import LoginButton from '../components/LoginButton';
-import classes from './QuickSignup.module.scss';
 import GoogleLogo from '../assets/logo_googleg_48dp.svg';
 import FacebookLogo from '../assets/FacebookLogo.png';
 import MailLogo from '../assets/Mail.svg';
@@ -9,15 +8,18 @@ import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks
 import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
 import { doc, setDoc, getDoc } from '@firebase/firestore';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { quickSignupErrors } from '../consts/errorMessages';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
+  const [error, setError] = useState<ErrorInfo>();
 
-  const handleUserCreation = async (user: User | undefined) => {
+  const createUserDocument = async (user?: User) => {
     if (user) {
       const oldUser = await getDoc(doc(collections.users, user.uid));
       if (!oldUser.exists()) {
@@ -31,21 +33,30 @@ const QuickSignup: React.FC = () => {
   };
 
   const signInWithGoogleHandler = async () => {
-    const user = await signInWithGoogle();
-    await handleUserCreation(user?.user);
+    try {
+      const user = await signInWithGoogle();
+      await createUserDocument(user?.user);
+    } catch (e) {
+      setError(quickSignupErrors.signUpWithGoogle);
+    }
   };
 
   const signInWithFacebookHandler = async () => {
-    const user = await signInWithFacebook();
-    await handleUserCreation(user?.user);
+    try {
+      const user = await signInWithFacebook();
+      await createUserDocument(user?.user);
+    } catch (e) {
+      setError(quickSignupErrors.signUpWithFacebook);
+    }
   };
 
   return (
     <>
+      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <Header>הרשמה מהירה</Header>
-      <div className={classes.wrapper}>
-        <div className={classes.page}>
-          <div className={classes.social}>
+      <div className="quick-signup-wrapper">
+        <div className="page">
+          <div className="social">
             <LoginButton onClick={signInWithGoogleHandler}>
               <img src={GoogleLogo} alt="Google Logo" />
               להרשמה עם גוגל
@@ -55,13 +66,13 @@ const QuickSignup: React.FC = () => {
               להרשמה עם פייסבוק
             </LoginButton>
           </div>
-          <div className={classes.separator}>
-            <div className={classes.line} />
-            <div className={classes.or}>
+          <div className="separator">
+            <div className="line" />
+            <div className="or">
               <span>או</span>
               <img src={OrBackground} alt="" />
             </div>
-            <div className={classes.line} />
+            <div className="line" />
           </div>
           <LoginButton
             onClick={() => {
@@ -72,7 +83,7 @@ const QuickSignup: React.FC = () => {
           </LoginButton>
           <p dir="rtl">
             כבר יש לך חשבון?{' '}
-            <NavLink to="/signin" className={classes.highlight}>
+            <NavLink to="/signin" className="highlight">
               להתחברות
             </NavLink>
           </p>
