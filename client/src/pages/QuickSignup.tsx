@@ -17,7 +17,7 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
 
-  const createUserDocument = async (user: User) => {
+  const handleUserCreation = async (user: User | undefined) => {
     if (user) {
       const oldUser = await getDoc(doc(collections.users, user.uid));
       if (!oldUser.exists()) {

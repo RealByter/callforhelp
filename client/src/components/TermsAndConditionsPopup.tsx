@@ -20,7 +20,8 @@ interface TermsAndConditionsPopupProps {
 }
 
 const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded, onClose }) => {
-  const [buttonEnabled, setButtonEnabled] = useState<boolean>(false);
+  const [buttonsEnabled, setButtonsEnabled] = useState<boolean>(false);
+  const [marked, setMarked] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const contentText: Array<string> = [
@@ -37,16 +38,16 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
   useEffect(() => {
     const element = contentRef.current;
     if (element && element.scrollHeight <= element.clientHeight) {
-      setButtonEnabled(true);
+      setButtonsEnabled(true);
     }
   }, [contentRef]);
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const element = e.currentTarget;
-
-    if (element.scrollHeight - element.scrollTop - 1 === element.clientHeight) {
+    
+    if (element.scrollHeight - element.scrollTop - 1 <= element.clientHeight) {
       // the -1 is for natural inaccuracy purposes
-      setButtonEnabled(true);
+      setButtonsEnabled(true);
     }
   };
 
@@ -66,11 +67,19 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
         </p>
         {agreeNeeded && (
           <div className="pop-up-window--bottom-nav">
+            <div className={`container ${!buttonsEnabled && 'disabled'}`}>
+              אני מאשר כי קראתי את התקנון ואני מסכים להוראותיו
+              <button
+                disabled={!buttonsEnabled}
+                className={`checkmark ${marked && 'marked'}`}
+                type="button"
+                onClick={() => setMarked((prev) => !prev)}></button>
+            </div>
             <Button
               className="pop-up-window--bottom-nav__agree-btn"
               onClick={onClose}
-              disabled={!buttonEnabled}>
-              אני מסכים לתנאים
+              disabled={!buttonsEnabled || !marked}>
+              אישור
             </Button>
           </div>
         )}
