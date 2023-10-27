@@ -34,7 +34,7 @@ const QuickSignup: React.FC = () => {
 
   const signInWithGoogleHandler = async () => {
     try {
-      const user = await signInWithGoogle([], { prompt: 'select_account' });
+      const user = await signInWithGoogle();
       await createUserDocument(user?.user);
     } catch (e) {
       setError(quickSignupErrors.signUpWithGoogle);
@@ -43,7 +43,7 @@ const QuickSignup: React.FC = () => {
 
   const signInWithFacebookHandler = async () => {
     try {
-      const user = await signInWithFacebook([], { prompt: 'select_account' });
+      const user = await signInWithFacebook();
       await createUserDocument(user?.user);
     } catch (e) {
       setError(quickSignupErrors.signUpWithFacebook);
