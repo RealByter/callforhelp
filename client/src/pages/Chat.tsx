@@ -59,9 +59,10 @@ export const Chat = () => {
     };
 
     if (chat) {
+      if (chat.supporteeId !== user?.uid && chat.supporterId !== user?.uid) navigate('/selection');
       getData();
     }
-  }, [chat, user]);
+  }, [chat, user, navigate]);
 
   useEffect(() => {
     // scroll to bottom of the chat when getting a new msg
@@ -122,7 +123,7 @@ export const Chat = () => {
   };
 
   const noMessages = messages ? messages.length === 0 : true;
-  
+
   return (
     <div className="chat-page">
       <ChatTopBar
@@ -145,14 +146,13 @@ export const Chat = () => {
               return aDate.getTime() - bDate.getTime();
             })
             .map((m, index) => (
-              <React.Fragment key={index}>
-                <Message
-                  isSender={m.senderId === user!.uid}
-                  content={m.content}
-                  messageDate={m.date}
-                  messageState={m.status}
-                />
-              </React.Fragment>
+              <Message
+                key={index}
+                isSender={m.senderId === user!.uid}
+                content={m.content}
+                messageDate={m.date}
+                messageState={m.status}
+              />
             ))
         )}
         <span ref={scrollingRef}></span>
