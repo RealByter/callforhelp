@@ -44,7 +44,7 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const element = e.currentTarget;
 
-    if (element.scrollHeight - element.scrollTop - 1 === element.clientHeight) {
+    if (element.scrollHeight - element.scrollTop - 1 <= element.clientHeight) {
       // the -1 is for natural inaccuracy purposes
       setButtonEnabled(true);
     }
