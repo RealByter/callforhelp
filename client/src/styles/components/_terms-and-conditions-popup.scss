@@ -39,6 +39,19 @@
     margin: 0;
     flex: 1;
 
+    strong {
+      text-decoration: underline;
+    }
+
+    p {
+      display: flex;
+      flex-direction: column;
+
+      .sub {
+        margin-right: 1rem;
+      }
+    }
+
     &:not(:last-child) {
       margin-bottom: 2rem;
     }
