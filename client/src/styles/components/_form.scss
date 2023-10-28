@@ -14,7 +14,7 @@
     gap: 1.5rem;
     flex: 1;
 
-    button {
+    .submit-button {
       margin-top: auto;
       margin-bottom: 4rem;
       height: 2.375rem;
@@ -24,10 +24,9 @@
       color: #113a8c;
       font-size: 0.875rem;
       font-weight: 600;
-      position: relative;
       text-align: start;
-      padding-right: 1.5rem;
       margin-top: 0.5rem;
+      line-height: 1;
 
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -41,33 +40,30 @@
       }
 
       .checkmark {
-        cursor: pointer;
-        position: absolute;
-        top: 2px;
-        right: 0;
-        margin: 0;
-        padding: 0;
-        width: 16px;
-        height: 16px;
-        border: 2px solid #113a8c;
-        border-radius: 2px;
         background: none;
+        border: none;
+        height: 1rem;
+        width: 1rem;
+        padding: 0;
+        position: relative;
+        top: -0.25rem;
+        margin-left: 0.5rem;
         outline: none;
 
-        &::after {
-          content: '';
+        svg {
           position: absolute;
-          width: 16px;
-          height: 16px;
-          border-radius: 2px;
-          display: none;
-          top: -2px;
-          left: -2px;
-          background: #113a8c;
+          top: 0;
+          left: 0;
         }
 
-        &.marked::after {
-          display: block;
+        .glow-border {
+          top: -0.25rem;
+          left: -0.25rem;
+        }
+
+        .check {
+          top: 0.2rem;
+          left: 0.15rem;
         }
       }
     }
