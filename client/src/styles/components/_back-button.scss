@@ -1,0 +1,11 @@
+.back-button {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  width: 100vw;
+  max-width: 24rem;
+  padding: 2rem;
+  display: flex;
+  justify-content: end;
+}

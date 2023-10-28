@@ -9,6 +9,7 @@ import React from 'react';
 import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { signUpErrors } from '../consts/errorMessages';
+import BackButton from '../components/BackButton';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ const SignUpPage = () => {
   return (
     <>
       {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
+      <BackButton to='/' />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
     </>
