@@ -123,7 +123,7 @@ export const Chat = () => {
   };
 
   const noMessages = messages ? messages.length === 0 : true;
-  
+
   return (
     <div className="chat-page">
       <ChatTopBar
@@ -158,7 +158,7 @@ export const Chat = () => {
         <span ref={scrollingRef}></span>
       </div>
 
-      <ChatBox sendChatMsg={sendMsg} disabled={!companionName} />
+      <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
     </div>
   );
 };
