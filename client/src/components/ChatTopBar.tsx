@@ -53,8 +53,16 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
           <p>השיחה הסתיימה</p>
         ) : (
           <div className="chat-top-bar-lower-buttons">
-            {isSupporter ? <></> : <button onClick={changeChatRoom}>החלף תומך</button>}
-            <button onClick={endChat}>סיום שיחה</button>
+            {isSupporter ? (
+              <></>
+            ) : (
+              <button onClick={changeChatRoom} disabled={!companionName}>
+                החלף תומך
+              </button>
+            )}
+            <button onClick={endChat} disabled={!companionName}>
+              סיום שיחה
+            </button>
           </div>
         )}
       </div>
