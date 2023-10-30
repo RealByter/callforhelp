@@ -41,6 +41,7 @@ const ContactUsForm: React.FC<ContactUsProps> = ({ isOpen, onClose }) => {
             />
           </svg>
         </button>
+        <h3 className='header'>יצירת קשר</h3>
         <form className="contact-form">
           <ContactSelection value={subject} onChange={setSubject} options={options} />
           <textarea />
