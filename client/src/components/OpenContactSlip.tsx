@@ -1,14 +1,10 @@
-import { MouseEventHandler, useState } from 'react';
+import { useState } from 'react';
 import Draggable from 'react-draggable';
 import ContactUsForm from './ContactUsForm';
 
 const OpenContactSlip: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [dragged, setDragged] = useState(false);
-
-  const handleCloseForm: MouseEventHandler<HTMLDivElement | HTMLButtonElement | HTMLOrSVGElement> = (event) => {
-    if (event.target === event.currentTarget) setShowForm(false);
-  };
 
   return (
     <>
@@ -36,7 +32,7 @@ const OpenContactSlip: React.FC = () => {
           </svg>
         </button>
       </Draggable>
-      {showForm ? <ContactUsForm onClose={handleCloseForm} /> : <></>}
+      <ContactUsForm isOpen={showForm} onClose={() => setShowForm(false)} />
     </>
   );
 };

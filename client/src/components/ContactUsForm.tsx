@@ -1,13 +1,22 @@
-import { MouseEventHandler } from 'react';
+import Button from './Button';
+import { Dialog } from '@headlessui/react';
+import ContactSelection from './ContactSelection';
+import { useState } from 'react';
 
 type ContactUsProps = {
-  onClose: MouseEventHandler<HTMLDivElement | HTMLButtonElement | HTMLOrSVGElement>;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
-const ContactUsForm: React.FC<ContactUsProps> = ({ onClose }) => {
+const options: string[] = ['כללי', 'דיווח על תומך/נתמך', 'דיווח על בעיה', "הצעת פיצ'ר"];
+export type Options = (typeof options)[number];
+
+const ContactUsForm: React.FC<ContactUsProps> = ({ isOpen, onClose }) => {
+  const [subject, setSubject] = useState<Options>(options[0]);
+
   return (
-    <div className="contact-us-form-backdrop" onClick={onClose}>
-      <div className="contact-us-form-container">
+    <Dialog open={isOpen} onClose={onClose} className="contact-us-form-backdrop" onClick={onClose}>
+      <Dialog.Panel className="contact-us-form-container">
         <button className="close-button" onClick={onClose}>
           <svg
             onClick={onClose}
@@ -32,8 +41,13 @@ const ContactUsForm: React.FC<ContactUsProps> = ({ onClose }) => {
             />
           </svg>
         </button>
-      </div>
-    </div>
+        <form className="contact-form">
+          <ContactSelection value={subject} onChange={setSubject} options={options} />
+          <textarea />
+          <Button>שליחה</Button>
+        </form>
+      </Dialog.Panel>
+    </Dialog>
   );
 };
 
