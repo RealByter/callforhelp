@@ -12,6 +12,7 @@ import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
 import Disclaimer from './components/Disclaimer.tsx';
+import OpenContactSlip from './components/OpenContactSlip.tsx';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <StyledEngineProvider injectFirst>
     <AuthenticationWrapper>
       <Disclaimer />
+      <OpenContactSlip />
       <RouterProvider router={router} />
     </AuthenticationWrapper>
   </StyledEngineProvider>
