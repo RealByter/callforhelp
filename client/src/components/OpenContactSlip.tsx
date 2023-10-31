@@ -11,6 +11,7 @@ const OpenContactSlip: React.FC = () => {
       <Draggable
         axis="y"
         defaultPosition={{ x: 0, y: 360 }}
+        bounds={{ bottom: window.innerHeight - 56, top: 0 }}
         onDrag={() => {
           setDragged(true);
         }}
