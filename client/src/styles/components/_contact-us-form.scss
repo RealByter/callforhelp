@@ -18,6 +18,8 @@
     background: #e9e4f5;
     box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
     padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
 
     .close-button {
       position: absolute;
@@ -32,7 +34,7 @@
 
     .header {
       text-align: end;
-      color: #0E1C74;
+      color: #0e1c74;
       font-size: 1rem;
       font-weight: 600;
       padding-top: 2.5rem;
@@ -42,6 +44,31 @@
       display: flex;
       flex-direction: column;
       margin-top: 1.25rem;
+      flex: 1;
+
+      .text-input {
+        flex: 1;
+        margin: 1.25rem 0 2rem;
+        border-radius: 4px;
+        border: 1px solid #113a8c;
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 0.875rem;
+        font-weight: 400;
+        outline: none;
+        color: black;
+        resize: none;
+        padding: 0.75rem 1rem;
+        line-height: 1.1;
+
+        &:placeholder {
+          color: #909090;
+        }
+      }
+
+      .submit-button {
+        margin: auto 0 2rem;
+        padding: 0.375rem 1.125rem;
+      }
     }
   }
 }

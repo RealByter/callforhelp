@@ -1,7 +1,7 @@
 import Button from './Button';
 import { Dialog } from '@headlessui/react';
 import ContactSelection from './ContactSelection';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 type ContactUsProps = {
   isOpen: boolean;
@@ -13,6 +13,11 @@ export type Options = (typeof options)[number];
 
 const ContactUsForm: React.FC<ContactUsProps> = ({ isOpen, onClose }) => {
   const [subject, setSubject] = useState<Options>(options[0]);
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  }
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="contact-us-form-backdrop" onClick={onClose}>
@@ -41,11 +46,20 @@ const ContactUsForm: React.FC<ContactUsProps> = ({ isOpen, onClose }) => {
             />
           </svg>
         </button>
-        <h3 className='header'>יצירת קשר</h3>
-        <form className="contact-form">
+        <h3 className="header">יצירת קשר</h3>
+        <form className="contact-form" onSubmit={handleSubmit}>
           <ContactSelection value={subject} onChange={setSubject} options={options} />
-          <textarea />
-          <Button>שליחה</Button>
+          <textarea
+            className="text-input"
+            dir="rtl"
+            placeholder="כתבו כאן"
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <div className="submit-button">
+            <Button type="submit" disabled={!message}>
+              שליחה
+            </Button>
+          </div>
         </form>
       </Dialog.Panel>
     </Dialog>
