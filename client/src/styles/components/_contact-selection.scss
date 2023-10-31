@@ -1,6 +1,7 @@
 .contact-selection {
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .label {
     font-size: 0.875rem;
@@ -13,7 +14,7 @@
   .button {
     padding: 0.75rem 1rem;
     background: #ffffff80;
-    color: #909090;
+    color: black;
     font-size: 0.875rem;
     font-weight: 400;
     height: 1.125rem;
@@ -24,15 +25,41 @@
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
+    border: none;
 
     svg {
       height: 1.25rem;
       width: 1.25rem;
     }
 
-    &[data-headlessui-state="open"] {
+    &[data-headlessui-state='open'] {
       svg {
         transform: rotateZ(180deg);
+      }
+    }
+  }
+
+  .options {
+    position: absolute;
+    top: 3rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    height: 3.3125rem;
+
+    .option {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0e1c74;
+      background: white;
+      border-bottom: 1px solid #d9d9d9;
+
+      &:last-child {
+        border-bottom: none;
       }
     }
   }
