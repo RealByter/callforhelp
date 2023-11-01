@@ -230,13 +230,96 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
         </article>
         {agreeNeeded && (
           <div className="pop-up-window--bottom-nav">
-            <div className={`container ${!buttonsEnabled && 'disabled'}`}>
-              אני מאשר כי קראתי את התקנון ואני מסכים להוראותיו
+            <div className={`container ${!buttonsEnabled && 'container-disabled'}`}>
               <button
-                disabled={!buttonsEnabled}
                 className={`checkmark ${marked && 'marked'}`}
                 type="button"
-                onClick={() => setMarked((prev) => !prev)}></button>
+                onClick={() => setMarked((prev) => buttonsEnabled && !prev)}>
+                {marked ? (
+                  <>
+                    <svg
+                      className="glow-border"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none">
+                      <g filter="url(#filter0_d_556_1719)">
+                        <rect
+                          x="4.5"
+                          y="4.5"
+                          width="15"
+                          height="15"
+                          rx="1.5"
+                          stroke="#0159FF"
+                          shape-rendering="crispEdges"
+                        />
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_556_1719"
+                          x="0"
+                          y="0"
+                          width="24"
+                          height="24"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB">
+                          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset />
+                          <feGaussianBlur stdDeviation="2" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.00416667 0 0 0 0 0.349389 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_556_1719"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_556_1719"
+                            result="shape"
+                          />
+                        </filter>
+                      </defs>
+                    </svg>
+                    <svg
+                      className="check"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="10"
+                      viewBox="0 0 11 10"
+                      fill="none">
+                      <path
+                        d="M1 5.5L3.5 9L9.5 1"
+                        stroke="#0159FF"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none">
+                    <rect x="0.5" y="0.5" width="15" height="15" rx="1.5" stroke="#0E1C74" />
+                  </svg>
+                )}
+              </button>
+              אני מאשר כי קראתי את התקנון ואני מסכים להוראותיו
             </div>
             <Button
               className="pop-up-window--bottom-nav__agree-btn"

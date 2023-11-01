@@ -25,6 +25,7 @@ export const findChatToFill = async (role: Role, userId: string): Promise<Chat |
   const queryChatToFill = query(
     collections.chats,
     where(roleFieldName, '==', null),
+    where('status', '==', 'active'),
     orderBy('createdAt'),
     limit(1)
   );

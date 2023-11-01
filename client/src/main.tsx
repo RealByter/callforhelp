@@ -32,12 +32,8 @@ const router = createBrowserRouter([
     element: <Chat />
   },
   {
-    path: '/supportedsList',
+    path: '/chats',
     element: <ChatsListPage />
-  },
-  {
-    path: '/FindSupporter', //there is a to link here from SwitchRoleLink component
-    element: <div>temp find supporter</div>
   },
   {
     path: '/selection',

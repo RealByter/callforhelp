@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 export interface ChatItemProps {
   name: string;
@@ -10,12 +10,16 @@ export interface ChatItemProps {
 export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: ChatItemProps) => {
   const navigate = useNavigate();
 
-  const OnItemClick = () => {
-    navigate('/chat', { state: { chatId, companionName: name } });
-  };
-
   return (
-    <li className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={OnItemClick} tabIndex={0}>
+    <li
+      className={`chat-item ${isEnded && 'chat-item-ended'}`}
+      onClick={() =>
+        navigate({
+          pathname: '/chat',
+          search: createSearchParams({ chatId: chatId }).toString()
+        })
+      }
+      tabIndex={0}>
       <p className="name">{name}</p>
       <svg
         className="arrow"
