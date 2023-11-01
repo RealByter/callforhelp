@@ -79,6 +79,18 @@ export const assignSupporter = async (userId: string) => {
   else await createChat(userId, 'supporter');
 };
 
+export const assignSupportee = async (userId: string, name: string) => {
+  const chatToFill = await findChatToFill('supportee', userId);
+
+  if (chatToFill) {
+    await joinChatFirebase(userId, 'supportee', chatToFill.id, name);
+    return chatToFill.id;
+  } else {
+    const chat = await createChat(userId, 'supportee', name);
+    return chat.id;
+  }
+};
+
 export const getNameById = async (companionId: string): Promise<string> => {
   if (companionId) {
     const userSnapshot = await getDoc(doc(collections.users, companionId));

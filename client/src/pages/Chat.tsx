@@ -9,12 +9,11 @@ import { ChatBox } from '../components/ChatBox';
 import { auth, collections } from '../firebase/connection';
 import {
   Role,
-  createChat,
-  findChatToFill,
+  assignSupportee,
+  assignSupporter,
   finishChat,
   getNameById,
-  getOppositeRoleFieldName,
-  joinChatFirebase
+  getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
 
 /*
@@ -98,23 +97,13 @@ export const Chat = () => {
   };
 
   // request to change partner
-  const changeChatRoom = async () => {
+  const changeSupporter = async () => {
     finishChat(chatId!);
 
-    const userId = user!.uid;
-
-    const chatToFill = await findChatToFill(role!, userId);
-
-    if (chatToFill) {
-      await joinChatFirebase(userId, role!, chatToFill.id);
-      const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role!)]!);
-      setCompanionName(companionName);
-      setSearchParams(createSearchParams({ chatId: chatToFill.id }));
-    } else {
-      const chat = await createChat(userId, role!);
-      setCompanionName('');
-      setSearchParams(createSearchParams({ chatId: chat.id }));
-    }
+    setSearchParams(
+      createSearchParams({ chatId: await assignSupportee(user!.uid, user!.displayName!) })
+    );
+    setCompanionName('');
   };
 
   // finish current chat
@@ -132,7 +121,8 @@ export const Chat = () => {
         companionName={companionName}
         isSupporter={role === 'supporter'}
         endChat={endChat}
-        changeChatRoom={changeChatRoom}
+        changeSupporter={changeSupporter}
+        findAdditionalSupportee={() => assignSupporter(user!.uid)}
         goBackToChatsPage={goBackToChatsPage}
       />
 

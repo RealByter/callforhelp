@@ -5,7 +5,8 @@ interface IChatTopBarProps {
   isSupporter: boolean;
   companionName: string;
   endChat: () => void;
-  changeChatRoom: () => void;
+  changeSupporter: () => void;
+  findAdditionalSupportee: () => void;
   goBackToChatsPage: () => void;
 }
 
@@ -14,7 +15,8 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   isSupporter,
   companionName,
   endChat,
-  changeChatRoom,
+  changeSupporter,
+  findAdditionalSupportee,
   goBackToChatsPage
 }: IChatTopBarProps) => {
   return (
@@ -54,9 +56,11 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
         ) : (
           <div className="chat-top-bar-lower-buttons">
             {isSupporter ? (
-              <></>
+              <button onClick={findAdditionalSupportee} disabled={!companionName}>
+                מצא נתמך נוסף
+              </button>
             ) : (
-              <button onClick={changeChatRoom} disabled={!companionName}>
+              <button onClick={changeSupporter} disabled={!companionName}>
                 החלף תומך
               </button>
             )}

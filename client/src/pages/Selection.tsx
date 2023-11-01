@@ -9,11 +9,9 @@ import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
 import {
   Role,
+  assignSupportee,
   assignSupporter,
   checkIfHasActive,
-  createChat,
-  findChatToFill,
-  joinChatFirebase
 } from '../helpers/chatFunctions';
 
 // const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
@@ -54,27 +52,17 @@ const Selection: React.FC = () => {
       );
 
       if (existingChatSnapshot.size > 0) {
-        const existingChatId = existingChatSnapshot.docs[0].id;
         navigate({
           pathname: '/chat',
-          search: createSearchParams({ chatId: existingChatId }).toString()
+          search: createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
         });
       } else {
-        const chatToFill = await findChatToFill('supportee', user!.uid);
-
-        if (chatToFill) {
-          await joinChatFirebase(user!.uid, 'supportee', chatToFill.id, user!.displayName!);
-          navigate({
-            pathname: '/chat',
-            search: createSearchParams({ chatId: chatToFill.id }).toString()
-          });
-        } else {
-          const chat = await createChat(user!.uid, 'supportee', user!.displayName!);
-          navigate({
-            pathname: '/chat',
-            search: createSearchParams({ chatId: chat.id }).toString()
-          });
-        }
+        navigate({
+          pathname: '/chat',
+          search: createSearchParams({
+            chatId: await assignSupportee(user!.uid, user!.displayName!)
+          }).toString()
+        });
       }
     };
 
