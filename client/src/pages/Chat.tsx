@@ -28,26 +28,30 @@ export const Chat = () => {
   const [messages, , error] = useCollectionData(
     query(collections.messages, where('chatId', '==', chatId))
   );
-  const [chat] = useDocumentData(doc(collections.chats, chatId || 'empty'));
+  const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [role, setRole] = useState<Role>(); // should be of use later
   const [companionName, setCompanionName] = useState('');
-  const [user, loading] = useAuthState(auth);
+  const [user, userLoading] = useAuthState(auth);
   const scrollingRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // redirect if user not logged in
-    if (!loading && !user) {
+    if (!userLoading && !user) {
       navigate('/');
     }
     if (error) {
       console.log(error);
     }
-  }, [loading, user, navigate, error]);
+  }, [userLoading, user, navigate, error]);
 
   useEffect(() => {
     if (!chatId) navigate('/selection');
   }, [chatId, navigate]);
+
+  useEffect(() => {
+    if (!chatLoading && !chat) navigate('/selection');
+  }, [chat, chatLoading, navigate]);
 
   useEffect(() => {
     const getData = async () => {
