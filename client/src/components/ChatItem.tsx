@@ -28,7 +28,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
         height="16"
         viewBox="0 0 16 16"
         fill="none">
-        <path d="M10 12L6 8L10 4" stroke="#0E1C74" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M10 12L6 8L10 4" stroke="#0E1C74" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </li>
   );
