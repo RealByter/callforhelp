@@ -12,14 +12,23 @@ type TextInputProps = {
   error?: FieldError;
 };
 
-export default function FormField({ label, inputType = 'text', inputProps, inputClass = '', placeHolder = label, error }: TextInputProps) {
+export default function FormField({
+  label,
+  inputType = 'text',
+  inputProps,
+  inputClass = '',
+  placeHolder = label,
+  error
+}: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const effectiveInputType =
     inputType !== 'password' ? inputType : showPassword ? 'text' : 'password';
 
   return (
     <div className="input-container">
-      <label htmlFor={`input-${inputProps.name}`} className='label'>{label}</label>
+      <label htmlFor={`input-${inputProps.name}`} className="label">
+        {label}
+      </label>
       <div className="input-wrapper">
         <input
           {...inputProps!}
@@ -41,7 +50,11 @@ export default function FormField({ label, inputType = 'text', inputProps, input
           </button>
         )}
       </div>
-      {error && <p className='error' dir='rtl'>{error.message}</p>}
+      {error && (
+        <p className="error" dir="rtl">
+          {error.message}
+        </p>
+      )}
     </div>
   );
 }

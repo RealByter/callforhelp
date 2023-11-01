@@ -3,31 +3,31 @@ import Choice from '../components/Choice';
 import Header from '../components/Header';
 import { query, where, getDocs } from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
-import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
 import {
   Role,
-  createChat,
-  findChatToFill,
-  getNameById,
-  getOppositeRoleFieldName,
-  getRoleFieldName,
-  joinChatFirebase
+  assignSupportee,
+  assignSupporter,
+  checkIfHasActive,
 } from '../helpers/chatFunctions';
 
-const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-  const roleFieldName = getRoleFieldName(role);
-  const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
+// const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
+//   const roleFieldName = getRoleFieldName(role);
+//   const queryMyChats = query(
+//     collections.chats,
+//     where(roleFieldName, '==', userId),
+//     where('status', '==', 'active')
+//   );
 
-  const querySnapshot = await getDocs(queryMyChats);
-  const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-  const filteredData = data.filter((doc) => doc.status === 'active');
+//   const querySnapshot = await getDocs(queryMyChats);
+//   const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
+//   const filteredData = data.filter((doc) => doc.status === 'active');
 
-  return filteredData;
-};
+//   return filteredData;
+// };
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
@@ -42,36 +42,45 @@ const Selection: React.FC = () => {
   }, [user, navigate, loading]);
 
   useEffect(() => {
-    const joinChat = async (userId: string, role: Role) => {
-      const myChats = await findMyChats(userId, role);
+    const joinAsSupportee = async () => {
+      const existingChatSnapshot = await getDocs(
+        query(
+          collections.chats,
+          where('supporteeId', '==', user!.uid),
+          where('status', '==', 'active')
+        )
+      );
 
-      if (myChats.length !== 0) {
-        const myCompanions = await Promise.all(
-          myChats.map((chat) => getNameById(chat[getOppositeRoleFieldName(role)] as string))
-        );
-        navigate('/chat', { state: { companionName: myCompanions, chatId: myChats, role } });
+      if (existingChatSnapshot.size > 0) {
+        navigate({
+          pathname: '/chat',
+          search: createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
+        });
       } else {
-        const chatToFill = await findChatToFill(role, user!.uid);
-
-        if (chatToFill) {
-          await joinChatFirebase(userId, role, chatToFill.id);
-          const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role)]!);
-          navigate('/chat', { state: { companionName, chatId: chatToFill.id, role } });
-        } else {
-          const chat = await createChat(userId, role);
-          navigate('/chat', { state: { chatId: chat.id, role } });
-        }
+        navigate({
+          pathname: '/chat',
+          search: createSearchParams({
+            chatId: await assignSupportee(user!.uid, user!.displayName!)
+          }).toString()
+        });
       }
     };
 
+    const joinAsSupporter = async () => {
+      const hasActiveChat = await checkIfHasActive(user!.uid);
+      if (!hasActiveChat) assignSupporter(user!.uid);
+      navigate('/chats');
+    };
+
     if (role) {
-      joinChat(user!.uid, role);
+      if (role === 'supportee') joinAsSupportee();
+      else joinAsSupporter();
     }
   }, [role, user, socket, navigate]);
 
   return (
     <>
-      <Header>היי שם משתמש</Header>
+      <Header>היי {user?.displayName}</Header>
       <div>
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"
