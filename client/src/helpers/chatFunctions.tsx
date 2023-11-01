@@ -25,22 +25,26 @@ export const findChatToFill = async (role: Role, userId: string): Promise<Chat |
   const queryChatToFill = query(
     collections.chats,
     where(roleFieldName, '==', null),
+    where(oppositeRoleFieldName, '!=', userId),
+    orderBy(oppositeRoleFieldName), // required
     where('status', '==', 'active'),
     orderBy('createdAt'),
     limit(1)
   );
   const querySnapshot = await getDocs(queryChatToFill);
-  const queryData = querySnapshot.docs.map((doc) => doc.data());
-  const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId);
 
-  if (filteredQueryData.length === 0) {
+  if (querySnapshot.size === 0) {
     return null;
   } else {
-    return filteredQueryData[0];
+    return querySnapshot.docs[0].data();
   }
 };
 
-export const createChat = async (userId: string, role: Role): Promise<Chat> => {
+export const createChat = async (
+  userId: string,
+  role: Role,
+  supporteeName?: string
+): Promise<Chat> => {
   const newChatValues = {
     createdAt: Timestamp.now(),
     [getRoleFieldName(role)]: userId,
@@ -48,15 +52,24 @@ export const createChat = async (userId: string, role: Role): Promise<Chat> => {
     status: 'active'
   };
 
+  if (role === 'supportee' && supporteeName) newChatValues.supporteeName = supporteeName;
+  else newChatValues.supporteeName = null;
+
   const chatRef = await addDoc(collections.chats, newChatValues);
 
   return { ...newChatValues, id: chatRef.id } as Chat;
 };
 
-export const joinChatFirebase = async (userId: string, role: Role, chatId: string) => {
-  await updateDoc(doc(collections.chats, chatId), {
-    [getRoleFieldName(role)]: userId
-  });
+export const joinChatFirebase = async (
+  userId: string,
+  role: Role,
+  chatId: string,
+  supporteeName?: string
+) => {
+  const updates = { [getRoleFieldName(role)]: userId };
+  if (role === 'supportee' && supporteeName) updates.supporteeName = supporteeName;
+
+  await updateDoc(doc(collections.chats, chatId), updates);
 };
 
 export const getNameById = async (companionId: string): Promise<string> => {
@@ -78,4 +91,17 @@ export const finishChat = async (chatId: string) => {
   } catch (err) {
     console.log('err: ', err);
   }
+};
+
+export const checkIfHasActive = async (userId: string) => {
+  const activeChat = await getDocs(
+    query(
+      collections.chats,
+      where('supporterId', '==', userId),
+      where('status', '==', 'active'),
+      limit(1)
+    )
+  );
+
+  return activeChat.size; // either 1 or 0 => true or false
 };

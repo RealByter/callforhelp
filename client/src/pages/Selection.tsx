@@ -3,29 +3,32 @@ import Choice from '../components/Choice';
 import Header from '../components/Header';
 import { query, where, getDocs } from 'firebase/firestore';
 import { auth, collections } from '../firebase/connection';
-import { Chat } from '../firebase/chat';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
 import {
   Role,
+  checkIfHasActive,
   createChat,
   findChatToFill,
-  getRoleFieldName,
   joinChatFirebase
 } from '../helpers/chatFunctions';
 
-const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-  const roleFieldName = getRoleFieldName(role);
-  const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId), where('status', '==', 'active'));
+// const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
+//   const roleFieldName = getRoleFieldName(role);
+//   const queryMyChats = query(
+//     collections.chats,
+//     where(roleFieldName, '==', userId),
+//     where('status', '==', 'active')
+//   );
 
-  const querySnapshot = await getDocs(queryMyChats);
-  const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-  const filteredData = data.filter((doc) => doc.status === 'active');
+//   const querySnapshot = await getDocs(queryMyChats);
+//   const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
+//   const filteredData = data.filter((doc) => doc.status === 'active');
 
-  return filteredData;
-};
+//   return filteredData;
+// };
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
@@ -40,25 +43,32 @@ const Selection: React.FC = () => {
   }, [user, navigate, loading]);
 
   useEffect(() => {
-    const joinChat = async (userId: string, role: Role) => {
-      const myChats = await findMyChats(userId, role);
+    const joinAsSupportee = async () => {
+      const existingChatSnapshot = await getDocs(
+        query(
+          collections.chats,
+          where('supporteeId', '==', user!.uid),
+          where('status', '==', 'active')
+        )
+      );
 
-      if (myChats.length !== 0) {
+      if (existingChatSnapshot.size > 0) {
+        const existingChatId = existingChatSnapshot.docs[0].id;
         navigate({
           pathname: '/chat',
-          search: createSearchParams({ chatId: myChats[0].id }).toString()
+          search: createSearchParams({ chatId: existingChatId }).toString()
         });
       } else {
-        const chatToFill = await findChatToFill(role, user!.uid);
+        const chatToFill = await findChatToFill('supportee', user!.uid);
 
         if (chatToFill) {
-          await joinChatFirebase(userId, role, chatToFill.id);
+          await joinChatFirebase(user!.uid, 'supportee', chatToFill.id, user!.displayName!);
           navigate({
             pathname: '/chat',
             search: createSearchParams({ chatId: chatToFill.id }).toString()
           });
         } else {
-          const chat = await createChat(userId, role);
+          const chat = await createChat(user!.uid, 'supportee', user!.displayName!);
           navigate({
             pathname: '/chat',
             search: createSearchParams({ chatId: chat.id }).toString()
@@ -67,14 +77,26 @@ const Selection: React.FC = () => {
       }
     };
 
+    const joinAsSupporter = async () => {
+      const hasActiveChat = await checkIfHasActive(user!.uid);
+      if (!hasActiveChat) {
+        const chatToFill = await findChatToFill('supporter', user!.uid);
+
+        if (chatToFill) await joinChatFirebase(user!.uid, 'supporter', chatToFill.id);
+        else await createChat(user!.uid, 'supporter');
+      }
+      navigate('/chats');
+    };
+
     if (role) {
-      joinChat(user!.uid, role);
+      if (role === 'supportee') joinAsSupportee();
+      else joinAsSupporter();
     }
   }, [role, user, socket, navigate]);
 
   return (
     <>
-      <Header>היי שם משתמש</Header>
+      <Header>היי {user?.displayName}</Header>
       <div>
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"

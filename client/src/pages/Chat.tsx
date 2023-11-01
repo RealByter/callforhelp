@@ -93,7 +93,8 @@ export const Chat = () => {
 
   // go back to the page of all chats
   const goBackToChatsPage = () => {
-    navigate('/selection');
+    if (role === 'supportee') navigate('/selection');
+    else navigate('/chats');
   };
 
   // request to change partner
