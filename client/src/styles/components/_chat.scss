@@ -15,16 +15,15 @@
       width: 100%;
       display: flex;
       box-sizing: border-box;
-      padding: 1.5rem 1.5rem 1rem;
+      padding: 1.5rem 1.5rem 0.25rem;
       gap: 0.5rem;
 
       .top-bar-text {
         display: flex;
         flex-direction: column;
-        line-height: 1;
-        gap: 0.5rem;
+        line-height: 1.5;
         position: relative;
-        top: -0.1rem;
+        top: -0.5rem;
 
         .title {
           font-size: $chat-title-text-size;
@@ -42,6 +41,7 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          margin-top: -0.1rem;
         }
       }
 
