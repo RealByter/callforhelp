@@ -158,7 +158,7 @@ export const Chat = () => {
         <span ref={scrollingRef}></span>
       </div>
 
-      <ChatBox sendChatMsg={sendMsg} blockSupporter={() => {}} />
+      <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
     </div>
   );
 };

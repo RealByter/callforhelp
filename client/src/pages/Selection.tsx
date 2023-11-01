@@ -18,7 +18,7 @@ import {
 
 const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
   const roleFieldName = getRoleFieldName(role);
-  const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId));
+  const queryMyChats = query(collections.chats, where(roleFieldName, '==', userId), where('status', '==', 'active'));
 
   const querySnapshot = await getDocs(queryMyChats);
   const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
