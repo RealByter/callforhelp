@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ChatItem } from '../components/ChatItem';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, collections } from '../firebase/connection';
-import { query, where } from 'firebase/firestore';
+import { orderBy, query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
@@ -11,7 +11,11 @@ import { assignSupporter } from '../helpers/chatFunctions';
 export const ChatsListPage = () => {
   const [user, userLoading] = useAuthState(auth);
   const [chats] = useCollectionData(
-    query(collections.chats, where('supporterId', '==', userLoading || !user ? 'empty' : user?.uid))
+    query(
+      collections.chats,
+      where('supporterId', '==', userLoading || !user ? 'empty' : user?.uid),
+      orderBy('createdAt', 'desc')
+    )
   );
 
   const navigate = useNavigate();
