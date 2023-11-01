@@ -11,6 +11,7 @@ import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
+import InfoModalExample from './components/InfoModalExample.tsx';
 import Disclaimer from './components/Disclaimer.tsx';
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/selection',
     element: <Selection />
+  },
+  {
+    path: '/example',
+    element: <InfoModalExample />
   }
 ]);
 

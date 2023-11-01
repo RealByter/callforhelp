@@ -12,8 +12,9 @@ interface GeneralCarouselProps {
 export const GeneralCarousel: React.FC<GeneralCarouselProps> = ({ items }) => {
   return (
     <Carousel
-      duration={1000}
+      duration={2000}
       animation="slide"
+      className='carousel'
       navButtonsAlwaysInvisible
       sx={{ height: '100%', width: '100%' }}
       indicatorIconButtonProps={carouselIndicatorIconButtonProps}
