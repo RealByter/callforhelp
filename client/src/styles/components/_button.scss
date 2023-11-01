@@ -14,6 +14,11 @@
     outline: none;
     background-color: $btn-bgd;
   }
+
+  &:disabled {
+    color: rgba(17, 58, 140, 0.50);
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 @media (hover: none) {

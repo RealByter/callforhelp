@@ -1,17 +1,7 @@
 .page-header {
-    color: $waiting-page-text-color;
-    width: 100vw;
-    height: 18vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &-text {
-        font-weight: bold;
-        font-size: 1.5rem;
-        height: fit-content;
-        width: fit-content;
-        margin: 0 auto;
-    }
+  color: #0e1c74;
+  font-weight: bold;
+  font-size: 1.5rem;
+  width: fit-content;
+  margin: 3.75rem auto 2.25rem;
 }
