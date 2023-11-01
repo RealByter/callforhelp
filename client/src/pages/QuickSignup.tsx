@@ -4,11 +4,15 @@ import FacebookLogo from '../assets/FacebookLogo.png';
 import MailLogo from '../assets/Mail.svg';
 import OrBackground from '../assets/OrBackground.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import {
+  useAuthState,
+  useSignInWithFacebook,
+  useSignInWithGoogle
+} from 'react-firebase-hooks/auth';
 import { auth, collections } from '../firebase/connection';
 import { User } from '@firebase/auth';
 import { doc, setDoc, getDoc } from '@firebase/firestore';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { quickSignupErrors } from '../consts/errorMessages';
@@ -18,6 +22,7 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [error, setError] = useState<ErrorInfo>();
+  const [user] = useAuthState(auth);
 
   const createUserDocument = async (user?: User) => {
     if (user) {
@@ -49,6 +54,10 @@ const QuickSignup: React.FC = () => {
       setError(quickSignupErrors.signUpWithFacebook);
     }
   };
+
+  useEffect(() => {
+    if (user) navigate('/selection');
+  }, [user, navigate]);
 
   return (
     <>
