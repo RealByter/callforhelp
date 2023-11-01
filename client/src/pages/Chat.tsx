@@ -9,12 +9,11 @@ import { ChatBox } from '../components/ChatBox';
 import { auth, collections } from '../firebase/connection';
 import {
   Role,
-  createChat,
-  findChatToFill,
+  assignSupportee,
+  assignSupporter,
   finishChat,
   getNameById,
-  getOppositeRoleFieldName,
-  joinChatFirebase
+  getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
 
 /*
@@ -29,26 +28,30 @@ export const Chat = () => {
   const [messages, , error] = useCollectionData(
     query(collections.messages, where('chatId', '==', chatId))
   );
-  const [chat] = useDocumentData(doc(collections.chats, chatId || 'empty'));
+  const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [role, setRole] = useState<Role>(); // should be of use later
   const [companionName, setCompanionName] = useState('');
-  const [user, loading] = useAuthState(auth);
+  const [user, userLoading] = useAuthState(auth);
   const scrollingRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // redirect if user not logged in
-    if (!loading && !user) {
+    if (!userLoading && !user) {
       navigate('/');
     }
     if (error) {
       console.log(error);
     }
-  }, [loading, user, navigate, error]);
+  }, [userLoading, user, navigate, error]);
 
   useEffect(() => {
     if (!chatId) navigate('/selection');
   }, [chatId, navigate]);
+
+  useEffect(() => {
+    if (!chatLoading && !chat) navigate('/selection');
+  }, [chat, chatLoading, navigate]);
 
   useEffect(() => {
     const getData = async () => {
@@ -93,27 +96,18 @@ export const Chat = () => {
 
   // go back to the page of all chats
   const goBackToChatsPage = () => {
-    navigate('/selection');
+    if (role === 'supportee') navigate('/selection');
+    else navigate('/chats');
   };
 
   // request to change partner
-  const changeChatRoom = async () => {
+  const changeSupporter = async () => {
     finishChat(chatId!);
 
-    const userId = user!.uid;
-
-    const chatToFill = await findChatToFill(role!, userId);
-
-    if (chatToFill) {
-      await joinChatFirebase(userId, role!, chatToFill.id);
-      const companionName = await getNameById(chatToFill[getOppositeRoleFieldName(role!)]!);
-      setCompanionName(companionName);
-      setSearchParams(createSearchParams({ chatId: chatToFill.id }));
-    } else {
-      const chat = await createChat(userId, role!);
-      setCompanionName('');
-      setSearchParams(createSearchParams({ chatId: chat.id }));
-    }
+    setSearchParams(
+      createSearchParams({ chatId: await assignSupportee(user!.uid, user!.displayName!) })
+    );
+    setCompanionName('');
   };
 
   // finish current chat
@@ -130,8 +124,10 @@ export const Chat = () => {
         isChatEnded={chat?.status === 'ended'}
         companionName={companionName}
         isSupporter={role === 'supporter'}
+        userId={user?.uid}
         endChat={endChat}
-        changeChatRoom={changeChatRoom}
+        changeSupporter={changeSupporter}
+        findAdditionalSupportee={() => assignSupporter(user!.uid)}
         goBackToChatsPage={goBackToChatsPage}
       />
 

@@ -10,7 +10,8 @@ const chatSchema = z.object({
   supporterId: z.string().nullable(),
   supporteeId: z.string().nullable(),
   createdAt: z.instanceof(Timestamp),
-  status: statusEnum.default('active')
+  status: statusEnum.default('active'),
+  supporteeName: z.string().nullable()
 });
 
 type Chat = z.infer<typeof chatSchema>;

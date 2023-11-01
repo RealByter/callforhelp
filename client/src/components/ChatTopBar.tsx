@@ -1,11 +1,14 @@
 import React from 'react';
+import FindAdditionalSupportee from './FindAdditionalSupportee';
 
 interface IChatTopBarProps {
   isChatEnded: boolean;
   isSupporter: boolean;
   companionName: string;
+  userId?: string;
   endChat: () => void;
-  changeChatRoom: () => void;
+  changeSupporter: () => void;
+  findAdditionalSupportee: () => void;
   goBackToChatsPage: () => void;
 }
 
@@ -13,8 +16,10 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
   companionName,
+  userId,
   endChat,
-  changeChatRoom,
+  changeSupporter,
+  findAdditionalSupportee,
   goBackToChatsPage
 }: IChatTopBarProps) => {
   return (
@@ -54,9 +59,13 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
         ) : (
           <div className="chat-top-bar-lower-buttons">
             {isSupporter ? (
-              <></>
+              <FindAdditionalSupportee
+                findAdditionalSupportee={findAdditionalSupportee}
+                disabled={!companionName}
+                userId={userId}
+              />
             ) : (
-              <button onClick={changeChatRoom} disabled={!companionName}>
+              <button onClick={changeSupporter} disabled={!companionName}>
                 החלף תומך
               </button>
             )}
