@@ -319,7 +319,9 @@ const TermsAndConditionsPopup: FC<TermsAndConditionsPopupProps> = ({ agreeNeeded
                   </svg>
                 )}
               </button>
-              <span onClick={() => setMarked((prev) => buttonsEnabled && !prev)}>אני מאשר כי קראתי את התקנון ואני מסכים להוראותיו</span>
+              <span onClick={() => setMarked((prev) => buttonsEnabled && !prev)}>
+                אני מאשר כי קראתי את התקנון ואני מסכים להוראותיו
+              </span>
             </div>
             <Button
               className="pop-up-window--bottom-nav__agree-btn"

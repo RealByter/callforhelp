@@ -6,6 +6,7 @@ import { query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
+import { assignSupporter } from '../helpers/chatFunctions';
 
 export const ChatsListPage = () => {
   const [user, userLoading] = useAuthState(auth);
@@ -51,7 +52,11 @@ export const ChatsListPage = () => {
         )}
       </ul>
       <div className="new-supportee">
-        <Button>איתור נתמך</Button>
+        <Button
+          onClick={() => assignSupporter(user!.uid)}
+          disabled={!!chats?.find((chat) => !chat.supporteeId)}>
+          איתור נתמך נוסף
+        </Button>
       </div>
       <NavLink className="selection-link" to="/selection">
         חזרה לעמוד בחירה

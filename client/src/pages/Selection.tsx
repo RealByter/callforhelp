@@ -9,6 +9,7 @@ import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
 import {
   Role,
+  assignSupporter,
   checkIfHasActive,
   createChat,
   findChatToFill,
@@ -79,12 +80,7 @@ const Selection: React.FC = () => {
 
     const joinAsSupporter = async () => {
       const hasActiveChat = await checkIfHasActive(user!.uid);
-      if (!hasActiveChat) {
-        const chatToFill = await findChatToFill('supporter', user!.uid);
-
-        if (chatToFill) await joinChatFirebase(user!.uid, 'supporter', chatToFill.id);
-        else await createChat(user!.uid, 'supporter');
-      }
+      if (!hasActiveChat) assignSupporter(user!.uid);
       navigate('/chats');
     };
 
