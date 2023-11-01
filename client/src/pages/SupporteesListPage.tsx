@@ -27,24 +27,30 @@ export const SupporteesListPage = () => {
 
   const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
   const [chats, setChats] = useState<ChatItemProps[]>([]);
+  
   const chatsIsEmpty = chats.length === 0;
   const endedChatsIsEmpty = endedChats.length === 0;
 
   useEffect(() => {
     // get chats from firebase 
+    if (user) {
+      findUserChatsData(user!.uid, location.state.role);
+    }
 
-    // sort by time and date (and write "yesterday" if the date is of yesterday)
+    // todo: sort by time and date (and write "yesterday" if the date is of yesterday)
+    
     const tempChats = [];
     const tempEndedChats = [];
 
-    for (let i = 0; i < MOCK_CHATS.length; i++) {
-      let chat = MOCK_CHATS[i];
+    for (let i = 0; i < chatsData.length; i++) {
+      let chat = chatsData[i];
       chat.isEnded ? tempEndedChats.push(chat) : tempChats.push(chat);
     }
 
     setChats(tempChats);
     setEndedChats(tempEndedChats);
-  }, []);
+  }, [user]);
+
 
   useEffect(() => {
     // redirect if user not logged in
@@ -56,27 +62,44 @@ export const SupporteesListPage = () => {
     // }
   }, [loading, user, navigate]);
 
-  useEffect(() => {
-    if (user) {
-      findUserChatsData(user!.uid, location.state.role);
-    }
-  }, [user])
-
+  
   const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => {
     const userChats = await getUserChats(userId, role);
     if (!userChats.length) return [];
 
     const names = await Promise.all(
       userChats.map((chat) => {
-        return getChatLastMessage(chat.id);
-        // return getNumOfUnreadMessagesInChat(userId, chat.id);
-        // return getNameById(chat[getOppositeRoleFieldName(role)] as string)
+        return getNameById(chat[getOppositeRoleFieldName(role)] as string)
       })
     );
 
-    console.log(names);
-    // setChatsData(names);
+    const unreadMessages = await Promise.all(
+      userChats.map((chat) => {
+        return getNumOfUnreadMessagesInChat(userId, chat.id);
+      })
+    );
 
+    const lastMessages = await Promise.all(
+      userChats.map((chat) => {
+        return getChatLastMessage(chat.id);
+      })
+    );
+
+    // format the data
+    let res = [];    
+    for (let i = 0; i < userChats.length; i++)
+    {
+      res.push({
+        name: names[i],
+        lastMessageSentAt: lastMessages[i][0]?.date,
+        unreadMessages: unreadMessages[i],
+        isEnded: userChats[i].status == "ended",
+        chatId: userChats[i].id
+      });
+    }
+
+    console.log(res);
+    setChatsData(res);
     return [];
   }
 
@@ -93,7 +116,7 @@ export const SupporteesListPage = () => {
         {/* sort by date */}
         <div className='chats'>
           {chatsIsEmpty ?
-            <span className='loading' >טוען...</span> :
+            <span className='loading' >אין שיחות פעילות</span> :
             chats.map((chat) =>
               <ChatItem
                 key={chat.chatId}
@@ -109,7 +132,7 @@ export const SupporteesListPage = () => {
 
         <div className='ended-chats'>
           {endedChatsIsEmpty ?
-            <span className='loading' >טוען...</span> :
+            <span className='loading' >אין שיחות שהסתיימו</span> :
             endedChats.map((chat) =>
               <ChatItem
                 key={chat.chatId}

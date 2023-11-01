@@ -32,7 +32,7 @@ export const getOppositeRoleFieldName = (role: Role) =>
 //   );
 //   const querySnapshot = await getDocs(queryUserChats);
 //   // const queryData = querySnapshot.docs.map((doc) => doc.data());
-  
+
 //   querySnapshot.docs.forEach((doc) => {
 //     let user = doc.data();
 
@@ -53,12 +53,10 @@ export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> 
   const querySnapshot = await getDocs(queryUserChats);
   const queryData = querySnapshot.docs.map((doc) => doc.data());
 
-  // console.log("queryData", queryData);
-
   return queryData;
 };
 
-export const getNumOfUnreadMessagesInChat = async (userId: string, chatId: string): Promise<Number> => {
+export const getNumOfUnreadMessagesInChat = async (userId: string, chatId: string): Promise<number> => {
   const queryChatMessages = query(
     collections.messages,
     and(where("chatId", '==', chatId),
