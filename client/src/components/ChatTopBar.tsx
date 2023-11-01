@@ -1,12 +1,14 @@
 import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import FindAdditionalSupportee from './FindAdditionalSupportee';
 
 interface IChatTopBarProps {
   isChatEnded: boolean;
   isSupporter: boolean;
   companionName: string;
+  userId?: string;
   endChat: () => void;
-  changeChatRoom: () => void;
+  changeSupporter: () => void;
+  findAdditionalSupportee: () => void;
   goBackToChatsPage: () => void;
 }
 
@@ -14,34 +16,64 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   isChatEnded,
   isSupporter,
   companionName,
+  userId,
   endChat,
-  changeChatRoom,
+  changeSupporter,
+  findAdditionalSupportee,
   goBackToChatsPage
-}: IChatTopBarProps) => {  
+}: IChatTopBarProps) => {
   return (
     <div className={`chat-top-bar ${isChatEnded ? 'ended' : ''}`}>
       <div className="chat-top-bar-upper">
+        <button className="top-bar-close" onClick={goBackToChatsPage}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="M18 6L6 18"
+              stroke="#0E1C74"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M6 6L18 18"
+              stroke="#0E1C74"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
         <div className="top-bar-text">
-          <span className="title">{companionName || "התומך המאושר"}</span>
+          <span className="title">{companionName || 'התומך המאושר'}</span>
           <span className="sub-title">אני פה בשבילך</span>
         </div>
-        <button className="top-bar-close" onClick={goBackToChatsPage}>
-          <CloseIcon />
-        </button>
       </div>
       <div className="chat-top-bar-lower">
         {isChatEnded ? (
           <p>השיחה הסתיימה</p>
         ) : (
-            <div className="chat-top-bar-lower-buttons">
-              <button onClick={changeChatRoom}>
-                {isSupporter ? 'איתור נתמך נוסף' : 'החלף תומך'}
+          <div className="chat-top-bar-lower-buttons">
+            {isSupporter ? (
+              <FindAdditionalSupportee
+                findAdditionalSupportee={findAdditionalSupportee}
+                disabled={!companionName}
+                userId={userId}
+              />
+            ) : (
+              <button onClick={changeSupporter} disabled={!companionName}>
+                החלף תומך
               </button>
-              <button onClick={endChat}>
-                סיום שיחה
-              </button>
-            </div>
-          )}
+            )}
+            <button onClick={endChat} disabled={!companionName}>
+              סיום שיחה
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
