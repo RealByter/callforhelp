@@ -120,6 +120,7 @@ export const Chat = () => {
         isChatEnded={chat?.status === 'ended'}
         companionName={companionName}
         isSupporter={role === 'supporter'}
+        userId={user?.uid}
         endChat={endChat}
         changeSupporter={changeSupporter}
         findAdditionalSupportee={() => assignSupporter(user!.uid)}
