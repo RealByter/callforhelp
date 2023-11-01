@@ -4,11 +4,12 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, collections } from '../firebase/connection';
 import { query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 export const ChatsListPage = () => {
   const [user, userLoading] = useAuthState(auth);
-  const [chats, chatsLoading] = useCollectionData(
+  const [chats] = useCollectionData(
     query(collections.chats, where('supporterId', '==', userLoading || !user ? 'empty' : user?.uid))
   );
 
@@ -22,43 +23,37 @@ export const ChatsListPage = () => {
   const endedChats = chats?.filter((chat) => chat.status === 'ended');
 
   return (
-    <div className="supporteds-list-page">
-      <div className="content">
-        <h1>רשימת נתמכים</h1>
-
-        {/* sort by date */}
-        <div className="chats">
-          {chatsLoading || activeChats?.length === 0 ? (
-            <span className="loading">טוען...</span>
-          ) : (
-            activeChats?.map((chat) => (
-              <ChatItem
-                key={chat.id}
-                name={chat.supporteeName || 'מחפש'}
-                isEnded={false}
-                chatId={chat.id}
-              />
-            ))
-          )}
-        </div>
-
-        <h2>שיחות שהסתיימו</h2>
-
-        <div className="ended-chats">
-          {chatsLoading || endedChats?.length === 0 ? (
-            <span className="loading">טוען...</span>
-          ) : (
-            endedChats?.map((chat) => (
+    <div className="chats-list">
+      <h2 className="header">רשימת נתמכים</h2>
+      <ul className="list">
+        {activeChats?.map((chat) => (
+          <ChatItem
+            key={chat.id}
+            name={chat.supporteeName || 'מחפשים...'}
+            isEnded={false}
+            chatId={chat.id}
+          />
+        ))}
+        {endedChats && endedChats.length > 0 ? (
+          <>
+            <p className="chats-ended">שיחות שהסתיימו</p>
+            {endedChats?.map((chat) => (
               <ChatItem
                 key={chat.id}
                 name={chat.supporteeName || 'לא נמצא'}
                 isEnded={true}
                 chatId={chat.id}
               />
-            ))
-          )}
-        </div>
-      </div>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
+      </ul>
+      <Button className="new-supportee">איתור נתמך</Button>
+      <NavLink className="selection-link" to="/selection">
+        חזרה לעמוד בחירה
+      </NavLink>
     </div>
   );
 };

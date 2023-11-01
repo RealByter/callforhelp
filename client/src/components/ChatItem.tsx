@@ -15,7 +15,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
   };
 
   return (
-    <div className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={OnItemClick}>
+    <li className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={OnItemClick} tabIndex={0}>
       <p className="name">{name}</p>
       <svg
         className="arrow"
@@ -26,6 +26,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
         fill="none">
         <path d="M10 12L6 8L10 4" stroke="#0E1C74" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-    </div>
+    </li>
   );
 };
