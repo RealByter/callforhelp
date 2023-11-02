@@ -4,34 +4,34 @@ export const MOCK_CHATS = [
         lastMessageSentAt: "00:00",
         unreadMessages: 3,
         isEnded: false,
-        chatId: "1"
+        chatId: "dfsa"
     },
     {
         name: "רון וויזלי",
         lastMessageSentAt: "אתמול",
         unreadMessages: 1,
         isEnded: false,
-        chatId: "2"            
+        chatId: "sadf"            
     },
     {
         name: "הרמיוני גריינג'ר",
         lastMessageSentAt: "02/03",
         unreadMessages: 0,
         isEnded: true,
-        chatId: "3"            
+        chatId: "ehtreh"            
     },
     {
         name: "נוויל לונגבוטום",
         lastMessageSentAt: "אתמול",
         unreadMessages: 0,
         isEnded: true,
-        chatId: "4"            
+        chatId: "sdtry"            
     },
     {
         name: "לונה לאבגוד",
         lastMessageSentAt: "15:56",
         unreadMessages: 3,
         isEnded: true,
-        chatId: "5"           
+        chatId: "trjjy"           
     }
   ]

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChatItem, ChatItemProps } from '../components/ChatItem';
-import SwitchRoleLink from '../components/SwitchRoleLink';
+// import SwitchRoleLink from '../components/SwitchRoleLink';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const SupporteesListPage = () => {
       // get chats from firebase 
       if (!user) return;
 
-      await findUserChatsData(user!.uid, location.state.role);
+      await findUserChatsData(user!.uid, "supportee"); // location.state.role
 
       const tempChats = [];
       const tempEndedChats = [];
@@ -144,7 +144,8 @@ export const SupporteesListPage = () => {
 
       <div className='footer'>
         <span className='locate-supportee' onClick={OnButtonClick}>איתור נתמך נוסף</span>
-        <SwitchRoleLink />
+        {/* <SwitchRoleLink /> */}
+        <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a>
       </div>
     </div>
   );
