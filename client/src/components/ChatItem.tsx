@@ -61,7 +61,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({
     }
 
     const OnItemClick = () => {
-        console.log(location);
         navigate('/chat', { state: { companionName: name, chatId, role: location.state?.role } });
     }
 

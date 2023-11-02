@@ -45,6 +45,7 @@ export const getOppositeRoleFieldName = (role: Role) =>
 
 export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> => {
   const roleFieldName = getRoleFieldName(role);
+  const oppositeRoleFieldName = getOppositeRoleFieldName(role);
   const queryUserChats = query(
     collections.chats,
     where(roleFieldName, '==', userId),
@@ -52,8 +53,9 @@ export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> 
   );
   const querySnapshot = await getDocs(queryUserChats);
   const queryData = querySnapshot.docs.map((doc) => doc.data());
-
-  return queryData;
+  const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId && doc[oppositeRoleFieldName] !== null);
+  
+  return filteredQueryData;
 };
 
 export const getNumOfUnreadMessagesInChat = async (userId: string, chatId: string): Promise<number> => {
