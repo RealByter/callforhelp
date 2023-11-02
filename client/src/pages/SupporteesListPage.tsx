@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChatItem, ChatItemProps } from '../components/ChatItem';
 import SwitchRoleLink from '../components/SwitchRoleLink';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, collections } from '../firebase/connection';
+import { auth } from '../firebase/connection';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Role,
@@ -12,16 +12,11 @@ import {
   getChatLastMessage,
   getNumOfUnreadMessagesInChat
 } from '../helpers/chatFunctions';
-import { MOCK_CHATS } from '../mock-data/chats-mock-data';
 
 export const SupporteesListPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, loading] = useAuthState(auth);
-
-  // const [chatsData, loadingChats, error] = useCollectionDataOnce(
-  //   query(collections.chats, where('supporterId', '==', user!.uid))
-  // ); // todo: move to useEffect
 
   const [chatsData, setChatsData] = useState<ChatItemProps[]>([]);
 
@@ -36,8 +31,6 @@ export const SupporteesListPage = () => {
     if (user) {
       findUserChatsData(user!.uid, location.state.role);
     }
-
-    // todo: sort by time and date (and write "yesterday" if the date is of yesterday)
     
     const tempChats = [];
     const tempEndedChats = [];
@@ -57,6 +50,7 @@ export const SupporteesListPage = () => {
     if (!loading) {
       if (!user) navigate('/');
     }
+    // todo: handle errors & loading
     // if (error) {
     //   console.log(error);
     // }
@@ -98,7 +92,6 @@ export const SupporteesListPage = () => {
       });
     }
 
-    console.log(res);
     setChatsData(res);
     return [];
   }
