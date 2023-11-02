@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import OrBackground from '../assets/OrBackground.svg';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export interface ChatItemProps {
     name: string,
@@ -13,6 +14,8 @@ export interface ChatItemProps {
 export const ChatItem: React.FC<ChatItemProps> = ({
     name, lastMessageSentAt, unreadMessages, isEnded, chatId }: ChatItemProps) => {
 
+    const location = useLocation();
+    const navigate = useNavigate();
     const [formattedTimeOrDate, setFormattedTimeOrDate] = useState("");
 
     useEffect(() => {
@@ -58,8 +61,8 @@ export const ChatItem: React.FC<ChatItemProps> = ({
     }
 
     const OnItemClick = () => {
-        // todo: go into the right chat
-        // navigate('/chat', { state: { companionName: myCompanions, chatId: myChats, role } });
+        console.log(location);
+        navigate('/chat', { state: { companionName: name, chatId, role: location.state?.role } });
     }
 
     return (

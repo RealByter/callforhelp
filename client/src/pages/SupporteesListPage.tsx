@@ -97,7 +97,7 @@ export const SupporteesListPage = () => {
   }
 
   const OnButtonClick = () => {
-    // find another supportee
+    // todo: find another supportee
   }
 
   return (
