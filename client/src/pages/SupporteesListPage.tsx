@@ -22,26 +22,31 @@ export const SupporteesListPage = () => {
 
   const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
   const [chats, setChats] = useState<ChatItemProps[]>([]);
-  
+
   const chatsIsEmpty = chats.length === 0;
   const endedChatsIsEmpty = endedChats.length === 0;
 
   useEffect(() => {
-    // get chats from firebase 
-    if (user) {
-      findUserChatsData(user!.uid, location.state.role);
-    }
-    
-    const tempChats = [];
-    const tempEndedChats = [];
+    const getData = async () => {
+      // get chats from firebase 
+      if (!user) return;
 
-    for (let i = 0; i < chatsData.length; i++) {
-      let chat = chatsData[i];
-      chat.isEnded ? tempEndedChats.push(chat) : tempChats.push(chat);
-    }
+      await findUserChatsData(user!.uid, location.state.role);
 
-    setChats(tempChats);
-    setEndedChats(tempEndedChats);
+      const tempChats = [];
+      const tempEndedChats = [];
+
+      for (let i = 0; i < chatsData.length; i++) {
+        let chat = chatsData[i];
+        chat.isEnded ? tempEndedChats.push(chat) : tempChats.push(chat);
+      }
+
+      setChats(tempChats);
+      setEndedChats(tempEndedChats);
+      console.log("mount", chatsData);
+    };
+
+    getData();
   }, [user]);
 
 
@@ -56,7 +61,7 @@ export const SupporteesListPage = () => {
     // }
   }, [loading, user, navigate]);
 
-  
+
   const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => {
     const userChats = await getUserChats(userId, role);
     if (!userChats.length) return [];
@@ -80,9 +85,8 @@ export const SupporteesListPage = () => {
     );
 
     // format the data
-    let res = [];    
-    for (let i = 0; i < userChats.length; i++)
-    {
+    let res = [];
+    for (let i = 0; i < userChats.length; i++) {
       res.push({
         name: names[i],
         lastMessageSentAt: lastMessages[i][0]?.date,
