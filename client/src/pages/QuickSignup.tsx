@@ -22,6 +22,7 @@ const QuickSignup: React.FC = () => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
   const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [error, setError] = useState<ErrorInfo>();
+  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
   const [user] = useAuthState(auth);
 
   const createUserDocument = async (user?: User) => {
@@ -33,31 +34,35 @@ const QuickSignup: React.FC = () => {
           acceptedTerms: false
         });
       }
-      navigate('/selection');
+      setStage('end');
     }
   };
 
   const signInWithGoogleHandler = async () => {
     try {
+      setStage('updating');
       const user = await signInWithGoogle();
       await createUserDocument(user?.user);
     } catch (e) {
       setError(quickSignupErrors.signUpWithGoogle);
+      setStage('start');
     }
   };
 
   const signInWithFacebookHandler = async () => {
     try {
+      setStage('updating');
       const user = await signInWithFacebook();
       await createUserDocument(user?.user);
     } catch (e) {
       setError(quickSignupErrors.signUpWithFacebook);
+      setStage('start');
     }
   };
 
   useEffect(() => {
-    if (user) navigate('/selection');
-  }, [user, navigate]);
+    if (user && stage != 'updating') navigate('/selection', { replace: true });
+  }, [user, navigate, stage]);
 
   return (
     <>
