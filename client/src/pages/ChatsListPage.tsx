@@ -10,7 +10,7 @@ import { assignSupporter } from '../helpers/chatFunctions';
 
 export const ChatsListPage = () => {
   const [user, userLoading] = useAuthState(auth);
-  const [chats] = useCollectionData(
+  const [chats, chatsLoading] = useCollectionData(
     query(
       collections.chats,
       where('supporterId', '==', userLoading || !user ? 'empty' : user?.uid),
@@ -58,7 +58,7 @@ export const ChatsListPage = () => {
       <div className="new-supportee">
         <Button
           onClick={() => assignSupporter(user!.uid)}
-          disabled={!!chats?.find((chat) => !chat.supporteeId)}>
+          disabled={chatsLoading || !!chats?.find((chat) => !chat.supporteeId)}>
           איתור נתמך נוסף
         </Button>
       </div>
