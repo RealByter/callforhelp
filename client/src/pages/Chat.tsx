@@ -15,6 +15,7 @@ import {
   getNameById,
   getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
+import SupporteeWaiting from '../components/SupporteeWaiting';
 
 /*
   TODO - take care of the disconnect events
@@ -118,7 +119,7 @@ export const Chat = () => {
 
   const noMessages = messages ? messages.length === 0 : true;
 
-  return (
+  let page = (
     <div className="chat-page">
       <ChatTopBar
         isChatEnded={chat?.status === 'ended'}
@@ -157,4 +158,9 @@ export const Chat = () => {
       <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
     </div>
   );
+
+  if (!role) page = <></>;
+  else if (role === 'supportee' && !companionName) page = <SupporteeWaiting />;
+
+  return page;
 };
