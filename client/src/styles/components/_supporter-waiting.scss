@@ -1,0 +1,19 @@
+.supporter-waiting {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #0e1c74;
+
+  h3 {
+    font-size: 2rem;
+    font-weight: 300;
+  }
+
+  p {
+    font-weight: 500;
+    text-align: center;
+    margin: 1rem 0.625rem 0;
+  }
+}
