@@ -39,26 +39,27 @@ const SignUpPage = () => {
         setStage('end');
       }
     } catch (e: unknown) {
-      const error = e as {code: string}
+      const error = e as { code: string };
       if (error.code === 'auth/email-already-in-use') {
         setError(signUpErrors.userAlreadyExists);
       } else {
         setError(signUpErrors.generalError);
       }
+      setStage('start');
     }
   };
 
   useEffect(() => {
     // Only redirect if the user existed before creating the user and after creating the user and assigning him the username
     if (user && stage !== 'updating') {
-      navigate('/selection');
+      navigate('/selection', {replace: true});
     }
   }, [user, navigate, stage]);
 
   return (
     <>
       {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
-      <BackButton to='/' />
+      <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
     </>
