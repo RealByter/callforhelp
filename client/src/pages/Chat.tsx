@@ -160,7 +160,7 @@ export const Chat = () => {
   );
 
   if (!role) page = <></>;
-  else if (role === 'supportee' && !companionName) page = <SupporteeWaiting />;
+  else if (role === 'supportee' && !chat?.supporterId) page = <SupporteeWaiting />;
 
   return page;
 };
