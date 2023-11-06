@@ -60,7 +60,9 @@ export const ChatsListPage = () => {
   );
 
   if (chatsLoading) mainContent = <></>;
-  else if (!chats![0].supporteeId) mainContent = <SupporterWaiting />;
+  else if (chats) {
+    if (chats.length === 0 || !(chats[0].supporteeId)) mainContent = <SupporterWaiting />;
+  }
 
   return (
     <div className="chats-list">
