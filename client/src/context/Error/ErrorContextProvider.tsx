@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ErrorContext from './ErrorContext';
 import ErrorModal from '../../components/ErrorModal';
-import { useNavigate } from 'react-router-dom';
 
 export type ErrorType = {
   title: string;
@@ -15,10 +14,9 @@ type ErrorContextProviderProps = {
 
 const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({ children }) => {
   const [error, setError] = useState<ErrorType>();
-  const navigate = useNavigate();
 
   const handleContinue = () => {
-    if (error?.refresh) navigate(window.location.pathname);
+    if (error?.refresh) window.location.href = window.location.pathname;
     else setError(undefined);
   };
 
