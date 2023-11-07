@@ -9,7 +9,8 @@ import {
   query,
   updateDoc,
   where,
-  and
+  and,
+  onSnapshot
 } from 'firebase/firestore';
 import { Chat } from '../firebase/chat';
 import { Message } from '../firebase/message';
@@ -21,24 +22,17 @@ export const getRoleFieldName = (role: Role) =>
 export const getOppositeRoleFieldName = (role: Role) =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
 
-// export const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => {
-//   const roleFieldName = getRoleFieldName(role);
-//   const queryUserChats = query(
-//     collections.chats,
-//     where(roleFieldName, '==', userId),
-//     orderBy('createdAt')
-//   );
-//   const querySnapshot = await getDocs(queryUserChats);
-//   // const queryData = querySnapshot.docs.map((doc) => doc.data());
 
-//   querySnapshot.docs.forEach((doc) => {
-//     let user = doc.data();
+export const temp = (userId: string, role: Role, cb: any) => { //todo: fix type
+  const roleFieldName = getRoleFieldName(role);
+  const queryUserChats = query(
+    collections.chats,
+    where(roleFieldName, '==', userId),
+    orderBy('createdAt')
+  );
 
-//   });
-
-
-//   return queryData;
-// };
+  const unsubscribe = onSnapshot(queryUserChats, cb);
+}
 
 
 export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> => {
