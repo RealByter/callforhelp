@@ -21,3 +21,8 @@ export const signInErrors = {
   },
   generalError: { title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות באמצעות אימייל' }
 };
+
+export const connectionError = {
+  title: 'יש בעיות באינטרנט',
+  content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב'
+};

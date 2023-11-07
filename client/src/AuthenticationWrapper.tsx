@@ -4,14 +4,17 @@ import { useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import TermsAndConditionsPopup from './components/TermsAndConditionsPopup';
 import React from 'react';
+import useErrorContext from './context/Error/useErrorContext';
+import { connectionError } from './consts/errorMessages';
 
 type AuthenticationWrapperProps = {
   children: React.ReactNode;
 };
 
 const AuthenticationWrapper: React.FC<AuthenticationWrapperProps> = ({ children }) => {
-  const [user] = useAuthState(auth);
+  const [user, , error] = useAuthState(auth);
   const [showTerms, setShowTerms] = useState(false);
+  useErrorContext(error && connectionError);
 
   useEffect(() => {
     if (user) {

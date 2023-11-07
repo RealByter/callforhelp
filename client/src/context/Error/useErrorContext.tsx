@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import ErrorContext from './ErrorContext';
 import { ErrorType } from './ErrorContextProvider';
 
-const useErrorContext = (error: ErrorType) => {
+const useErrorContext = (error: ErrorType | undefined) => {
   const setError = useContext(ErrorContext).setError;
 
   useEffect(() => {
