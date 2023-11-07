@@ -7,10 +7,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { assignSupporter } from '../helpers/chatFunctions';
+import SupporterWaiting from '../components/SupporterWaiting';
 
 export const ChatsListPage = () => {
   const [user, userLoading] = useAuthState(auth);
-  const [chats] = useCollectionData(
+  const [chats, chatsLoading] = useCollectionData(
     query(
       collections.chats,
       where('supporterId', '==', userLoading || !user ? 'empty' : user?.uid),
@@ -27,8 +28,8 @@ export const ChatsListPage = () => {
   const activeChats = chats?.filter((chat) => chat.status === 'active');
   const endedChats = chats?.filter((chat) => chat.status === 'ended');
 
-  return (
-    <div className="chats-list">
+  let mainContent = (
+    <>
       <h2 className="header">רשימת נתמכים</h2>
       <ul className="list">
         {activeChats?.map((chat) => (
@@ -55,10 +56,19 @@ export const ChatsListPage = () => {
           <></>
         )}
       </ul>
+    </>
+  );
+
+  if (chatsLoading) mainContent = <></>;
+  else if (!chats![chats!.length - 1].supporteeId) mainContent = <SupporterWaiting />;
+
+  return (
+    <div className="chats-list">
+      {mainContent}
       <div className="new-supportee">
         <Button
           onClick={() => assignSupporter(user!.uid)}
-          disabled={!!chats?.find((chat) => !chat.supporteeId)}>
+          disabled={chatsLoading || !!chats?.find((chat) => !chat.supporteeId)}>
           איתור נתמך נוסף
         </Button>
       </div>

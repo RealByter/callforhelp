@@ -30,14 +30,14 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/selection');
+      navigate('/selection', { replace: true });
     }
   }, [user, navigate]);
 
   return (
     <>
       {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
-      <BackButton to='/' />
+      <BackButton to="/" />
       <Header>התחברות</Header>
       <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
     </>

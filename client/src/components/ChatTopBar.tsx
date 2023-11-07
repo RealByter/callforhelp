@@ -22,6 +22,15 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   findAdditionalSupportee,
   goBackToChatsPage
 }: IChatTopBarProps) => {
+  let subTitle = '';
+  if (companionName) {
+    if (isSupporter) subTitle = 'אני צריך תמיכה';
+    else subTitle = 'אני פה בשבילך';
+  } else {
+    if (isSupporter) subTitle = 'אצטרך תמיכה';
+    else subTitle = 'אהיה פה בשבילך';
+  }
+
   return (
     <div className={`chat-top-bar ${isChatEnded ? 'ended' : ''}`}>
       <div className="chat-top-bar-upper">
@@ -49,8 +58,8 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
           </svg>
         </button>
         <div className="top-bar-text">
-          <span className="title">{companionName || 'התומך המאושר'}</span>
-          <span className="sub-title">אני פה בשבילך</span>
+          <span className="title">{companionName || 'מחפשים...'}</span>
+          <span className="sub-title">{subTitle}</span>
         </div>
       </div>
       <div className="chat-top-bar-lower">
