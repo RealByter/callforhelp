@@ -5,7 +5,7 @@ import ErrorModal from '../../components/ErrorModal';
 export type ErrorType = {
   title: string;
   content: string;
-  refresh: boolean;
+  refresh?: boolean;
 };
 
 type ErrorContextProviderProps = {
