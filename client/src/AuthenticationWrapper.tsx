@@ -12,19 +12,25 @@ type AuthenticationWrapperProps = {
 };
 
 const AuthenticationWrapper: React.FC<AuthenticationWrapperProps> = ({ children }) => {
-  const [user, , error] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
   const [showTerms, setShowTerms] = useState(false);
-  useErrorContext(error && connectionError);
+  console.log(error);
+  console.log(user);
+  console.log(loading);
+
+  const setError = useErrorContext(error && connectionError.refresh);
 
   useEffect(() => {
     if (user) {
-      getDoc(doc(collections.users, user.uid)).then((res) => {
-        if (!res.data()?.acceptedTerms) {
-          setShowTerms(true);
-        }
-      });
+      getDoc(doc(collections.users, user.uid))
+        .then((res) => {
+          if (!res.data()?.acceptedTerms) {
+            setShowTerms(true);
+          }
+        })
+        .catch(() => setError(connectionError.refresh));
     }
-  }, [user]);
+  }, [user, setError]);
 
   const handleAcceptance = async () => {
     await updateDoc(doc(collections.users, user!.uid), { acceptedTerms: true });

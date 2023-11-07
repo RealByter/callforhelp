@@ -9,6 +9,8 @@ const useErrorContext = (error: ErrorType | undefined) => {
     if(error)
       setError(error)
   }, [error, setError])
+
+  return setError;
 };
 
 export default useErrorContext;

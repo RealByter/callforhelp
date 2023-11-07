@@ -23,6 +23,14 @@ export const signInErrors = {
 };
 
 export const connectionError = {
-  title: 'יש בעיות באינטרנט',
-  content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב'
+  refresh: {
+    title: 'יש בעיות באינטרנט',
+    content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב',
+    refresh: true
+  },
+  continue: {
+    title: 'יש בעיות באינטרנט',
+    content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב',
+    refresh: false
+  }
 };
