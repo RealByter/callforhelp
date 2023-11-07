@@ -13,6 +13,7 @@ import AuthenticationWrapper from './AuthenticationWrapper.tsx';
 import './styles/App.scss';
 import InfoModalExample from './components/InfoModalExample.tsx';
 import Disclaimer from './components/Disclaimer.tsx';
+import ErrorContextProvider from './context/Error/ErrorContextProvider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -49,10 +50,12 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
-    <AuthenticationWrapper>
-      <Disclaimer />
-      <RouterProvider router={router} />
-    </AuthenticationWrapper>
+    <ErrorContextProvider>
+      <AuthenticationWrapper>
+        <Disclaimer />
+        <RouterProvider router={router} />
+      </AuthenticationWrapper>
+    </ErrorContextProvider>
   </StyledEngineProvider>
   // </React.StrictMode>
 );
