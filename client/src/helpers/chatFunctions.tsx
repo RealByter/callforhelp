@@ -10,13 +10,16 @@ import {
   updateDoc,
   where,
   and,
-  onSnapshot
+  onSnapshot,
+  getCountFromServer
 } from 'firebase/firestore';
 import { Chat } from '../firebase/chat';
 import { Message } from '../firebase/message';
 import { collections } from '../firebase/connection';
 
 export type Role = 'supporter' | 'supportee';
+export const getOppositeRole = (role: Role) =>
+  role === 'supporter' ? 'supportee' : 'supporter';
 export const getRoleFieldName = (role: Role) =>
   role === 'supporter' ? 'supporterId' : 'supporteeId';
 export const getOppositeRoleFieldName = (role: Role) =>
@@ -28,19 +31,25 @@ const OnSnapshotError = (error: any) => { // todo: handle errors
   console.log("error", error);
 }
 
-export const getRealtimeUserChats = (userId: string, role: Role, onSnapshotCB: any) => {
+export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
   const roleFieldName = getRoleFieldName(role);
+  let oppositeRole: Role = getOppositeRole(role);
+
   const queryUserChats = query(
     collections.chats,
     where(roleFieldName, '==', userId),
     orderBy('createdAt')
   );
 
-  const unsubscribe = onSnapshot(queryUserChats, onSnapshotCB, OnSnapshotError);
+  const unsubscribe = onSnapshot(queryUserChats, (snapshot) => {
+    const queryData = snapshot.docs.map((doc) => doc.data());
+    const filteredData = queryData.filter((doc) => doc[oppositeRole] !== userId && doc[oppositeRole] !== null);
+    cb(filteredData);
+  }, OnSnapshotError);
   return unsubscribe;
 }
 
-export const getRealtimeAdditionalChatData = (chatId: string, onSnapshotCB: any) => {
+export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => { //todo: rename
   const queryChatMessages = query(
     collections.messages,
     where("chatId", '==', chatId),
@@ -48,51 +57,23 @@ export const getRealtimeAdditionalChatData = (chatId: string, onSnapshotCB: any)
     limit(1)
   );
 
-  const unsubscribe = onSnapshot(queryChatMessages, onSnapshotCB, OnSnapshotError);
+  const unsubscribe = onSnapshot(queryChatMessages, (snapshot) => {
+    const snapshotData = snapshot.docs.map((doc) => doc.data());
+    let timestamp = snapshotData[0].date;
+    cb(timestamp);
+  }, OnSnapshotError);
   return unsubscribe;
 }
 
-
-export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> => {
-  const roleFieldName = getRoleFieldName(role);
-  const oppositeRoleFieldName = getOppositeRoleFieldName(role);
-  const queryUserChats = query(
-    collections.chats,
-    where(roleFieldName, '==', userId),
-    orderBy('createdAt')
-  );
-
-  const querySnapshot = await getDocs(queryUserChats);
-  const queryData = querySnapshot.docs.map((doc) => doc.data());
-  const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId && doc[oppositeRoleFieldName] !== null);
-
-  return filteredQueryData;
-};
-
-export const getNumOfUnreadMessagesInChat = async (userId: string, chatId: string): Promise<number> => {
+export const getUnreadMessagesCount = async (userId: string, chatId: string): Promise<number> => {
   const queryChatMessages = query(
     collections.messages,
     and(where("chatId", '==', chatId),
       where("senderId", '!=', userId),
       where("status", '==', 'received')),
   );
-  const querySnapshot = await getDocs(queryChatMessages);
-  const queryData = querySnapshot.docs.map((doc) => doc.data());
-
-  return queryData.length;
-};
-
-export const getChatLastMessage = async (chatId: string): Promise<Message[]> => {
-  const queryChatMessages = query(
-    collections.messages,
-    where("chatId", '==', chatId),
-    orderBy('date', "desc"),
-    limit(1)
-  );
-  const querySnapshot = await getDocs(queryChatMessages);
-  const queryData = querySnapshot.docs.map((doc) => doc.data());
-
-  return queryData;
+  const snapshot = await getCountFromServer(queryChatMessages);
+  return snapshot.data().count;
 };
 
 export const findChatToFill = async (role: Role, userId: string): Promise<Chat | null> => {

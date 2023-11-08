@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { auth } from '../firebase/connection';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import {getRealtimeAdditionalChatData} from '../helpers/chatFunctions';
+import { getRealtimeLastMessageTimestamp, getUnreadMessagesCount } from '../helpers/chatFunctions';
 
 export interface ChatItemProps {
   name: string,
@@ -14,22 +16,37 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
 
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, userLoading] = useAuthState(auth);
+
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState("");
 
   useEffect(() => {
-      let unsubscribe = getRealtimeAdditionalChatData(chatId, (snapshot) => {
-        const snapshotData = snapshot.docs.map((doc) => doc.data());
-        let timestamp = snapshotData[0].date;
-        setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
-      })
-   
-    return(() => {
+    let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp) => {
+      setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
+    })
+
+    return (() => {
       unsubscribe();
     });
   }, [])
 
-  const FormatLastMessageTimestamp = (timestamp : string) => {
+  useEffect(() => {
+    // redirect if user not logged in
+    if (!userLoading && !user) navigate('/');
+  }, [user, userLoading, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    (async () => {
+      const count = await getUnreadMessagesCount(user!.uid, chatId);
+      setUnreadMessages(count);
+    })();
+
+  }, [lastMessageTimestamp])
+
+  const FormatLastMessageTimestamp = (timestamp: string) => {
     let currDateAndTime = FormatDateAndTime(new Date().toISOString());
     let dateAndTime = FormatDateAndTime(timestamp);
 

@@ -3,51 +3,22 @@ import { ChatItem, ChatItemProps } from '../components/ChatItem';
 // import SwitchRoleLink from '../components/SwitchRoleLink';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  DocumentData,
-  FirestoreError,
-  getDocs,
-  getDocsFromCache,
-  getDocsFromServer,
-  doc,
-  onSnapshot,
-  Query,
-  QuerySnapshot,
-  SnapshotOptions,
-  SnapshotListenOptions,
-  collection
-} from 'firebase/firestore';
-import { collections } from '../firebase/connection';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import {
-  Role,
-  getUserChats,
-  getNameById,
-  getOppositeRoleFieldName,
-  getChatLastMessage,
-  getNumOfUnreadMessagesInChat,
-  getRealtimeUserChats,
-  getRealtimeAdditionalChatData
-} from '../helpers/chatFunctions';
+import { useNavigate } from 'react-router-dom';
+import { Role, getRealtimeUserChats} from '../helpers/chatFunctions';
 
 // todo: remeve unnedded imports
 
 // todo: handle loading
 
 export const SupporteesListPage = () => {
-  // const location = useLocation();
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
 
   const unsubscribeSnapshotsFuncs: { [key: string]: any } = {};
-  // const [userChats, setUserChats] = useState<any>([]);
   const [chatsData, setChatsData] = useState<ChatItemProps[]>([]);
-  const [additionalChatData, setAdditionalChatData] = useState<{ [key: string]: { [key: string]: string } }>({});
 
   const activeChats = chatsData?.filter((chat) => !chat.isEnded);
   const endedChats = chatsData?.filter((chat) => chat.isEnded);
-  const [a, setA] = useState(0);
 
 
   useEffect(() => {
@@ -59,46 +30,10 @@ export const SupporteesListPage = () => {
   useEffect(() => {
     if (!user) return;
 
-    let userId = user!.uid;
-    let role = "supporter";
-    let otherRole = "supportee";
+    // todo: make more generic
+    let role : Role = "supporter";
 
-    let unsubscribe = getRealtimeUserChats(user!.uid, "supporter", async (snapshot) => {
-
-      let changes = snapshot.docChanges();
-
-      for (let i = 0; i < changes.length; i++) {
-        let change = changes[i];
-        let changeData = change.doc.data();
-
-        if (change.type === "added") {
-          unsubscribeSnapshotsFuncs[changeData.chatId] = getRealtimeAdditionalChatData(changeData.id, (chatSnapshot) => {
-            const chatSnapshotData = chatSnapshot.docs.map((doc) => doc.data());
-            console.log("chatSnapshotData", chatSnapshotData);
-
-            setAdditionalChatData(additionalChatData => {
-              return {
-                ...additionalChatData,
-                [chatSnapshotData[0].chatId]: { "lastMessageSentAt": chatSnapshotData[0].date }
-              }
-            });
-          })
-        }
-        // if (change.type === "modified") {
-        // }
-        if (change.type === "removed") {
-          unsubscribeSnapshotsFuncs[changeData.chatId]();
-        }
-      }
-
-      const queryData = snapshot.docs.map((doc) => doc.data());
-      const userChats = queryData.filter((doc) => doc[otherRole] !== userId && doc[otherRole] !== null);
-
-      // const unreadMessages = await Promise.all(
-      //   userChats.map((chat) => {
-      //     return getNumOfUnreadMessagesInChat(userId, chat.id);
-      //   })
-      // );
+    let unsubscribe = getRealtimeUserChats(user!.uid, role, async (userChats) => {
 
       // format the data
       let res = [];
@@ -107,8 +42,6 @@ export const SupporteesListPage = () => {
 
         res.push({
           name: userChats[i].supporteeName,
-          lastMessageSentAt: "", //lastMessages[i][0]?.date,
-          unreadMessages: 0, //unreadMessages[i],
           isEnded: userChats[i].status == "ended",
           chatId: userChats[i].id
         });
@@ -142,8 +75,6 @@ export const SupporteesListPage = () => {
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageSentAt={additionalChatData[chat.chatId]?.lastMessageSentAt}
-                unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
             )}
@@ -158,8 +89,6 @@ export const SupporteesListPage = () => {
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageSentAt={additionalChatData[chat.chatId]?.lastMessageSentAt}
-                unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
             )}
