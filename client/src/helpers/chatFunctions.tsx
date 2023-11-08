@@ -22,8 +22,13 @@ export const getRoleFieldName = (role: Role) =>
 export const getOppositeRoleFieldName = (role: Role) =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
 
+//todo: fix types of cb from any
 
-export const temp = (userId: string, role: Role, cb: any) => { //todo: fix type
+const OnSnapshotError = (error: any) => { // todo: handle errors
+  console.log("error", error);
+}
+
+export const getRealtimeUserChats = (userId: string, role: Role, onSnapshotCB: any) => {
   const roleFieldName = getRoleFieldName(role);
   const queryUserChats = query(
     collections.chats,
@@ -31,7 +36,20 @@ export const temp = (userId: string, role: Role, cb: any) => { //todo: fix type
     orderBy('createdAt')
   );
 
-  const unsubscribe = onSnapshot(queryUserChats, cb);
+  const unsubscribe = onSnapshot(queryUserChats, onSnapshotCB, OnSnapshotError);
+  return unsubscribe;
+}
+
+export const getRealtimeAdditionalChatData = (chatId: string, onSnapshotCB: any) => {
+  const queryChatMessages = query(
+    collections.messages,
+    where("chatId", '==', chatId),
+    orderBy('date', "desc"),
+    limit(1)
+  );
+
+  const unsubscribe = onSnapshot(queryChatMessages, onSnapshotCB, OnSnapshotError);
+  return unsubscribe;
 }
 
 
@@ -43,10 +61,11 @@ export const getUserChats = async (userId: string, role: Role): Promise<Chat[]> 
     where(roleFieldName, '==', userId),
     orderBy('createdAt')
   );
+
   const querySnapshot = await getDocs(queryUserChats);
   const queryData = querySnapshot.docs.map((doc) => doc.data());
   const filteredQueryData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId && doc[oppositeRoleFieldName] !== null);
-  
+
   return filteredQueryData;
 };
 

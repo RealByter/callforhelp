@@ -34,7 +34,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({
     else {
       setFormattedTimeOrDate(dateAndTime.date);
     }
-  }, []);
+  }, [lastMessageSentAt]);
 
   const FormatDateAndTime = (dateAndTime: string) => {
     let arr = dateAndTime.split("T");

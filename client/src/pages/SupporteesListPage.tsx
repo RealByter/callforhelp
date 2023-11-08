@@ -27,7 +27,8 @@ import {
   getOppositeRoleFieldName,
   getChatLastMessage,
   getNumOfUnreadMessagesInChat,
-  temp
+  getRealtimeUserChats,
+  getRealtimeAdditionalChatData
 } from '../helpers/chatFunctions';
 
 // todo: remeve unnedded imports
@@ -39,13 +40,14 @@ export const SupporteesListPage = () => {
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
 
+  const unsubscribeSnapshotsFuncs: { [key: string]: any } = {};
+  // const [userChats, setUserChats] = useState<any>([]);
   const [chatsData, setChatsData] = useState<ChatItemProps[]>([]);
+  const [additionalChatData, setAdditionalChatData] = useState<{ [key: string]: { [key: string]: string } }>({});
 
   const activeChats = chatsData?.filter((chat) => !chat.isEnded);
   const endedChats = chatsData?.filter((chat) => chat.isEnded);
-
-  // const [activeChats, setActiveChats] = useState<ChatItemProps[]>([]);
-  // const [endedChats, setEndedChats] = useState<ChatItemProps[]>([]);
+  const [a, setA] = useState(0);
 
 
   useEffect(() => {
@@ -53,34 +55,50 @@ export const SupporteesListPage = () => {
     if (!userLoading && !user) navigate('/');
   }, [user, userLoading, navigate]);
 
+
   useEffect(() => {
     if (!user) return;
 
-    let userId = user!.uid; 
+    let userId = user!.uid;
     let role = "supporter";
     let otherRole = "supportee";
 
-    temp(user!.uid, "supporter", async (querySnapshot) => {
-      const queryData = querySnapshot.docs.map((doc) => doc.data());
+    let unsubscribe = getRealtimeUserChats(user!.uid, "supporter", async (snapshot) => {
+
+      let changes = snapshot.docChanges();
+
+      for (let i = 0; i < changes.length; i++) {
+        let change = changes[i];
+        let changeData = change.doc.data();
+
+        if (change.type === "added") {
+          unsubscribeSnapshotsFuncs[changeData.chatId] = getRealtimeAdditionalChatData(changeData.id, (chatSnapshot) => {
+            const chatSnapshotData = chatSnapshot.docs.map((doc) => doc.data());
+            console.log("chatSnapshotData", chatSnapshotData);
+
+            setAdditionalChatData(additionalChatData => {
+              return {
+                ...additionalChatData,
+                [chatSnapshotData[0].chatId]: { "lastMessageSentAt": chatSnapshotData[0].date }
+              }
+            });
+          })
+        }
+        // if (change.type === "modified") {
+        // }
+        if (change.type === "removed") {
+          unsubscribeSnapshotsFuncs[changeData.chatId]();
+        }
+      }
+
+      const queryData = snapshot.docs.map((doc) => doc.data());
       const userChats = queryData.filter((doc) => doc[otherRole] !== userId && doc[otherRole] !== null);
 
-      const names = await Promise.all(
-        userChats.map((chat) => {
-          return getNameById(chat[getOppositeRoleFieldName(role)] as string)
-        })
-      );
-
-      const unreadMessages = await Promise.all(
-        userChats.map((chat) => {
-          return getNumOfUnreadMessagesInChat(userId, chat.id);
-        })
-      );
-
-      const lastMessages = await Promise.all(
-        userChats.map((chat) => {
-          return getChatLastMessage(chat.id);
-        })
-      );
+      // const unreadMessages = await Promise.all(
+      //   userChats.map((chat) => {
+      //     return getNumOfUnreadMessagesInChat(userId, chat.id);
+      //   })
+      // );
 
       // format the data
       let res = [];
@@ -88,78 +106,24 @@ export const SupporteesListPage = () => {
         if (userChats[i].status == "blocked") continue;
 
         res.push({
-          name: names[i],
-          lastMessageSentAt: lastMessages[i][0]?.date,
-          unreadMessages: unreadMessages[i],
+          name: userChats[i].supporteeName,
+          lastMessageSentAt: "", //lastMessages[i][0]?.date,
+          unreadMessages: 0, //unreadMessages[i],
           isEnded: userChats[i].status == "ended",
           chatId: userChats[i].id
         });
       }
+      console.log(res);
       setChatsData(res);
     });
 
-    // const getData = async () => {
-      // get chats from firebase 
-      // if (!user) return;
+    return () => {
+      Object.values(unsubscribeSnapshotsFuncs).forEach((unsubscribeChat, index) => unsubscribeChat());
+      unsubscribe();
+    }
 
-      // let res = await findUserChatsData(user!.uid, "supporter"); // todo: location.state.role
-      // setChatsData(res);
+  }, [user]);
 
-      // const tempChats = [];
-      // const tempEndedChats = [];
-
-      // for (let i = 0; i < chatsData.length; i++) {
-      //   let chat = chatsData[i];
-      //   chat.isEnded ? tempEndedChats.push(chat) : tempChats.push(chat);
-      // }
-
-      // setActiveChats(tempChats);
-      // setEndedChats(tempEndedChats);
-    // };
-
-    // getData();
-  }, [user, activeChats, endedChats]);
-
-
-  // const findUserChatsData = async (userId: string, role: Role): Promise<ChatItemProps[]> => { // todo: move to chatFunctions
-  //   const userChats = await getUserChats(userId, role);
-  //   if (!userChats.length) return [];
-
-  //   const names = await Promise.all(
-  //     userChats.map((chat) => {
-  //       return getNameById(chat[getOppositeRoleFieldName(role)] as string)
-  //     })
-  //   );
-
-  //   const unreadMessages = await Promise.all(
-  //     userChats.map((chat) => {
-  //       return getNumOfUnreadMessagesInChat(userId, chat.id);
-  //     })
-  //   );
-
-  //   const lastMessages = await Promise.all(
-  //     userChats.map((chat) => {
-  //       return getChatLastMessage(chat.id);
-  //     })
-  //   );
-
-  //   // format the data
-  //   let res = [];
-  //   for (let i = 0; i < userChats.length; i++) {
-  //     if (userChats[i].status == "blocked") continue;
-
-  //     res.push({
-  //       name: names[i],
-  //       lastMessageSentAt: lastMessages[i][0]?.date,
-  //       unreadMessages: unreadMessages[i],
-  //       isEnded: userChats[i].status == "ended",
-  //       chatId: userChats[i].id
-  //     });
-  //   }
-
-  //   // setChatsData(res);
-  //   return res;
-  // }
 
   const OnButtonClick = () => {
     // todo: find another supportee
@@ -170,8 +134,7 @@ export const SupporteesListPage = () => {
 
       <div className='content'>
         <h1>רשימת נתמכים</h1>
-
-        {/* sort by date */}
+        
         <div className='chats'>
           {activeChats.length === 0 ?
             <span className='loading' >אין שיחות פעילות</span> :
@@ -179,7 +142,7 @@ export const SupporteesListPage = () => {
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageSentAt={chat.lastMessageSentAt}
+                lastMessageSentAt={additionalChatData[chat.chatId]?.lastMessageSentAt}
                 unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
@@ -195,7 +158,7 @@ export const SupporteesListPage = () => {
               <ChatItem
                 key={chat.chatId}
                 name={chat.name}
-                lastMessageSentAt={chat.lastMessageSentAt}
+                lastMessageSentAt={additionalChatData[chat.chatId]?.lastMessageSentAt}
                 unreadMessages={chat.unreadMessages}
                 isEnded={chat.isEnded}
                 chatId={chat.chatId} />
