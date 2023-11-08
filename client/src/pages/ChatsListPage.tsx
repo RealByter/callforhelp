@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Chat } from '../firebase/chat';
 import { ChatItem } from '../components/ChatItem';
 // import SwitchRoleLink from '../components/SwitchRoleLink';

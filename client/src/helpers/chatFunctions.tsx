@@ -51,7 +51,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
   return unsubscribe;
 }
 
-export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => { //todo: rename
+export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => {
   const queryChatMessages = query(
     collections.messages,
     where("chatId", '==', chatId),
