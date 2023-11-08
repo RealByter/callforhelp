@@ -28,7 +28,6 @@ export const SupporteesListPage = () => {
     if (!userLoading && !user) navigate('/');
   }, [user, userLoading, navigate]);
 
-
   useEffect(() => {
     if (!user) return;
 
@@ -54,9 +53,9 @@ export const SupporteesListPage = () => {
   return (
     <div className="supportees-list-page">
 
-      <div className='content'>
-        <h1>רשימת נתמכים</h1>
+      <h1>רשימת נתמכים</h1>
 
+      <ul className='content'>
         <div className='chats'>
           {activeChats.length === 0 ?
             <span className='loading' >אין שיחות פעילות</span> :
@@ -84,14 +83,13 @@ export const SupporteesListPage = () => {
             </div>
           </>}
 
-      </div>
+      </ul>
 
       <div className='footer'>
 
-        <Button  className='new-supportee' onClick={() => assignSupporter(user!.uid)} disabled={IsSearchingForSupportee()}>איתור נתמך נוסף</Button>
+        <Button className='new-supportee' onClick={() => assignSupporter(user!.uid)} disabled={IsSearchingForSupportee()}>איתור נתמך נוסף</Button>
         <NavLink className="selection-link" to="/selection">חזרה לעמוד בחירה</NavLink>
 
-        {/* <span className='locate-supportee'>איתור נתמך נוסף</span> */}
         {/* <SwitchRoleLink /> */}
         {/* <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a> */}
       </div>
