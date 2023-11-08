@@ -43,7 +43,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
 
   const unsubscribe = onSnapshot(queryUserChats, (snapshot) => {
     const queryData = snapshot.docs.map((doc) => doc.data());
-    const filteredData = queryData.filter((doc) => doc[oppositeRole] !== userId && doc[oppositeRole] !== null);
+    const filteredData = queryData.filter((doc) => doc[oppositeRole] !== userId && doc[oppositeRole] !== null && doc.status != "blocked");
     cb(filteredData);
   }, OnSnapshotError);
   return unsubscribe;

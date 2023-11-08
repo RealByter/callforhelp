@@ -38,15 +38,12 @@ export const SupporteesListPage = () => {
       // format the data
       let res = [];
       for (let i = 0; i < userChats.length; i++) {
-        if (userChats[i].status == "blocked") continue;
-
         res.push({
           name: userChats[i].supporteeName,
           isEnded: userChats[i].status == "ended",
           chatId: userChats[i].id
         });
       }
-      console.log(res);
       setChatsData(res);
     });
 

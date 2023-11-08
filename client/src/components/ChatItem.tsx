@@ -14,16 +14,17 @@ export interface ChatItemProps {
 
 export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: ChatItemProps) => {
 
-  const location = useLocation();
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
 
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const [plainTimestamp, setPlainTimestamp] = useState(""); // needed for the unreadMessages accuracy
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState("");
 
   useEffect(() => {
     let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp) => {
       setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
+      setPlainTimestamp(timestamp);
     })
 
     return (() => {
@@ -44,7 +45,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
       setUnreadMessages(count);
     })();
 
-  }, [lastMessageTimestamp])
+  }, [plainTimestamp])
 
   const FormatLastMessageTimestamp = (timestamp: string) => {
     let currDateAndTime = FormatDateAndTime(new Date().toISOString());
