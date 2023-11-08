@@ -12,7 +12,7 @@ import Button from '../components/Button';
 
 // todo: handle loading
 
-export const SupporteesListPage = () => {
+export const ChatsListPage = () => {
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
 
@@ -51,7 +51,7 @@ export const SupporteesListPage = () => {
   }
 
   return (
-    <div className="supportees-list-page">
+    <div className="chats-list-page">
 
       <h1>רשימת נתמכים</h1>
 

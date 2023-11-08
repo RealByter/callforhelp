@@ -6,8 +6,7 @@ import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
 import { Chat } from './pages/Chat';
-import { SupporteesListPage } from './pages/SupporteesListPage.tsx';
-// import { ChatsListPage } from './pages/ChatsListPage.tsx';
+import { ChatsListPage } from './pages/ChatsListPage.tsx';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
 import AuthenticationWrapper from './AuthenticationWrapper.tsx';
@@ -34,13 +33,9 @@ const router = createBrowserRouter([
     element: <Chat />
   },
   {
-    path: '/supporteesList',
-    element: <SupporteesListPage />
+    path: '/chats',
+    element: <ChatsListPage />
   },
-  // {
-  //   path: '/chats',
-  //   element: <ChatsListPage />
-  // },
   {
     path: '/selection',
     element: <Selection />
