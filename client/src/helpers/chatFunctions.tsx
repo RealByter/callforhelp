@@ -18,11 +18,13 @@ import { Message } from '../firebase/message';
 import { collections } from '../firebase/connection';
 
 export type Role = 'supporter' | 'supportee';
-export const getOppositeRole = (role: Role) =>
+export type RoleFieldName = 'supporterId' | 'supporteeId';
+
+export const getOppositeRole = (role: Role) : Role =>
   role === 'supporter' ? 'supportee' : 'supporter';
-export const getRoleFieldName = (role: Role) =>
+export const getRoleFieldName = (role: Role) : RoleFieldName=>
   role === 'supporter' ? 'supporterId' : 'supporteeId';
-export const getOppositeRoleFieldName = (role: Role) =>
+export const getOppositeRoleFieldName = (role: Role) : RoleFieldName =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
 
 //todo: fix types of cb from any
@@ -33,7 +35,7 @@ const OnSnapshotError = (error: any) => { // todo: handle errors
 
 export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
   const roleFieldName = getRoleFieldName(role);
-  let oppositeRole: Role = getOppositeRole(role);
+  let oppositeRoleFieldName = getOppositeRoleFieldName(role);
 
   const queryUserChats = query(
     collections.chats,
@@ -43,7 +45,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
 
   const unsubscribe = onSnapshot(queryUserChats, (snapshot) => {
     const queryData = snapshot.docs.map((doc) => doc.data());
-    const filteredData = queryData.filter((doc) => doc[oppositeRole] !== userId && doc[oppositeRole] !== null && doc.status != "blocked");
+    const filteredData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId && doc.status != "blocked");
     cb(filteredData);
   }, OnSnapshotError);
   return unsubscribe;
@@ -59,7 +61,7 @@ export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => { //
 
   const unsubscribe = onSnapshot(queryChatMessages, (snapshot) => {
     const snapshotData = snapshot.docs.map((doc) => doc.data());
-    let timestamp = snapshotData[0].date;
+    let timestamp = snapshotData[0]?.date || "";
     cb(timestamp);
   }, OnSnapshotError);
   return unsubscribe;

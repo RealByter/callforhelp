@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ChatItem, ChatItemProps } from '../components/ChatItem';
+import { Chat } from '../firebase/chat';
+import { ChatItem } from '../components/ChatItem';
 // import SwitchRoleLink from '../components/SwitchRoleLink';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
-import { Role, getRealtimeUserChats} from '../helpers/chatFunctions';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Role, getRealtimeUserChats, assignSupporter } from '../helpers/chatFunctions';
+import Button from '../components/Button';
 
-// todo: remeve unnedded imports
+// todo: remove unnedded imports
 
 // todo: handle loading
 
@@ -15,10 +17,10 @@ export const SupporteesListPage = () => {
   const [user, userLoading] = useAuthState(auth);
 
   const unsubscribeSnapshotsFuncs: { [key: string]: any } = {};
-  const [chatsData, setChatsData] = useState<ChatItemProps[]>([]);
+  const [chats, setChats] = useState<Chat[]>([]); // todo: type
 
-  const activeChats = chatsData?.filter((chat) => !chat.isEnded);
-  const endedChats = chatsData?.filter((chat) => chat.isEnded);
+  const activeChats = chats?.filter((chat) => chat.status != "ended");
+  const endedChats = chats?.filter((chat) => chat.status == "ended");
 
 
   useEffect(() => {
@@ -31,20 +33,10 @@ export const SupporteesListPage = () => {
     if (!user) return;
 
     // todo: make more generic
-    let role : Role = "supporter";
+    let role: Role = "supporter";
 
-    let unsubscribe = getRealtimeUserChats(user!.uid, role, async (userChats) => {
-
-      // format the data
-      let res = [];
-      for (let i = 0; i < userChats.length; i++) {
-        res.push({
-          name: userChats[i].supporteeName,
-          isEnded: userChats[i].status == "ended",
-          chatId: userChats[i].id
-        });
-      }
-      setChatsData(res);
+    let unsubscribe = getRealtimeUserChats(user!.uid, role, async (chatsData: Chat[]) => {
+      setChats(chatsData);
     });
 
     return () => {
@@ -55,8 +47,8 @@ export const SupporteesListPage = () => {
   }, [user]);
 
 
-  const OnButtonClick = () => {
-    // todo: find another supportee
+  const IsSearchingForSupportee = () => {
+    return !!chats?.find((chat) => !chat.supporteeId);
   }
 
   return (
@@ -64,39 +56,45 @@ export const SupporteesListPage = () => {
 
       <div className='content'>
         <h1>רשימת נתמכים</h1>
-        
+
         <div className='chats'>
           {activeChats.length === 0 ?
             <span className='loading' >אין שיחות פעילות</span> :
             activeChats.map((chat) =>
               <ChatItem
-                key={chat.chatId}
-                name={chat.name}
-                isEnded={chat.isEnded}
-                chatId={chat.chatId} />
+                key={chat.id}
+                name={chat.supporteeName || 'מחפשים לך תומך...'}
+                isEnded={false}
+                chatId={chat.id} />
             )}
         </div>
 
-        <h2>שיחות שהסתיימו</h2>
+        {endedChats.length > 0 &&
+          <>
+            <h2>שיחות שהסתיימו</h2>
 
-        <div className='ended-chats'>
-          {endedChats.length === 0 ?
-            <span className='loading' >אין שיחות שהסתיימו</span> :
-            endedChats.map((chat) =>
-              <ChatItem
-                key={chat.chatId}
-                name={chat.name}
-                isEnded={chat.isEnded}
-                chatId={chat.chatId} />
-            )}
-        </div>
+            <div className='ended-chats'>
+              {endedChats.map((chat) =>
+                <ChatItem
+                  key={chat.id}
+                  name={chat.supporteeName || 'לא נמצא תומך'}
+                  isEnded={true}
+                  chatId={chat.id} />
+              )}
+            </div>
+          </>}
+
       </div>
 
       <div className='footer'>
-        <span className='locate-supportee' onClick={OnButtonClick}>איתור נתמך נוסף</span>
+
+        <Button  className='new-supportee' onClick={() => assignSupporter(user!.uid)} disabled={IsSearchingForSupportee()}>איתור נתמך נוסף</Button>
+        <NavLink className="selection-link" to="/selection">חזרה לעמוד בחירה</NavLink>
+
+        {/* <span className='locate-supportee'>איתור נתמך נוסף</span> */}
         {/* <SwitchRoleLink /> */}
-        <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a>
+        {/* <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a> */}
       </div>
-    </div>
+    </div >
   );
 };

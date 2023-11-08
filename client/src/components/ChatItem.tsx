@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { getRealtimeLastMessageTimestamp, getUnreadMessagesCount } from '../helpers/chatFunctions';
@@ -21,21 +20,29 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
   const [plainTimestamp, setPlainTimestamp] = useState(""); // needed for the unreadMessages accuracy
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState("");
 
-  useEffect(() => {
-    let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp) => {
-      setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
-      setPlainTimestamp(timestamp);
-    })
-
-    return (() => {
-      unsubscribe();
-    });
-  }, [])
 
   useEffect(() => {
     // redirect if user not logged in
     if (!userLoading && !user) navigate('/');
   }, [user, userLoading, navigate]);
+
+
+  useEffect(() => {
+    if (!user) return;
+    if (!name) return;
+
+    let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp: string) => {
+      if (timestamp) {
+        setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
+        setPlainTimestamp(timestamp);
+      }
+    })
+
+    return (() => {
+      unsubscribe();
+    });
+  }, [user, name])
+
 
   useEffect(() => {
     if (!user) return;
@@ -46,6 +53,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
     })();
 
   }, [plainTimestamp])
+
 
   const FormatLastMessageTimestamp = (timestamp: string) => {
     let currDateAndTime = FormatDateAndTime(new Date().toISOString());
@@ -109,7 +117,16 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
             <img src={OrBackground} alt="notification-icon" />
             <span className='unread-messages'>{unreadMessages}</span>
           </div> : null}
-        <KeyboardArrowLeftIcon />
+
+        <svg
+          className="arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none">
+          <path d="M10 12L6 8L10 4" stroke="#0E1C74" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
     </div>
 
