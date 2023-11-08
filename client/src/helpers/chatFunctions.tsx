@@ -1,4 +1,6 @@
 import {
+  DocumentSnapshot,
+  QuerySnapshot,
   Timestamp,
   addDoc,
   doc,
@@ -32,6 +34,8 @@ export const findChatToFill = async (role: Role, userId: string): Promise<Chat |
     limit(1)
   );
   const querySnapshot = await getDocs(queryChatToFill);
+
+  throwErrorIfOffline(querySnapshot);
 
   if (querySnapshot.size === 0) {
     return null;
@@ -94,6 +98,7 @@ export const assignSupportee = async (userId: string, name: string) => {
 export const getNameById = async (companionId: string): Promise<string> => {
   if (companionId) {
     const userSnapshot = await getDoc(doc(collections.users, companionId));
+    throwErrorIfOffline(userSnapshot);
     if (!userSnapshot.exists()) {
       throw new Error(`Companion with the id ${companionId} wasn't found`);
     } else {
@@ -122,5 +127,18 @@ export const checkIfHasActive = async (userId: string) => {
     )
   );
 
+  throwErrorIfOffline(activeChat);
+
   return activeChat.size; // either 1 or 0 => true or false
+};
+
+export const throwErrorIfOffline = (snapshot: QuerySnapshot | DocumentSnapshot) => {
+  console.log(navigator.onLine);
+  
+  // if (snapshot.empty && snapshot.metadata.fromCache)
+  // {
+  //   if(snapshot instanceof QuerySnapshot && snapshot.empty)
+  //     throw { code: 'firestore/network-request-failed' };
+  //   else if (snapshot instanceof DocumentSnapshot && snapshot)
+  // }
 };

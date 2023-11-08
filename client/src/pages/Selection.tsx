@@ -7,27 +7,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
-import {
-  Role,
-  assignSupportee,
-  assignSupporter,
-  checkIfHasActive,
-} from '../helpers/chatFunctions';
-
-// const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-//   const roleFieldName = getRoleFieldName(role);
-//   const queryMyChats = query(
-//     collections.chats,
-//     where(roleFieldName, '==', userId),
-//     where('status', '==', 'active')
-//   );
-
-//   const querySnapshot = await getDocs(queryMyChats);
-//   const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-//   const filteredData = data.filter((doc) => doc.status === 'active');
-
-//   return filteredData;
-// };
+import { Role, assignSupportee, assignSupporter, checkIfHasActive, throwErrorIfOffline } from '../helpers/chatFunctions';
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
@@ -43,33 +23,46 @@ const Selection: React.FC = () => {
 
   useEffect(() => {
     const joinAsSupportee = async () => {
-      const existingChatSnapshot = await getDocs(
-        query(
-          collections.chats,
-          where('supporteeId', '==', user!.uid),
-          where('status', '==', 'active')
-        )
-      );
+      try {
+        const existingChatSnapshot = await getDocs(
+          query(
+            collections.chats,
+            where('supporteeId', '==', user!.uid),
+            where('status', '==', 'active')
+          )
+        );
+        console.log(existingChatSnapshot);
 
-      if (existingChatSnapshot.size > 0) {
-        navigate({
-          pathname: '/chat',
-          search: createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
-        });
-      } else {
-        navigate({
-          pathname: '/chat',
-          search: createSearchParams({
-            chatId: await assignSupportee(user!.uid, user!.displayName!)
-          }).toString()
-        });
+        throwErrorIfOffline(existingChatSnapshot);
+
+        if (existingChatSnapshot.size > 0) {
+          navigate({
+            pathname: '/chat',
+            search: createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
+          });
+        } else {
+          navigate({
+            pathname: '/chat',
+            search: createSearchParams({
+              chatId: await assignSupportee(user!.uid, user!.displayName!)
+            }).toString()
+          });
+        }
+      } catch (e: unknown) {
+        const error = e as { code: string };
+        console.log(error);
       }
     };
 
     const joinAsSupporter = async () => {
-      const hasActiveChat = await checkIfHasActive(user!.uid);
-      if (!hasActiveChat) assignSupporter(user!.uid);
-      navigate('/chats');
+      try {
+        const hasActiveChat = await checkIfHasActive(user!.uid);
+        if (!hasActiveChat) assignSupporter(user!.uid);
+        navigate('/chats');
+      } catch (e: unknown) {
+        const error = e as { code: string };
+        console.log(error);
+      }
     };
 
     if (role) {
