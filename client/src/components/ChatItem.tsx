@@ -2,39 +2,48 @@ import React, { useState, useEffect } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import {getRealtimeAdditionalChatData} from '../helpers/chatFunctions';
 
 export interface ChatItemProps {
   name: string,
-  lastMessageSentAt: string,
-  unreadMessages: number,
   isEnded: boolean,
   chatId: string
 };
 
-export const ChatItem: React.FC<ChatItemProps> = ({
-  name, lastMessageSentAt, unreadMessages, isEnded, chatId }: ChatItemProps) => {
+export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: ChatItemProps) => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const [formattedTimeOrDate, setFormattedTimeOrDate] = useState("");
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [lastMessageTimestamp, setLastMessageTimestamp] = useState("");
 
   useEffect(() => {
-    if (!lastMessageSentAt) return;
+      let unsubscribe = getRealtimeAdditionalChatData(chatId, (snapshot) => {
+        const snapshotData = snapshot.docs.map((doc) => doc.data());
+        let timestamp = snapshotData[0].date;
+        setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
+      })
+   
+    return(() => {
+      unsubscribe();
+    });
+  }, [])
 
+  const FormatLastMessageTimestamp = (timestamp : string) => {
     let currDateAndTime = FormatDateAndTime(new Date().toISOString());
-    let dateAndTime = FormatDateAndTime(lastMessageSentAt);
+    let dateAndTime = FormatDateAndTime(timestamp);
 
     if (dateAndTime.date === currDateAndTime.date) // if date is today
     {
-      setFormattedTimeOrDate(dateAndTime.time);
+      return dateAndTime.time;
     }
     else if (IsYesterday(dateAndTime.date, currDateAndTime.date)) {
-      setFormattedTimeOrDate("אתמול");
+      return "אתמול";
     }
     else {
-      setFormattedTimeOrDate(dateAndTime.date);
+      return dateAndTime.date;
     }
-  }, [lastMessageSentAt]);
+  }
 
   const FormatDateAndTime = (dateAndTime: string) => {
     let arr = dateAndTime.split("T");
@@ -72,8 +81,8 @@ export const ChatItem: React.FC<ChatItemProps> = ({
     <div className='chat-item' onClick={OnItemClick}>
       <div className='content'>
         <span className='name'>{name}</span>
-        {lastMessageSentAt &&
-          <span className='last-message'>תגובה אחרונה <span>{formattedTimeOrDate}</span></span>}
+        {lastMessageTimestamp &&
+          <span className='last-message'>תגובה אחרונה <span>{lastMessageTimestamp}</span></span>}
       </div>
 
       <div className='rest'>
