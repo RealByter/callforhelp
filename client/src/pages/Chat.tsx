@@ -15,6 +15,7 @@ import {
   getNameById,
   getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
+import { getCurrDateIsrael } from '../helpers/dateFunctions';
 import SupporteeWaiting from '../components/SupporteeWaiting';
 
 /*
@@ -75,16 +76,8 @@ export const Chat = () => {
     }
   }, [messages]);
 
-  // get current date in IOS string
-  const getCurrDateIsrael = () => { // todo: move to helper?
-    const here = new Date();
-    const invDate = new Date(here.toLocaleString('en-US', { timeZone: 'Israel' }));
-    const diff = here.getTime() - invDate.getTime();
-    return new Date(here.getTime() - diff).toISOString();
-  };
-
   const sendMsg = async (message: string) => {
-    const messageDate = getCurrDateIsrael();
+    const messageDate = getCurrDateIsrael().toISOString();
     const newMsgData = {
       content: message,
       senderId: user!.uid,

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import OrBackground from '../assets/OrBackground.svg';
-import { createSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { getRealtimeLastMessage, getUnreadMessagesCount } from '../helpers/chatFunctions';
 import { Message } from '../firebase/message';
+import { getCurrDateIsrael, isYesterday } from '../helpers/dateFunctions';
 
 export interface ChatItemProps {
   name: string,
@@ -34,9 +35,9 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
 
     let unsubscribe = getRealtimeLastMessage(chatId, (message: Message) => {
       setLastMessage(message);
-      
+
       if (message) {
-        setLastMessageTimestamp(FormatLastMessageTimestamp(message.date));
+        setLastMessageTimestamp(formatLastMessageTimestamp(message.date));
       }
     })
 
@@ -57,47 +58,26 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
   }, [lastMessage])
 
 
-  const FormatLastMessageTimestamp = (timestamp: string) => {
-    let currDateAndTime = FormatDateAndTime(new Date().toISOString());
-    let dateAndTime = FormatDateAndTime(timestamp);
+  const formatLastMessageTimestamp = (timestamp: string) => {
+    const curr = getCurrDateIsrael();
+    const currDate = curr.toLocaleDateString();
+    const other = new Date(timestamp);
+    const otherDate = other.toLocaleDateString();
+    const otherTime = other.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
 
-    if (dateAndTime.date === currDateAndTime.date) // if date is today
+    if (otherDate === currDate) // if date is today
     {
-      return dateAndTime.time;
+      return otherTime;
     }
-    else if (IsYesterday(dateAndTime.date, currDateAndTime.date)) {
+    else if (isYesterday(otherDate, currDate)) {
       return "אתמול";
     }
     else {
-      return dateAndTime.date;
+      return otherDate.replace("/", ".").replace("/", "."); // twice in orderto replace all
     }
   }
 
-  const FormatDateAndTime = (dateAndTime: string) => {
-    let arr = dateAndTime.split("T");
-    let res = { date: arr[0], time: arr[1] };
-    res.date = res.date.split("-").join(".");
-    res.time = res.time.slice(0, 5);
-    return res;
-  }
-
-  const IsYesterday = (date: string, today: string) => {
-    let dateArr = date.split(".");
-    let todayArr = today.split(".");
-
-    const year = 0;
-    const month = 1;
-    const day = 2;
-
-    if (dateArr[year] === todayArr[year] &&
-      dateArr[month] === todayArr[month] &&
-      Number(dateArr[day]) == Number(todayArr[day]) - 1)
-      return true;
-
-    return false;
-  }
-
-  const OnItemClick = () => {
+  const onItemClick = () => {
     navigate({
       pathname: '/chat',
       search: createSearchParams({ chatId: chatId }).toString()
@@ -105,7 +85,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
   }
 
   return (
-    <li className='chat-item' onClick={OnItemClick} tabIndex={0}>
+    <li className='chat-item' onClick={onItemClick} tabIndex={0}>
       <div className='content'>
         <span className='name'>{name}</span>
         {lastMessageTimestamp &&
