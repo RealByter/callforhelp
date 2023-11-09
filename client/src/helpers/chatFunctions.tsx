@@ -51,7 +51,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
   return unsubscribe;
 }
 
-export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => {
+export const getRealtimeLastMessage = (chatId: string, cb: any) => {
   const queryChatMessages = query(
     collections.messages,
     where("chatId", '==', chatId),
@@ -61,8 +61,7 @@ export const getRealtimeLastMessageTimestamp = (chatId: string, cb: any) => {
 
   const unsubscribe = onSnapshot(queryChatMessages, (snapshot) => {
     const snapshotData = snapshot.docs.map((doc) => doc.data());
-    let timestamp = snapshotData[0]?.date || "";
-    cb(timestamp);
+    cb(snapshotData[0]);
   }, OnSnapshotError);
   return unsubscribe;
 }

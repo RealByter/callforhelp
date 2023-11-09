@@ -3,7 +3,8 @@ import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import { getRealtimeLastMessageTimestamp, getUnreadMessagesCount } from '../helpers/chatFunctions';
+import { getRealtimeLastMessage, getUnreadMessagesCount } from '../helpers/chatFunctions';
+import { Message } from '../firebase/message';
 
 export interface ChatItemProps {
   name: string,
@@ -17,7 +18,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
   const [user, userLoading] = useAuthState(auth);
 
   const [unreadMessages, setUnreadMessages] = useState(0);
-  const [plainTimestamp, setPlainTimestamp] = useState(""); // needed for the unreadMessages accuracy
+  const [lastMessage, setLastMessage] = useState<Message>(); // needed for the unreadMessages accuracy
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState("");
 
 
@@ -31,10 +32,11 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
     if (!user) return;
     if (!name) return; // needed because if !name => no supporter yet
 
-    let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp: string) => {
-      if (timestamp) {
-        setLastMessageTimestamp(FormatLastMessageTimestamp(timestamp));
-        setPlainTimestamp(timestamp);
+    let unsubscribe = getRealtimeLastMessage(chatId, (message: Message) => {
+      setLastMessage(message);
+      
+      if (message) {
+        setLastMessageTimestamp(FormatLastMessageTimestamp(message.date));
       }
     })
 
@@ -52,7 +54,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
       setUnreadMessages(count);
     })();
 
-  }, [plainTimestamp])
+  }, [lastMessage])
 
 
   const FormatLastMessageTimestamp = (timestamp: string) => {
