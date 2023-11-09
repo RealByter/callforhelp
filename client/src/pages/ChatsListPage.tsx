@@ -1,23 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Chat } from '../firebase/chat';
 import { ChatItem } from '../components/ChatItem';
-// import SwitchRoleLink from '../components/SwitchRoleLink';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Role, getRealtimeUserChats, assignSupporter } from '../helpers/chatFunctions';
 import Button from '../components/Button';
 
-// todo: remove unnedded imports
-
-// todo: handle loading
-
 export const ChatsListPage = () => {
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
-
-  const unsubscribeSnapshotsFuncs: { [key: string]: any } = {};
-  const [chats, setChats] = useState<Chat[]>([]); // todo: type
+  const [chats, setChats] = useState<Chat[]>([]);
 
   const activeChats = chats?.filter((chat) => chat.status != "ended");
   const endedChats = chats?.filter((chat) => chat.status == "ended");
@@ -39,7 +32,6 @@ export const ChatsListPage = () => {
     });
 
     return () => {
-      Object.values(unsubscribeSnapshotsFuncs).forEach((unsubscribeChat, index) => unsubscribeChat());
       unsubscribe();
     }
 
@@ -89,9 +81,6 @@ export const ChatsListPage = () => {
 
         <Button className='new-supportee' onClick={() => assignSupporter(user!.uid)} disabled={IsSearchingForSupportee()}>איתור נתמך נוסף</Button>
         <NavLink className="selection-link" to="/selection">חזרה לעמוד בחירה</NavLink>
-
-        {/* <SwitchRoleLink /> */}
-        {/* <a className='switch-role-link' href="FindSupporter">אני צריך תומך</a> */}
       </div>
     </div >
   );

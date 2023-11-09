@@ -27,13 +27,11 @@ export const getRoleFieldName = (role: Role) : RoleFieldName=>
 export const getOppositeRoleFieldName = (role: Role) : RoleFieldName =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
 
-//todo: fix types of cb from any
-
 const OnSnapshotError = (error: any) => { // todo: handle errors
   console.log("error", error);
 }
 
-export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
+export const getRealtimeUserChats = (userId: string, role: Role, cb: Function) => {
   const roleFieldName = getRoleFieldName(role);
   let oppositeRoleFieldName = getOppositeRoleFieldName(role);
 
@@ -51,7 +49,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: any) => {
   return unsubscribe;
 }
 
-export const getRealtimeLastMessage = (chatId: string, cb: any) => {
+export const getRealtimeLastMessage = (chatId: string, cb: Function) => {
   const queryChatMessages = query(
     collections.messages,
     where("chatId", '==', chatId),
