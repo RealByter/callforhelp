@@ -29,7 +29,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
 
   useEffect(() => {
     if (!user) return;
-    if (!name) return;
+    if (!name) return; // needed because if !name => no supporter yet
 
     let unsubscribe = getRealtimeLastMessageTimestamp(chatId, (timestamp: string) => {
       if (timestamp) {

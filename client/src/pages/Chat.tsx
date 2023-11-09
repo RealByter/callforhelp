@@ -54,7 +54,7 @@ export const Chat = () => {
     if (!chatLoading && !chat) navigate('/selection');
   }, [chat, chatLoading, navigate]);
 
-  useEffect(() => {
+  useEffect(() => { // todo: getName from chatObj instead?
     const getData = async () => {
       const userRole = chat!.supporteeId === user!.uid ? 'supportee' : 'supporter';
       setRole(userRole);
@@ -76,7 +76,7 @@ export const Chat = () => {
   }, [messages]);
 
   // get current date in IOS string
-  const getCurrDateIsrael = () => {
+  const getCurrDateIsrael = () => { // todo: move to helper?
     const here = new Date();
     const invDate = new Date(here.toLocaleString('en-US', { timeZone: 'Israel' }));
     const diff = here.getTime() - invDate.getTime();
@@ -145,6 +145,7 @@ export const Chat = () => {
             .map((m, index) => (
               <Message
                 key={index}
+                messageId={m.id ? m.id : ''}
                 isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}
