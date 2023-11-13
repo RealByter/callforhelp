@@ -138,7 +138,7 @@ export const Chat = () => {
             .map((m, index) => (
               <Message
                 key={index}
-                messageId={m.id ? m.id : ''}
+                messageId={m.id}
                 isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}

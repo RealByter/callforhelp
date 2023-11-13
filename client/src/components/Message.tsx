@@ -3,7 +3,7 @@ import { updateDoc, doc } from 'firebase/firestore';
 import { collections } from '../firebase/connection';
 
 export interface IMessageProps {
-  messageId: string,
+  messageId: string | undefined,
   isSender: boolean;
   content: string;
   messageDate: string;
@@ -14,12 +14,13 @@ export const Message: React.FC<IMessageProps> = ({ messageId, isSender, content,
 
   useEffect(() => {
     if (isSender) return;
-    if (!messageId) return;
+    if (messageState == "read") return;
+
 
     (async () => {
       await updateDoc(doc(collections.messages, messageId), { status: "read" });
     })();
-  }, [messageId])
+  }, [])
 
   const formatDate = (date: string) => {
     const newDate = new Date(date);
