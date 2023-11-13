@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import Choice from '../components/Choice';
 import Header from '../components/Header';
-import { query, where, getDocs } from 'firebase/firestore';
-import { auth, collections } from '../firebase/connection';
+import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
-import { Role, assignSupportee, assignSupporter, checkIfHasActive, throwErrorIfOffline } from '../helpers/chatFunctions';
+import { Role, assignSupporter, checkIfHasActive } from '../helpers/chatFunctions';
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
@@ -22,38 +21,6 @@ const Selection: React.FC = () => {
   }, [user, navigate, loading]);
 
   useEffect(() => {
-    const joinAsSupportee = async () => {
-      try {
-        const existingChatSnapshot = await getDocs(
-          query(
-            collections.chats,
-            where('supporteeId', '==', user!.uid),
-            where('status', '==', 'active')
-          )
-        );
-        console.log(existingChatSnapshot);
-
-        throwErrorIfOffline(existingChatSnapshot);
-
-        if (existingChatSnapshot.size > 0) {
-          navigate({
-            pathname: '/chat',
-            search: createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
-          });
-        } else {
-          navigate({
-            pathname: '/chat',
-            search: createSearchParams({
-              chatId: await assignSupportee(user!.uid, user!.displayName!)
-            }).toString()
-          });
-        }
-      } catch (e: unknown) {
-        const error = e as { code: string };
-        console.log(error);
-      }
-    };
-
     const joinAsSupporter = async () => {
       try {
         const hasActiveChat = await checkIfHasActive(user!.uid);
@@ -66,7 +33,7 @@ const Selection: React.FC = () => {
     };
 
     if (role) {
-      if (role === 'supportee') joinAsSupportee();
+      if (role === 'supportee') navigate('/waiting');
       else joinAsSupporter();
     }
   }, [role, user, socket, navigate]);

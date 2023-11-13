@@ -5,7 +5,7 @@ import './index.css';
 import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
-import { Chat } from './pages/Chat';
+import { ChatPage } from './pages/ChatPage.tsx';
 import { ChatsListPage } from './pages/ChatsListPage.tsx';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';
@@ -14,6 +14,7 @@ import './styles/App.scss';
 import InfoModalExample from './components/InfoModalExample.tsx';
 import Disclaimer from './components/Disclaimer.tsx';
 import ErrorContextProvider from './context/Error/ErrorContextProvider.tsx';
+import SupporteeWaiting from './components/SupporteeWaiting.tsx';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/chat',
-    element: <Chat />
+    element: <ChatPage />
+  },
+  {
+    path: '/waiting',
+    element: <SupporteeWaiting />
   },
   {
     path: '/chats',
