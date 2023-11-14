@@ -147,7 +147,14 @@ export const assignSupporter = async (userId: string, existingChatId?: string) =
         await joinChatFirebase(userId, 'supporter', chatToFill.id);
       });
     else await joinChatFirebase(userId, 'supporter', chatToFill.id);
-  } else if (!existingChatId) await createChat(userId, 'supporter');
+
+    return chatToFill.id;
+  } else if (!existingChatId) {
+    const newChat = await createChat(userId, 'supporter');
+    return newChat.id;
+  } else {
+    return existingChatId;
+  }
 };
 
 export const assignSupportee = async (userId: string, name: string, existingChatId?: string) => {

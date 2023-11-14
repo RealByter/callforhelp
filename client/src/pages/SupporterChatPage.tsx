@@ -1,5 +1,5 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { auth } from '../firebase/connection';
 import { assignSupporter, finishChat } from '../helpers/chatFunctions';
 import { useEffect } from 'react';
@@ -24,6 +24,15 @@ export const SupporterChatPage = () => {
     assignSupporter(user!.uid);
   };
 
+  const tryToFindAnotherSupportee = async (existingChatId: string) => {
+    const newChatId = await assignSupporter(user!.uid, existingChatId);
+    if (newChatId !== existingChatId)
+      navigate({
+        pathname: '/supporter-chat',
+        search: createSearchParams({ chatId: newChatId }).toString()
+      });
+  };
+
   useEffect(() => {
     if (!chatId) navigate('/chats');
   }, [chatId, navigate]);
@@ -43,6 +52,7 @@ export const SupporterChatPage = () => {
         endChat={endChat}
         secondaryAction={findAdditionalSupportee}
         goBack={() => navigate('/chats')}
+        tryToFind={tryToFindAnotherSupportee}
       />
     );
 

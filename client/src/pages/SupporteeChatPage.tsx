@@ -38,7 +38,7 @@ export const SupporteeChatPage = () => {
   const tryToFindSupporter = useCallback(
     async (existingChatId: string) => {
       const newChatId = await assignSupportee(user!.uid, user!.displayName!, existingChatId);
-      if (newChatId != existingChatId)
+      if (newChatId !== existingChatId)
         navigate({
           pathname: '/supportee-chat',
           search: createSearchParams({ chatId: newChatId }).toString()
