@@ -22,7 +22,7 @@ import {
   TODO - leave socket room on exiting
 */
 
-export const ChatPage = () => {
+export const SupporteeChatPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get('chatId');
   const [user, userLoading] = useAuthState(auth);
@@ -36,13 +36,9 @@ export const ChatPage = () => {
 
   }, [userLoading, user, navigate]);
 
-  useEffect(() => {
-    if (!chatId) navigate('/selection');
-  }, [chatId, navigate]);
+  
 
-  useEffect(() => {
-    if (!chatLoading && !chat) navigate('/selection');
-  }, [chat, chatLoading, navigate]);
+  
 
   
 

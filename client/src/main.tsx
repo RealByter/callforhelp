@@ -5,7 +5,7 @@ import './index.css';
 import Signin from './pages/SignIn.tsx';
 import Signup from './pages/SignUp.tsx';
 import QuickSignup from './pages/QuickSignup.tsx';
-import { ChatPage } from './pages/ChatPage.tsx';
+import { ChatPage } from './pages/SupporteeChatPage.tsx';
 import { ChatsListPage } from './pages/ChatsListPage.tsx';
 import { StyledEngineProvider } from '@mui/material';
 import Selection from './pages/Selection.tsx';

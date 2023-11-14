@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChatTopBar } from './ChatTopBar';
-import { Role, assignSupportee, assignSupporter, finishChat, getNameById, getOppositeRoleFieldName } from '../helpers/chatFunctions';
+import {
+  Role,
+  assignSupportee,
+  assignSupporter,
+  finishChat,
+  getNameById,
+  getOppositeRoleFieldName
+} from '../helpers/chatFunctions';
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { addDoc, doc, query, where } from 'firebase/firestore';
 import { collections } from '../firebase/connection';
@@ -12,13 +19,12 @@ type ChatProps = {
   chatId: string;
   userId: string;
   displayName: string;
+  role: Role;
   setSearchParams: SetURLSearchParams;
 };
 
 export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, displayName }) => {
-  const [messages] = useCollectionData(
-    query(collections.messages, where('chatId', '==', chatId))
-  );
+  const [messages] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [role, setRole] = useState<Role>(); // should be of use later
   const [companionName, setCompanionName] = useState('');
@@ -55,9 +61,7 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
   const changeSupporter = async () => {
     finishChat(chatId!);
 
-    setSearchParams(
-      createSearchParams({ chatId: await assignSupportee(userId, displayName) })
-    );
+    setSearchParams(createSearchParams({ chatId: await assignSupportee(userId, displayName) }));
     setCompanionName('');
   };
 
@@ -68,6 +72,14 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
   };
 
   const noMessages = messages ? messages.length === 0 : true;
+
+  useEffect(() => {
+    if (!chatLoading && !chat) navigate('/selection');
+  }, [chat, chatLoading, navigate]);
+
+  useEffect(() => {
+    if (!chatId) navigate('/selection');
+  }, [chatId, navigate]);
 
   useEffect(() => {
     const getData = async () => {
