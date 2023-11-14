@@ -1,37 +1,172 @@
 export const MOCK_CHATS = [
     {
-        name: "הארי פוטר",
-        lastMessageTiming: "00:00",
-        unreadMessages: 3,
-        isEnded: false,
-        chatId: 'sdfsd'
+        id: "gdfgdhr1",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
     },
     {
-        name: "רון וויזלי",
-        lastMessageTiming: "אתמול",
-        unreadMessages: 1,
-        isEnded: false,
-        chatId: 'sdafqe2fq'            
+        id: "gdfgdhr2",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
     },
     {
-        name: "הרמיוני גריינג'ר",
-        lastMessageTiming: "02/03",
-        unreadMessages: 0,
-        isEnded: true,
-        chatId: 'fwefqe'            
+        id: "gdfgdhr3",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
     },
     {
-        name: "נוויל לונגבוטום",
-        lastMessageTiming: "אתמול",
-        unreadMessages: 0,
-        isEnded: true,
-        chatId: 'dgwefrg'            
+        id: "gdfgdhr4",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
     },
     {
-        name: "לונה לאבגוד",
-        lastMessageTiming: "15:56",
-        unreadMessages: 3,
-        isEnded: true,
-        chatId: 'gerwrwg'            
+        id: "gdfgdhr5",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr6",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr7",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr8",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    
+    
+    {
+        id: "gdfgdhr1",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr2",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr3",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr4",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'active',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr5",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr6",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr7",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr8",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr9",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "xxx"
+    },
+    {
+        id: "gdfgdhr6",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr7",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr8",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "toni"
+    },
+    {
+        id: "gdfgdhr9",
+        supporterId: "kjkjkjk",
+        supporteeId: "kkjhkjhkh",
+        createdAt: "אתמול",
+        status: 'ended',
+        supporteeName: "xxx"
     }
-  ]
+]

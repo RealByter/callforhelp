@@ -1,9 +1,9 @@
 import { FirestoreDataConverter } from 'firebase/firestore';
 import { z } from "zod";
 
-export type messageStatusType = "sent" | "received" | "loading";
+export type messageStatusType = "sent" | "received" | "read";
 
-const statusEnum: z.ZodType<messageStatusType> = z.enum(['sent', 'received', 'loading']);
+const statusEnum: z.ZodType<messageStatusType> = z.enum(['sent', 'received', 'read']);
 
 const messageSchema = z.object({
     id: z.string().optional(),

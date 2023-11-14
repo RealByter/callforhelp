@@ -6,7 +6,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { useSocketCtx } from '../context/socket/useSocketCtx';
 import React from 'react';
-import { Role, assignSupporter, checkIfHasActive } from '../helpers/chatFunctions';
+import {
+  Role,
+  assignSupporter,
+  checkIfHasActive,
+} from '../helpers/chatFunctions';
 
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
