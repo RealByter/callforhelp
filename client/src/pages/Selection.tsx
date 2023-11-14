@@ -33,7 +33,7 @@ const Selection: React.FC = () => {
     };
 
     if (role) {
-      if (role === 'supportee') navigate('/waiting');
+      if (role === 'supportee') navigate('/supportee-chat');
       else joinAsSupporter();
     }
   }, [role, user, socket, navigate]);

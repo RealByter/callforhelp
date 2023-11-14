@@ -15,7 +15,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
       className={`chat-item ${isEnded && 'chat-item-ended'}`}
       onClick={() =>
         navigate({
-          pathname: '/chat',
+          pathname: '/supporter-chat',
           search: createSearchParams({ chatId: chatId }).toString()
         })
       }

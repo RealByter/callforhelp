@@ -2,31 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import { ChatTopBar } from './ChatTopBar';
 import {
   Role,
-  assignSupportee,
-  assignSupporter,
-  finishChat,
   getNameById,
   getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { addDoc, doc, query, where } from 'firebase/firestore';
 import { collections } from '../firebase/connection';
-import { SetURLSearchParams, createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
 
 type ChatProps = {
   chatId: string;
   userId: string;
-  displayName: string;
   role: Role;
-  setSearchParams: SetURLSearchParams;
+  endChat: () => void;
+  secondaryAction: () => void;
+  goBack: () => void;
 };
 
-export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, displayName }) => {
+export const Chat: React.FC<ChatProps> = ({ chatId, userId, role, endChat, secondaryAction, goBack }) => {
   const [messages] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
-  const [role, setRole] = useState<Role>(); // should be of use later
   const [companionName, setCompanionName] = useState('');
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
@@ -51,26 +48,6 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
     await addDoc(collections.messages, newMsgData);
   };
 
-  // go back to the page of all chats
-  const goBackToChatsPage = () => {
-    if (role === 'supportee') navigate('/selection');
-    else navigate('/chats');
-  };
-
-  // request to change partner
-  const changeSupporter = async () => {
-    finishChat(chatId!);
-
-    setSearchParams(createSearchParams({ chatId: await assignSupportee(userId, displayName) }));
-    setCompanionName('');
-  };
-
-  // finish current chat
-  const endChat = () => {
-    finishChat(chatId!);
-    goBackToChatsPage();
-  };
-
   const noMessages = messages ? messages.length === 0 : true;
 
   useEffect(() => {
@@ -78,14 +55,8 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
   }, [chat, chatLoading, navigate]);
 
   useEffect(() => {
-    if (!chatId) navigate('/selection');
-  }, [chatId, navigate]);
-
-  useEffect(() => {
     const getData = async () => {
-      const userRole = chat!.supporteeId === userId ? 'supportee' : 'supporter';
-      setRole(userRole);
-      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!);
+      const compName = await getNameById(chat![getOppositeRoleFieldName(role)]!);
       setCompanionName(compName);
     };
 
@@ -93,7 +64,7 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
       if (chat.supporteeId !== userId && chat.supporterId !== userId) navigate('/selection');
       getData();
     }
-  }, [chat, userId, navigate]);
+  }, [chat, userId, navigate, role]);
 
   useEffect(() => {
     // scroll to bottom of the chat when getting a new msg
@@ -102,43 +73,47 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, setSearchParams, dis
     }
   }, [messages]);
 
-  return (
-    <div className="chat-page">
-      <ChatTopBar
-        isChatEnded={chat?.status === 'ended'}
-        companionName={companionName}
-        isSupporter={role === 'supporter'}
-        userId={userId}
-        endChat={endChat}
-        changeSupporter={changeSupporter}
-        findAdditionalSupportee={() => assignSupporter(userId)}
-        goBackToChatsPage={goBackToChatsPage}
-      />
+  let page = <></>; // should be replaced with loading state once we have it
+  if (!chatLoading && chat)
+    page = (
+      <div className="chat-page">
+        <ChatTopBar
+          isChatEnded={chat?.status === 'ended'}
+          companionName={companionName}
+          isSupporter={role === 'supporter'}
+          userId={userId}
+          endChat={endChat}
+          changeSupporter={secondaryAction}
+          findAdditionalSupportee={secondaryAction}
+          goBackToChatsPage={goBack}
+        />
 
-      <div className="messages">
-        {noMessages ? (
-          <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
-        ) : (
-          messages!
-            .sort((a, b) => {
-              const aDate = new Date(a.date);
-              const bDate = new Date(b.date);
-              return aDate.getTime() - bDate.getTime();
-            })
-            .map((m, index) => (
-              <Message
-                key={index}
-                isSender={m.senderId === userId}
-                content={m.content}
-                messageDate={m.date}
-                messageState={m.status}
-              />
-            ))
-        )}
-        <span ref={scrollingRef}></span>
+        <div className="messages">
+          {noMessages ? (
+            <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
+          ) : (
+            messages!
+              .sort((a, b) => {
+                const aDate = new Date(a.date);
+                const bDate = new Date(b.date);
+                return aDate.getTime() - bDate.getTime();
+              })
+              .map((m, index) => (
+                <Message
+                  key={index}
+                  isSender={m.senderId === userId}
+                  content={m.content}
+                  messageDate={m.date}
+                  messageState={m.status}
+                />
+              ))
+          )}
+          <span ref={scrollingRef}></span>
+        </div>
+
+        <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
       </div>
+    );
 
-      <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
-    </div>
-  );
+  return page;
 };

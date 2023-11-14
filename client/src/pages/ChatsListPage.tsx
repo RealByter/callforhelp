@@ -58,7 +58,10 @@ export const ChatsListPage = () => {
       </ul>
     </>
   );
-
+  console.log(chatsLoading);
+  console.log(chats);
+  
+  
   if (chatsLoading) mainContent = <></>;
   else if (!chats![chats!.length - 1].supporteeId) mainContent = <SupporterWaiting />;
 
