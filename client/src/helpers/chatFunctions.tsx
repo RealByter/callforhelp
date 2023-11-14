@@ -33,8 +33,6 @@ const OnSnapshotError = (error: any) => { // todo: handle errors
 
 export const getRealtimeUserChats = (userId: string, role: Role, cb: Function) => {
   const roleFieldName = getRoleFieldName(role);
-  let oppositeRoleFieldName = getOppositeRoleFieldName(role);
-
   const queryUserChats = query(
     collections.chats,
     where(roleFieldName, '==', userId),
@@ -43,7 +41,7 @@ export const getRealtimeUserChats = (userId: string, role: Role, cb: Function) =
 
   const unsubscribe = onSnapshot(queryUserChats, (snapshot) => {
     const queryData = snapshot.docs.map((doc) => doc.data());
-    const filteredData = queryData.filter((doc) => doc[oppositeRoleFieldName] !== userId && doc.status != "blocked");
+    const filteredData = queryData.filter((doc) => doc.status != "blocked");
     cb(filteredData);
   }, OnSnapshotError);
   return unsubscribe;

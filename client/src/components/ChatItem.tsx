@@ -5,7 +5,7 @@ import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { getRealtimeLastMessage, getUnreadMessagesCount } from '../helpers/chatFunctions';
 import { Message } from '../firebase/message';
-import { getCurrDateIsrael, isYesterday } from '../helpers/dateFunctions';
+import { getCurrDateIsrael, isYesterday, formatLastMessageTimestamp } from '../helpers/dateFunctions';
 
 export interface ChatItemProps {
   name: string,
@@ -13,7 +13,7 @@ export interface ChatItemProps {
   chatId: string
 };
 
-export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: ChatItemProps) => {
+export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => {
 
   const navigate = useNavigate();
   const [user, userLoading] = useAuthState(auth);
@@ -57,25 +57,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }: Cha
 
   }, [lastMessage])
 
-
-  const formatLastMessageTimestamp = (timestamp: string) => {
-    const curr = getCurrDateIsrael();
-    const currDate = curr.toLocaleDateString();
-    const other = new Date(timestamp);
-    const otherDate = other.toLocaleDateString();
-    const otherTime = other.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-
-    if (otherDate === currDate) // if date is today
-    {
-      return otherTime;
-    }
-    else if (isYesterday(otherDate, currDate)) {
-      return "אתמול";
-    }
-    else {
-      return otherDate.replace("/", ".").replace("/", "."); // twice in orderto replace all
-    }
-  }
 
   const onItemClick = () => {
     navigate({

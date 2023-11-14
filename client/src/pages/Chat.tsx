@@ -55,11 +55,11 @@ export const Chat = () => {
     if (!chatLoading && !chat) navigate('/selection');
   }, [chat, chatLoading, navigate]);
 
-  useEffect(() => { // todo: getName from chatObj instead?
+  useEffect(() => { 
     const getData = async () => {
       const userRole = chat!.supporteeId === user!.uid ? 'supportee' : 'supporter';
       setRole(userRole);
-      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!);
+      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!); // todo: getName from chatObj instead?
       setCompanionName(compName);
     };
 

@@ -20,3 +20,22 @@ export const isYesterday = (date: string, today: string) => { // gets date in fo
 
     return false;
 }
+
+export const formatLastMessageTimestamp = (timestamp: string) => {
+    const curr = getCurrDateIsrael();
+    const currDate = curr.toLocaleDateString();
+    const other = new Date(timestamp);
+    const otherDate = other.toLocaleDateString();
+    const otherTime = other.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+
+    if (otherDate === currDate) // if date is today
+    {
+      return otherTime;
+    }
+    else if (isYesterday(otherDate, currDate)) {
+      return "אתמול";
+    }
+    else {
+      return otherDate.replace("/", ".").replace("/", "."); // twice in orderto replace all
+    }
+  }
