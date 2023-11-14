@@ -12,7 +12,7 @@ export const SupporterChatPage = () => {
   const navigate = useNavigate();
 
   const goBackToChatsList = () => {
-    navigate('/selection');
+    navigate('/chats');
   };
 
   const endChat = () => {
@@ -25,7 +25,7 @@ export const SupporterChatPage = () => {
   };
 
   useEffect(() => {
-    if (!chatId) navigate('/selection');
+    if (!chatId) navigate('/chats');
   }, [chatId, navigate]);
 
   useEffect(() => {
