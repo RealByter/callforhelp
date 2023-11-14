@@ -14,21 +14,6 @@ import {
   checkIfHasActive,
 } from '../helpers/chatFunctions';
 
-// const findMyChats = async (userId: string, role: Role): Promise<Chat[]> => {
-//   const roleFieldName = getRoleFieldName(role);
-//   const queryMyChats = query(
-//     collections.chats,
-//     where(roleFieldName, '==', userId),
-//     where('status', '==', 'active')
-//   );
-
-//   const querySnapshot = await getDocs(queryMyChats);
-//   const data = querySnapshot.docs.map((chatSnapshot) => chatSnapshot.data());
-//   const filteredData = data.filter((doc) => doc.status === 'active');
-
-//   return filteredData;
-// };
-
 const Selection: React.FC = () => {
   const { socket } = useSocketCtx();
   const navigate = useNavigate();

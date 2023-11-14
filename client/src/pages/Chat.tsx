@@ -15,6 +15,7 @@ import {
   getNameById,
   getOppositeRoleFieldName
 } from '../helpers/chatFunctions';
+import { getCurrDateIsrael } from '../helpers/dateFunctions';
 import SupporteeWaiting from '../components/SupporteeWaiting';
 
 /*
@@ -54,11 +55,11 @@ export const Chat = () => {
     if (!chatLoading && !chat) navigate('/selection');
   }, [chat, chatLoading, navigate]);
 
-  useEffect(() => {
+  useEffect(() => { 
     const getData = async () => {
       const userRole = chat!.supporteeId === user!.uid ? 'supportee' : 'supporter';
       setRole(userRole);
-      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!);
+      const compName = await getNameById(chat![getOppositeRoleFieldName(userRole)]!); // todo: getName from chatObj instead?
       setCompanionName(compName);
     };
 
@@ -75,16 +76,8 @@ export const Chat = () => {
     }
   }, [messages]);
 
-  // get current date in IOS string
-  const getCurrDateIsrael = () => {
-    const here = new Date();
-    const invDate = new Date(here.toLocaleString('en-US', { timeZone: 'Israel' }));
-    const diff = here.getTime() - invDate.getTime();
-    return new Date(here.getTime() - diff).toISOString();
-  };
-
   const sendMsg = async (message: string) => {
-    const messageDate = getCurrDateIsrael();
+    const messageDate = getCurrDateIsrael().toISOString();
     const newMsgData = {
       content: message,
       senderId: user!.uid,
@@ -145,6 +138,7 @@ export const Chat = () => {
             .map((m, index) => (
               <Message
                 key={index}
+                messageId={m.id}
                 isSender={m.senderId === user!.uid}
                 content={m.content}
                 messageDate={m.date}
