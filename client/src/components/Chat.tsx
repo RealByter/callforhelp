@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChatTopBar } from './ChatTopBar';
-import {
-  Role,
-  getNameById,
-  getOppositeRoleFieldName
-} from '../helpers/chatFunctions';
+import { Role, getNameById, getOppositeRoleFieldName } from '../helpers/chatFunctions';
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { addDoc, doc, query, where } from 'firebase/firestore';
 import { collections } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
+import SupporteeWaiting from './SupporteeWaiting';
 
 type ChatProps = {
   chatId: string;
@@ -19,9 +16,18 @@ type ChatProps = {
   endChat: () => void;
   secondaryAction: () => void;
   goBack: () => void;
+  tryToFind?: (existingChatId: string) => void;
 };
 
-export const Chat: React.FC<ChatProps> = ({ chatId, userId, role, endChat, secondaryAction, goBack }) => {
+export const Chat: React.FC<ChatProps> = ({
+  chatId,
+  userId,
+  role,
+  endChat,
+  secondaryAction,
+  goBack,
+  tryToFind
+}) => {
   const [messages] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [companionName, setCompanionName] = useState('');
@@ -58,13 +64,16 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, role, endChat, secon
     const getData = async () => {
       const compName = await getNameById(chat![getOppositeRoleFieldName(role)]!);
       setCompanionName(compName);
+      if (!compName) if (tryToFind) await tryToFind(chat!.id);
     };
 
     if (chat) {
-      if (chat.supporteeId !== userId && chat.supporterId !== userId) navigate('/selection');
+      if (chat.supporteeId !== userId && chat.supporterId !== userId) {
+        navigate('/selection');
+      }
       getData();
     }
-  }, [chat, userId, navigate, role]);
+  }, [chat, userId, navigate, role, tryToFind]);
 
   useEffect(() => {
     // scroll to bottom of the chat when getting a new msg
@@ -74,7 +83,8 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, role, endChat, secon
   }, [messages]);
 
   let page = <></>; // should be replaced with loading state once we have it
-  if (!chatLoading && chat)
+  if (!chatLoading && chat) {
+    if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
     page = (
       <div className="chat-page">
         <ChatTopBar
@@ -114,6 +124,7 @@ export const Chat: React.FC<ChatProps> = ({ chatId, userId, role, endChat, secon
         <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
       </div>
     );
+  }
 
   return page;
 };

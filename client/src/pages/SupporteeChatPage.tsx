@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { query, where } from '@firebase/firestore';
@@ -35,6 +35,18 @@ export const SupporteeChatPage = () => {
     goBackToSelection();
   };
 
+  const tryToFindSupporter = useCallback(
+    async (existingChatId: string) => {
+      const newChatId = await assignSupportee(user!.uid, user!.displayName!, existingChatId);
+      if (newChatId != existingChatId)
+        navigate({
+          pathname: '/supportee-chat',
+          search: createSearchParams({ chatId: newChatId }).toString()
+        });
+    },
+    [navigate, user]
+  );
+
   useEffect(() => {
     const joinAsSupportee = async () => {
       try {
@@ -47,9 +59,13 @@ export const SupporteeChatPage = () => {
         );
 
         if (existingChatSnapshot.size > 0) {
-          setSearchParams(
-            createSearchParams({ chatId: existingChatSnapshot.docs[0].id }).toString()
-          );
+          const existingChat = existingChatSnapshot.docs[0].data();
+
+          if (!existingChat.supporterId) {
+            tryToFindSupporter(existingChat.id);
+          } else {
+            setSearchParams(createSearchParams({ chatId: existingChat.id }).toString());
+          }
         } else {
           setSearchParams(
             createSearchParams({
@@ -65,13 +81,12 @@ export const SupporteeChatPage = () => {
 
     // redirect if user not logged in
     if (!userLoading) {
-      console.log(user);
       if (!user) navigate('/');
       else if (!chatId) joinAsSupportee();
     }
-  }, [userLoading, user, navigate, chatId, setSearchParams]);
+  }, [userLoading, user, navigate, chatId, setSearchParams, tryToFindSupporter]);
 
-  let page = <SupporteeWaiting />
+  let page = <SupporteeWaiting />;
   if (chatId && user)
     page = (
       <Chat
@@ -81,6 +96,7 @@ export const SupporteeChatPage = () => {
         endChat={endChat}
         secondaryAction={changeSupporter}
         goBack={goBackToSelection}
+        tryToFind={tryToFindSupporter}
       />
     );
 

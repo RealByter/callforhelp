@@ -1,6 +1,7 @@
 import {
   Timestamp,
   addDoc,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -79,15 +80,20 @@ export const assignSupporter = async (userId: string) => {
   else await createChat(userId, 'supporter');
 };
 
-export const assignSupportee = async (userId: string, name: string) => {
+export const assignSupportee = async (userId: string, name: string, existingChatId?: string) => {
   const chatToFill = await findChatToFill('supportee', userId);
 
   if (chatToFill) {
+    if (existingChatId) await deleteDoc(doc(collections.chats, existingChatId));
     await joinChatFirebase(userId, 'supportee', chatToFill.id, name);
     return chatToFill.id;
   } else {
-    const chat = await createChat(userId, 'supportee', name);
-    return chat.id;
+    if (!existingChatId) {
+      const chat = await createChat(userId, 'supportee', name);
+      return chat.id;
+    } else {
+      return existingChatId;
+    }
   }
 };
 
