@@ -4,7 +4,12 @@ import { ChatItem } from '../components/ChatItem';
 import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Role, getRealtimeUserChats, assignSupporter } from '../helpers/chatFunctions';
+import {
+  Role,
+  getRealtimeUserChats,
+  assignSupporter,
+  checkIfHasActive
+} from '../helpers/chatFunctions';
 import Button from '../components/Button';
 import SupporterWaiting from '../components/SupporterWaiting';
 
@@ -18,8 +23,22 @@ export const ChatsListPage = () => {
   const endedChats = chats?.filter((chat) => chat.status == 'ended');
 
   useEffect(() => {
+    const joinAsSupporter = async () => {
+      try {
+        const hasActiveChat = await checkIfHasActive(user!.uid);
+        if (!hasActiveChat) assignSupporter(user!.uid);
+        navigate('/chats');
+      } catch (e: unknown) {
+        const error = e as { code: string };
+        console.log(error);
+      }
+    };
+
     // redirect if user not logged in
-    if (!userLoading && !user) navigate('/');
+    if (!userLoading) {
+      if (user) joinAsSupporter;
+      else navigate('/');
+    }
   }, [user, userLoading, navigate]);
 
   useEffect(() => {

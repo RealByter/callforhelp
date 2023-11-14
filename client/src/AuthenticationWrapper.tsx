@@ -15,7 +15,7 @@ const AuthenticationWrapper: React.FC<AuthenticationWrapperProps> = ({ children 
   const [user,, error] = useAuthState(auth);
   const [showTerms, setShowTerms] = useState(false);
   const setError = useErrorContext(error && connectionError.refresh);
-
+  
   useEffect(() => {
     if (user) {
       getDoc(doc(collections.users, user.uid))
