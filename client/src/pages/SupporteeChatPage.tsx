@@ -65,13 +65,14 @@ export const SupporteeChatPage = () => {
 
     // redirect if user not logged in
     if (!userLoading) {
+      console.log(user);
       if (!user) navigate('/');
       else if (!chatId) joinAsSupportee();
     }
   }, [userLoading, user, navigate, chatId, setSearchParams]);
 
   let page = <SupporteeWaiting />
-  if (chatId)
+  if (chatId && user)
     page = (
       <Chat
         role="supportee"

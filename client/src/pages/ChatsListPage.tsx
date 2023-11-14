@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { ChatItem } from '../components/ChatItem';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, collections } from '../firebase/connection';
@@ -58,9 +58,6 @@ export const ChatsListPage = () => {
       </ul>
     </>
   );
-  console.log(chatsLoading);
-  console.log(chats);
-  
   
   if (chatsLoading) mainContent = <></>;
   else if (!chats![chats!.length - 1].supporteeId) mainContent = <SupporterWaiting />;
