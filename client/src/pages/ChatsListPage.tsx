@@ -72,7 +72,7 @@ export const ChatsListPage = () => {
           activeChats.map((chat) => (
             <ChatItem
               key={chat.id}
-              name={chat.supporteeName || 'מחפשים לך נתמך...'}
+              name={chat.supporteeName}
               isEnded={false}
               chatId={chat.id}
             />
@@ -109,7 +109,7 @@ export const ChatsListPage = () => {
     </div>
   );
 
-  if (chatsLoading) mainContent = <></>;
+  if (chatsLoading) mainContent = <></>; // should be replaced with loading state once we have it
   else if (!chats!.find((chat) => chat.supporteeId)) mainContent = <SupporterWaiting />;
 
   return mainContent;

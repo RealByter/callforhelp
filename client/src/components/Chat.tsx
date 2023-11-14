@@ -113,6 +113,7 @@ export const Chat: React.FC<ChatProps> = ({
                   key={index}
                   isSender={m.senderId === userId}
                   content={m.content}
+                  messageId={m.id}
                   messageDate={m.date}
                   messageState={m.status}
                 />

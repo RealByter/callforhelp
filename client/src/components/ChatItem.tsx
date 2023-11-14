@@ -3,12 +3,12 @@ import { auth } from '../firebase/connection';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import OrBackground from '../assets/OrBackground.svg';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { getRealtimeLastMessage, getUnreadMessagesCount } from '../helpers/chatFunctions';
+import { assignSupporter, getRealtimeLastMessage, getUnreadMessagesCount } from '../helpers/chatFunctions';
 import { Message } from '../firebase/message';
 import { formatLastMessageTimestamp } from '../helpers/dateFunctions';
 
 export interface ChatItemProps {
-  name: string;
+  name: string | null;
   isEnded: boolean;
   chatId: string;
 }
@@ -26,21 +26,23 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
     if (!userLoading && !user) navigate('/');
   }, [user, userLoading, navigate]);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (!user) return;
-    if (!name) return; // needed because if !name => no supporter yet
+    if (!name) { // if !name => no supporter yet      
+      assignSupporter(user.uid, chatId);
+    } else {
+      const unsubscribe = getRealtimeLastMessage(chatId, (message: Message) => {
+        setLastMessage(message);
 
-    const unsubscribe = getRealtimeLastMessage(chatId, (message: Message) => {
-      setLastMessage(message);
+        if (message) {
+          setLastMessageTimestamp(formatLastMessageTimestamp(message.date));
+        }
+      });
 
-      if (message) {
-        setLastMessageTimestamp(formatLastMessageTimestamp(message.date));
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
+      return () => {
+        unsubscribe();
+      };
+    }
   }, [user, name, chatId]);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
   return (
     <li className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={onItemClick} tabIndex={0}>
       <div className="content">
-        <span className="name">{name}</span>
+        <span className="name">{name || 'מחפשים לך נתמך...'}</span>
         {lastMessageTimestamp && (
           <span className="last-message">
             תגובה אחרונה <span>{lastMessageTimestamp}</span>
