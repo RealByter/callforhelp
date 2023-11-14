@@ -6,6 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Role, getRealtimeUserChats, assignSupporter } from '../helpers/chatFunctions';
 import Button from '../components/Button';
+import { MOCK_CHATS } from '../mock-data/chats-mock-data';
 
 export const ChatsListPage = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export const ChatsListPage = () => {
 
     let unsubscribe = getRealtimeUserChats(user!.uid, role, async (chatsData: Chat[]) => {
       setChats(chatsData);
+      // setChats(MOCK_CHATS);
     });
 
     return () => {
@@ -37,7 +39,7 @@ export const ChatsListPage = () => {
 
   }, [user]);
 
-
+  
   const IsSearchingForSupportee = () => {
     return !!chats?.find((chat) => !chat.supporteeId);
   }
@@ -48,23 +50,20 @@ export const ChatsListPage = () => {
       <h1>רשימת נתמכים</h1>
 
       <ul className='content'>
-        <div className='chats'>
           {activeChats.length === 0 ?
             <span className='loading' >אין שיחות פעילות</span> :
             activeChats.map((chat) =>
               <ChatItem
                 key={chat.id}
-                name={chat.supporteeName || 'מחפשים לך תומך...'}
+                name={chat.supporteeName || 'מחפשים לך נתמך...'}
                 isEnded={false}
                 chatId={chat.id} />
             )}
-        </div>
 
         {endedChats.length > 0 &&
           <>
             <h2>שיחות שהסתיימו</h2>
 
-            <div className='ended-chats'>
               {endedChats.map((chat) =>
                 <ChatItem
                   key={chat.id}
@@ -72,7 +71,6 @@ export const ChatsListPage = () => {
                   isEnded={true}
                   chatId={chat.id} />
               )}
-            </div>
           </>}
 
       </ul>

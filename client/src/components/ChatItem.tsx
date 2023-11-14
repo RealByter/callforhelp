@@ -66,7 +66,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
   }
 
   return (
-    <li className='chat-item' onClick={onItemClick} tabIndex={0}>
+    <li className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={onItemClick} tabIndex={0}>
       <div className='content'>
         <span className='name'>{name}</span>
         {lastMessageTimestamp &&
@@ -77,9 +77,8 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
         {unreadMessages && !isEnded ?
           <div className='notification'>
             <img src={OrBackground} alt="notification-icon" />
-            <span className='unread-messages'>{unreadMessages}</span>
+            <span className='unread-messages'>{unreadMessages > 10 ? '9+' : unreadMessages}</span>
           </div> : null}
-
         <svg
           className="arrow"
           xmlns="http://www.w3.org/2000/svg"

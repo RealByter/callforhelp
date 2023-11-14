@@ -128,14 +128,16 @@ export const joinChatFirebase = async (
 
 export const assignSupporter = async (userId: string) => {
   const chatToFill = await findChatToFill('supporter', userId);
-
+  console.log(chatToFill);
+  
   if (chatToFill) await joinChatFirebase(userId, 'supporter', chatToFill.id);
   else await createChat(userId, 'supporter');
 };
 
 export const assignSupportee = async (userId: string, name: string) => {
   const chatToFill = await findChatToFill('supportee', userId);
-
+  console.log(chatToFill);
+  
   if (chatToFill) {
     await joinChatFirebase(userId, 'supportee', chatToFill.id, name);
     return chatToFill.id;
