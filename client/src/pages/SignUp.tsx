@@ -10,6 +10,7 @@ import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@fire
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { signUpErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -52,9 +53,18 @@ const SignUpPage = () => {
   useEffect(() => {
     // Only redirect if the user existed before creating the user and after creating the user and assigning him the username
     if (user && stage !== 'updating') {
-      navigate('/selection', {replace: true});
+      navigate('/selection', { replace: true });
     }
   }, [user, navigate, stage]);
+
+  useEffect(() => {
+    (async () => {
+      const functions = getFunctions();
+      const helloWorld = httpsCallable(functions, 'helloWorld');
+      const message = await helloWorld('me');
+      console.log(message);
+    })();
+  }, []);
 
   return (
     <>
