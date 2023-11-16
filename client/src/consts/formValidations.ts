@@ -27,12 +27,16 @@ export const passwordSigninValidations: RegisterOptions = {
 export const passwordSignupValidations: RegisterOptions = {
   required: 'יש להכניס סיסמא',
   pattern: {
-    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/,
+    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,20}$/,
     message:
       'הסיסמא צריכה להכיל לפחות אות קטנה אחת, אות גדולה אחת, מספר וסימן מיוחד (@,$,!,%,*,?,&,_)'
   },
   minLength: {
     value: 8,
     message: 'הסיסמא חייבת להכיל לפחות 8 תווים'
+  },
+  maxLength: {
+    value: 20,
+    message: 'הסיסמא לא יכולה להיות ארוכה מ-8 תווים'
   }
 };
