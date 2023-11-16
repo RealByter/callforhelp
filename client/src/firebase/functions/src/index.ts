@@ -10,6 +10,23 @@
 
 import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
+import * as admin from "firebase-admin";
+
+const serviceAccountPath = process.env.SERVICE_ACCOUNT_PATH;
+
+if (!serviceAccountPath) {
+  throw new Error("SERVICE_ACCOUNT_PATH environment variable is not set.");
+}
+
+let serviceAccount: any;
+
+try {
+  serviceAccount = require(serviceAccountPath);
+} catch (error: unknown) {
+  const err = error as {message: string};
+  throw new Error(`Error loading service account file: ${err.message}`);
+}
+
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
