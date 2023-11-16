@@ -25,7 +25,7 @@ const firebaseConfig = {
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'localhost:9099',
   // if i forget: find a way to set the correct project id with the firebase emulators
   projectId:
-    import.meta.env.VITE_FIREBASE_PROJECT_ID === 'your-project-id'
+    import.meta.env.VITE_FIREBASE_PROJECT_ID === 'your-project-id' || !import.meta.env.VITE_FIREBASE_PROJECT_ID
       ? 'callforhelp-37002'
       : import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,

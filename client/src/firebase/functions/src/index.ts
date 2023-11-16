@@ -26,8 +26,9 @@ admin.initializeApp({
 // https://firebase.google.com/docs/functions/typescript
 
 export const signUp = functions.https.onCall(async (request) => {
+  logger.log(request);
   const {email, password, name}: { email?: string; password?: string; name?: string } =
-    request.data;
+    request;
 
   if (!email || !password || !name) {
     logger.error("The function requires an email, a password and a name: " + request);
@@ -101,7 +102,12 @@ export const signUp = functions.https.onCall(async (request) => {
       throw ""; // to get to the actual error throw
     }
   } catch (error) {
-    logger.error("An error occurred while creating the user: " + request);
-    throw new functions.https.HttpsError("internal", "An error occurred while creating the user");
+    const err = error as {message: string};
+    logger.error("An error occurred while creating the user: " + error + ", " + request);
+    if (err.message === "The email address is already in use by another account.") {
+      throw new functions.https.HttpsError("already-exists", "User with email already exists");
+    } else {
+      throw new functions.https.HttpsError("internal", "An error occurred while creating the user");
+    }
   }
 });
