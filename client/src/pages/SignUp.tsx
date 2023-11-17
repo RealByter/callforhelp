@@ -23,9 +23,14 @@ const SignUpPage = () => {
       await signUp({ password, email, name });
       await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e: unknown) {
-      const error = e as { message: string };
-      if (error.message === 'User with email already exists') {
+      const error = e as { message: string; code: string };  
+      
+      if (error.code === 'functions/already-exists') {
         setError(signUpErrors.userAlreadyExists);
+      } else if (error.code === 'functions/invalid-argument') {
+        setError({ title: 'קלט לא תקין', content: error.message });
+      } else if (error.code === 'functions/failed-precondition') {
+        setError({ title: 'שגיאת הרשאה', content: error.message });
       } else {
         setError(signUpErrors.generalError);
       }

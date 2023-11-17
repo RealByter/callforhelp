@@ -37,6 +37,6 @@ export const passwordSignupValidations: RegisterOptions = {
   },
   maxLength: {
     value: 20,
-    message: 'הסיסמא לא יכולה להיות ארוכה מ-8 תווים'
+    message: 'הסיסמא לא יכולה להיות ארוכה מ-20 תווים'
   }
 };

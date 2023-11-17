@@ -34,7 +34,7 @@ export const signUp = functions.https.onCall(async (request) => {
     logger.error("The function requires an email, a password and a name: " + request);
     throw new functions.https.HttpsError(
       "invalid-argument",
-      "The function requires an email, a password and a name"
+      "צריך אימייל, סיסמא ואימייל"
     );
   }
 
@@ -42,7 +42,7 @@ export const signUp = functions.https.onCall(async (request) => {
     logger.error("The user must be unauthenticated in order to sign up: " + request);
     throw new functions.https.HttpsError(
       "failed-precondition",
-      "The user must be unauthenticated in order to sign up"
+      "אי אפשר להירשם בתור משתמש מחובר"
     );
   }
 
@@ -56,33 +56,33 @@ export const signUp = functions.https.onCall(async (request) => {
       logger.error("The password should include at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and one symbol from the following: @$!%*?&_: " + request);
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "The password should include at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and one symbol from the following: @$!%*?&_"
+        "הסיסמא צריכה להכיל לפחות אות קטנה אחת, אות גדולה אחת, מספר וסימן מיוחד (@,$,!,%,*,?,&,_)"
       );
     }
   } catch (error) {
     logger.error("Error checking regex: " + error + ", " + request);
-    throw new functions.https.HttpsError("internal", "Error checking regex: " + error);
+    throw new functions.https.HttpsError("invalid-argument", "הסיסמא צריכה להכיל לפחות אות קטנה אחת, אות גדולה אחת, מספר וסימן מיוחד (@,$,!,%,*,?,&,_)");
   }
   if (password.length < 8 || password.length > 20) {
     throw new functions.https.HttpsError(
       "invalid-argument",
-      "The password must have at least 8 characters and no more than 20"
+      "הסיסמא חייבת לכלול לפחות 8 תווים ולא יותר מ-20"
     );
   }
 
   try {
     if (!emailRegex) {
       logger.error("The email must be a valid address: " + request);
-      throw new functions.https.HttpsError("invalid-argument", "The email must be a valid address");
+      throw new functions.https.HttpsError("invalid-argument", "האימייל צריך להיות תקין");
     }
   } catch (error) {
     logger.error("Error checking regex: " + error + ", " + request);
-    throw new functions.https.HttpsError("internal", "Error checking regex: " + error);
+    throw new functions.https.HttpsError("invalid-argument", "האימייל צריך להיות תקין");
   }
 
   if (name.length < 2) {
     logger.error("The name must include at least 2 characters: " + request);
-    throw new functions.https.HttpsError("invalid-argument", "The name must include at least 2 characters");
+    throw new functions.https.HttpsError("invalid-argument", "השם צריך לכלול לפחות 2 אותיות");
   }
 
   try {
@@ -105,7 +105,7 @@ export const signUp = functions.https.onCall(async (request) => {
     const err = error as {message: string};
     logger.error("An error occurred while creating the user: " + error + ", " + request);
     if (err.message === "The email address is already in use by another account.") {
-      throw new functions.https.HttpsError("already-exists", "User with email already exists");
+      throw new functions.https.HttpsError("already-exists", "אי אפשר ליצור יותר ממשתמש אחד עם אותו אימייל");
     } else {
       throw new functions.https.HttpsError("internal", "An error occurred while creating the user");
     }
