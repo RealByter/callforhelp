@@ -1,8 +1,10 @@
+import { signOut } from 'firebase/auth';
 import { Menu } from '@headlessui/react';
+import { auth } from '../firebase/connection';
 
 const UserOptions: React.FC = () => {
   return (
-    <Menu as='div' className="user-options">
+    <Menu as="div" className="user-options">
       <Menu.Button className="open-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +28,9 @@ const UserOptions: React.FC = () => {
       </Menu.Button>
       <Menu.Items as="ul" className="options">
         <Menu.Item as="li">פרטים אישיים</Menu.Item>
-        <Menu.Item as="li">התנתקות</Menu.Item>
+        <Menu.Item as="li" onClick={() => signOut(auth)}>
+          התנתקות
+        </Menu.Item>
       </Menu.Items>
     </Menu>
   );
