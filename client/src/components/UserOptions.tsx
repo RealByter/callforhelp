@@ -1,6 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { Menu } from '@headlessui/react';
 import { auth } from '../firebase/connection';
+import { NavLink } from 'react-router-dom';
 
 const UserOptions: React.FC = () => {
   return (
@@ -27,9 +28,11 @@ const UserOptions: React.FC = () => {
         </svg>
       </Menu.Button>
       <Menu.Items as="ul" className="options">
-        <Menu.Item as="li">פרטים אישיים</Menu.Item>
-        <Menu.Item as="li" onClick={() => signOut(auth)}>
-          התנתקות
+        <Menu.Item>
+          <NavLink to="/profile">פרטים אישיים</NavLink>
+        </Menu.Item>
+        <Menu.Item>
+          <button onClick={() => signOut(auth)}>התנתקות</button>
         </Menu.Item>
       </Menu.Items>
     </Menu>
