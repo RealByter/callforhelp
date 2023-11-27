@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom';
 import { Message } from '../components/Message';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -17,6 +17,10 @@ import {
 } from '../helpers/chatFunctions';
 import SupporteeWaiting from '../components/SupporteeWaiting';
 
+type ScrollBehaviorOptions = 'smooth' | 'instant' | 'auto';
+
+const PADDING = 50;
+
 export const Chat = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get('chatId');
@@ -31,7 +35,12 @@ export const Chat = () => {
   const navigate = useNavigate();
 
   const [msgDiff, setMsgDiff] = useState<number>(0);
-  const [msgLength, setMsgLength] = useState<number>(messages?.length || 0);
+  // const [msgLength, setMsgLength] = useState<number>(messages?.length || 0); //msgLength isn't being used so I commented it out until we hear from Yael
+
+  const scrollToBottom = useCallback((behavior: ScrollBehaviorOptions) => {
+    (scrollingRef.current! as HTMLElement).scrollIntoView({ behavior });
+    // setMsgLength(messages!.length);
+  }, []);
 
   useEffect(() => {
     // redirect if user not logged in
@@ -71,30 +80,31 @@ export const Chat = () => {
       const rect = element.getBoundingClientRect();
       return (
         rect.top >= 0 &&
-        (rect.bottom - 50) <= (window.innerHeight || document.documentElement.clientHeight)
+        rect.bottom - PADDING <= (window.innerHeight || document.documentElement.clientHeight)
       );
     }
     if (scrollingRef.current) {
       if (isInViewport(scrollingRef.current)) {
         scrollToBottom('smooth');
         setMsgDiff(0);
-      } else {
-        // if now in viewport - add button to scroll down
-        setMsgLength(prev => {
-          const diff = (messages?.length || 0) - prev;
-          setMsgDiff(prev => prev + diff);
-          return messages?.length || 0;
-        })
       }
+      // else {
+      //   // if now in viewport - add button to scroll down
+      //   setMsgLength(prev => {
+      //     const diff = (messages?.length || 0) - prev;
+      //     setMsgDiff(prev => prev + diff);
+      //     return messages?.length || 0;
+      //   })
+      // }
     }
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   useEffect(() => {
     // immediately scroll down when entering the page
     if (scrollingRef.current) {
       scrollToBottom('instant');
     }
-  }, [scrollingRef.current]);
+  }, [scrollToBottom]);
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const element = e.currentTarget;
@@ -102,11 +112,6 @@ export const Chat = () => {
       setMsgDiff(0);
     }
   };
-
-  const scrollToBottom = (behavior: 'smooth' | 'instant' | 'auto') => {
-    (scrollingRef.current as HTMLElement).scrollIntoView({ behavior });
-    setMsgLength(messages.length);
-  }
 
   const scrollDownClick = () => {
     if (scrollingRef.current) {
@@ -175,27 +180,31 @@ export const Chat = () => {
         {noMessages ? (
           <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
         ) : (
-            messages!
-              .sort((a, b) => {
-                const aDate = new Date(a.date);
-                const bDate = new Date(b.date);
-                return aDate.getTime() - bDate.getTime();
-              })
-              .map((m, index) => (
-                <Message
-                  key={index}
-                  isSender={m.senderId === user!.uid}
-                  content={m.content}
-                  messageDate={m.date}
-                  messageState={m.status}
-                />
-              ))
-          )}
+          messages!
+            .sort((a, b) => {
+              const aDate = new Date(a.date);
+              const bDate = new Date(b.date);
+              return aDate.getTime() - bDate.getTime();
+            })
+            .map((m, index) => (
+              <Message
+                key={index}
+                isSender={m.senderId === user!.uid}
+                content={m.content}
+                messageDate={m.date}
+                messageState={m.status}
+              />
+            ))
+        )}
         <span ref={scrollingRef}></span>
       </div>
-      <div className="has-messages"
-        onClick={scrollDownClick}
-        style={{ display: msgDiff ? "flex" : "none" }}>{msgDiff}</div>
+      {msgDiff ? (
+        <button className="has-messages" onClick={scrollDownClick}>
+          {msgDiff}
+        </button>
+      ) : (
+        <></>
+      )}
 
       <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
     </div>
