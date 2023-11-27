@@ -16,14 +16,14 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { quickSignupErrors } from '../consts/errorMessages';
-import useLoadingContext from '../context/loading/useLoadingContext';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<ErrorInfo>();
   const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [user] = useAuthState(auth);
-  const setIsLoading = useLoadingContext(loading);
 
   const createUserDocument = async (user?: User) => {
     if (user) {
@@ -41,7 +41,7 @@ const QuickSignup: React.FC = () => {
   const signInWithGoogleHandler = async () => {
     try {
       setStage('updating');
-      const result = await signInWithPopup()
+      const user = await signInWithGoogle();
       await createUserDocument(user?.user);
     } catch (e) {
       setError(quickSignupErrors.signUpWithGoogle);

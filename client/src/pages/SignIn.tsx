@@ -9,13 +9,16 @@ import { signInWithEmailAndPassword } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { signInErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
+import useLoadingContext from '../context/loading/useLoadingContext';
 
 const SignInPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [error, setError] = useState<ErrorInfo>();
+  const setIsLoading = useLoadingContext();
 
   const handleFormSubmit = async ({ email, password }: FormOptions) => {
+    setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e: unknown) {
@@ -26,6 +29,7 @@ const SignInPage = () => {
         setError(signInErrors.generalError);
       }
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {

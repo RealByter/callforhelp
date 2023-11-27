@@ -10,14 +10,17 @@ import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@fire
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { signUpErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
+import useLoadingContext from '../context/loading/useLoadingContext';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
+  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start'); // This is used for auth state
   const [error, setError] = useState<ErrorInfo>();
+  const setIsLoading = useLoadingContext(); // And this is used to prevent the user from clicking the sign up button multiple times
 
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
+    setIsLoading(true);
     setStage('updating');
     try {
       const user = await createUserWithEmailAndPassword(auth, email!, password!);
@@ -47,6 +50,7 @@ const SignUpPage = () => {
       }
       setStage('start');
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
