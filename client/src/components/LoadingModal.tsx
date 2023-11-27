@@ -2,6 +2,7 @@ const LoadingModal: React.FC = () => {
   return (
     <div className="loading-modal">
       <svg
+        className="loading-spinner"
         xmlns="http://www.w3.org/2000/svg"
         width="109"
         height="109"
