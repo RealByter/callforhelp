@@ -86,7 +86,7 @@ export const ChatsListPage = () => {
             {endedChats.map((chat) => (
               <ChatItem
                 key={chat.id}
-                name={chat.supporteeName || 'לא נמצא תומך'}
+                name={chat.supporteeName}
                 isEnded={true}
                 chatId={chat.id}
               />

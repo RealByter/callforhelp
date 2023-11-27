@@ -22,15 +22,18 @@ export const signInErrors = {
   generalError: { title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות באמצעות אימייל' }
 };
 
+const CONNECTION_ERROR_TEXT = {
+  title: 'יש בעיות באינטרנט',
+  content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב'
+};
+
 export const connectionError = {
   refresh: {
-    title: 'יש בעיות באינטרנט',
-    content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב',
+    ...CONNECTION_ERROR_TEXT,
     refresh: true
   },
   continue: {
-    title: 'יש בעיות באינטרנט',
-    content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב',
+    ...CONNECTION_ERROR_TEXT,
     refresh: false
   }
 };

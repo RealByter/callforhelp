@@ -22,12 +22,12 @@ const Selection: React.FC = () => {
       <div>
         <Choice
           paragraphText="מרגיש/ה שאת/ה צריכ/ה לשוחח עם מישהו?"
-          linkText="אני צריכ/ה תמיכה"
+          text="אני צריכ/ה תמיכה"
           to="/supportee-chat"
         />
         <Choice
           paragraphText="יש גם אפשרות לתמוך ולהיות שם עבור מי שצריכ/ה"
-          linkText="אני רוצה לתמוך"
+          text="אני רוצה לתמוך"
           to="/chats"
         />
       </div>

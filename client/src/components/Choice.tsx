@@ -5,18 +5,18 @@ import { NavLink } from 'react-router-dom';
 
 type ChoiceProps = {
   paragraphText: string;
-  linkText: string;
+  text: string;
   to: string;
 };
 
-const Choice: React.FC<ChoiceProps> = ({ paragraphText, linkText, to }) => {
+const Choice: React.FC<ChoiceProps> = ({ paragraphText, text, to }) => {
   return (
     <div className="choice">
       <Paragraph dir="rtl" isBold>
         {paragraphText}
       </Paragraph>
       <NavLink to={to} className="button-wrapper">
-        <Button>{linkText}</Button>
+        <Button>{text}</Button>
       </NavLink>
     </div>
   );

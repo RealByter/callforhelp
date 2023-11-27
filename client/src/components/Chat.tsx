@@ -93,8 +93,7 @@ export const Chat: React.FC<ChatProps> = ({
           isSupporter={role === 'supporter'}
           userId={userId}
           endChat={endChat}
-          changeSupporter={secondaryAction}
-          findAdditionalSupportee={secondaryAction}
+          secondaryAction={secondaryAction}
           goBackToChatsPage={goBack}
         />
 
