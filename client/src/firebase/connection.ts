@@ -38,8 +38,6 @@ if (import.meta.env.DEV) {
   connectFirestoreEmulator(firestore, DEV_FIRESTORE_HOST, DEV_FIRESTORE_PORT);
 }
 
-
-
 const collections = {
   chats: collection(firestore, 'chats').withConverter(chatFirestoreConverter),
   users: collection(firestore, 'users').withConverter(userFirestoreConverter),
