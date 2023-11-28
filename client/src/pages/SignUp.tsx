@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
 import { deleteDoc, doc, setDoc } from '@firebase/firestore';
-import React from 'react';
 import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { signUpErrors } from '../consts/errorMessages';
@@ -57,12 +56,12 @@ const SignUpPage = () => {
   }, [user, navigate, stage]);
 
   return (
-    <>
+    <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
       {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
       <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
-    </>
+    </div>
   );
 };
 
