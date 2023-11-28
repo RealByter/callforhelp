@@ -12,6 +12,7 @@ import {
 } from '../helpers/chatFunctions';
 import Button from '../components/Button';
 import SupporterWaiting from '../components/SupporterWaiting';
+import LoadingModal from '../components/LoadingModal';
 
 export const ChatsListPage = () => {
   const navigate = useNavigate();
@@ -70,12 +71,7 @@ export const ChatsListPage = () => {
           <span className="loading">אין שיחות פעילות</span>
         ) : (
           activeChats.map((chat) => (
-            <ChatItem
-              key={chat.id}
-              name={chat.supporteeName}
-              isEnded={false}
-              chatId={chat.id}
-            />
+            <ChatItem key={chat.id} name={chat.supporteeName} isEnded={false} chatId={chat.id} />
           ))
         )}
 
@@ -84,12 +80,7 @@ export const ChatsListPage = () => {
             <h2>שיחות שהסתיימו</h2>
 
             {endedChats.map((chat) => (
-              <ChatItem
-                key={chat.id}
-                name={chat.supporteeName}
-                isEnded={true}
-                chatId={chat.id}
-              />
+              <ChatItem key={chat.id} name={chat.supporteeName} isEnded={true} chatId={chat.id} />
             ))}
           </>
         )}
@@ -109,7 +100,8 @@ export const ChatsListPage = () => {
     </div>
   );
 
-  if (chatsLoading) mainContent = <></>; // should be replaced with loading state once we have it
+  if (chatsLoading)
+    mainContent = <LoadingModal />;
   else if (!chats!.find((chat) => chat.supporteeId)) mainContent = <SupporterWaiting />;
 
   return mainContent;

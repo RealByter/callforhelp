@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
 import SupporteeWaiting from './SupporteeWaiting';
+import useLoadingContext from '../context/loading/useLoadingContext';
 
 type ChatProps = {
   chatId: string;
@@ -28,11 +29,12 @@ export const Chat: React.FC<ChatProps> = ({
   goBack,
   tryToFind
 }) => {
-  const [messages] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
+  const [messages, messagesLoading] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [companionName, setCompanionName] = useState('');
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
+  useLoadingContext(chatLoading || messagesLoading);
 
   // get current date in IOS string
   const getCurrDateIsrael = () => {
