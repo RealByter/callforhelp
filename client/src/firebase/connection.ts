@@ -17,6 +17,16 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCvoVkNgx38i-WtODOuOqVqbtjFNasbcgY",
+//   authDomain: "callforhelp-37002.firebaseapp.com",
+//   databaseURL: "https://callforhelp-37002-default-rtdb.firebaseio.com",
+//   projectId: "callforhelp-37002",
+//   storageBucket: "callforhelp-37002.appspot.com",
+//   messagingSenderId: "57290554385",
+//   appId: "1:57290554385:web:02923873f7aaf45b5385b0",
+//   measurementId: "G-WWWPNZ017T"
+// };
 
 const app = initializeApp(firebaseConfig);
 

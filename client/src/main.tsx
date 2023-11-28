@@ -1,5 +1,9 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes
+} from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Signin from './pages/SignIn.tsx';
@@ -16,51 +20,25 @@ import Disclaimer from './components/Disclaimer.tsx';
 import ErrorContextProvider from './context/Error/ErrorContextProvider.tsx';
 import { SupporterChatPage } from './pages/SupporterChatPage.tsx';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <QuickSignup />
-  },
-  {
-    path: '/signin',
-
-    element: <Signin />
-  },
-  {
-    path: '/signup',
-    element: <Signup />
-  },
-  {
-    path: '/supporter-chat',
-    element: <SupporterChatPage />
-  },
-  {
-    path: '/supportee-chat',
-    element: <SupporteeChatPage />
-  },
-  {
-    path: '/chats',
-    element: <ChatsListPage />
-  },
-  {
-    path: '/selection',
-    element: <Selection />
-  },
-  {
-    path: '/example',
-    element: <InfoModalExample />
-  }
-]);
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
-    <ErrorContextProvider>
-      <AuthenticationWrapper>
-        <Disclaimer />
-        <RouterProvider router={router} />
-      </AuthenticationWrapper>
-    </ErrorContextProvider>
+    <Disclaimer />
+    <BrowserRouter>
+      <ErrorContextProvider>
+         <AuthenticationWrapper>
+           <Routes>
+             <Route path="/" element={<QuickSignup />} />
+             <Route path="/signin" element={<Signin />} />
+             <Route path="/signup" element={<Signup />} />
+             <Route path="/chat" element={<Chat />} />
+             <Route path="/chats" element={<ChatsListPage />} />
+             <Route path="/selection" element={<Selection />} />
+             <Route path="/example" element={<InfoModalExample />} />
+            </Routes>
+          </AuthenticationWrapper>
+       </ErrorContextProvider>
+    </BrowserRouter>
   </StyledEngineProvider>
   // </React.StrictMode>
 );

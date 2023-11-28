@@ -6,6 +6,7 @@ import TermsAndConditionsPopup from './components/TermsAndConditionsPopup';
 import React from 'react';
 import useErrorContext from './context/Error/useErrorContext';
 import { connectionError } from './consts/errorMessages';
+import UserOptions from './components/UserOptions';
 
 type AuthenticationWrapperProps = {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ const AuthenticationWrapper: React.FC<AuthenticationWrapperProps> = ({ children 
   return (
     <>
       {showTerms && <TermsAndConditionsPopup agreeNeeded onClose={handleAcceptance} />}
+      {user && <UserOptions />}
       {children}
     </>
   );
