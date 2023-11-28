@@ -141,9 +141,9 @@ const Form = ({ onSubmit, name, email, password, submitLabel }: FormProps) => {
                       <path
                         d="M1 5.5L3.5 9L9.5 1"
                         stroke="#0159FF"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </>

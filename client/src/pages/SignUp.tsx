@@ -8,15 +8,18 @@ import { deleteDoc, doc, setDoc } from '@firebase/firestore';
 import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
 import { connectionError, signUpErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
+import useLoadingContext from '../context/loading/useLoadingContext';
 import useErrorContext from '../context/Error/useErrorContext';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
+  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start'); // This is used for auth state
+  const setIsLoading = useLoadingContext(); // And this is used to prevent the user from clicking the sign up button multiple times
   const setError = useErrorContext();
 
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
+    setIsLoading(true);
     setStage('updating');
     try {
       const user = await createUserWithEmailAndPassword(auth, email!, password!);
@@ -48,6 +51,7 @@ const SignUpPage = () => {
       }
       setStage('start');
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
