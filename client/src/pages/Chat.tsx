@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams, createSearchParams } from 'react-router-dom';
+import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import { Message } from '../components/Message';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
@@ -36,6 +37,7 @@ export const Chat = () => {
   const [user, userLoading] = useAuthState(auth);
   const scrollingRef = useRef(null);
   const navigate = useNavigate();
+  const isKeyboardOpen = useDetectKeyboardOpen();
 
   useEffect(() => {
     // redirect if user not logged in
@@ -55,7 +57,7 @@ export const Chat = () => {
     if (!chatLoading && !chat) navigate('/selection');
   }, [chat, chatLoading, navigate]);
 
-  useEffect(() => { 
+  useEffect(() => {
     const getData = async () => {
       const userRole = chat!.supporteeId === user!.uid ? 'supportee' : 'supporter';
       setRole(userRole);
@@ -115,6 +117,7 @@ export const Chat = () => {
   let page = (
     <div className="chat-page">
       <ChatTopBar
+        isMinimized={isKeyboardOpen}
         isChatEnded={chat?.status === 'ended'}
         companionName={companionName}
         isSupporter={role === 'supporter'}

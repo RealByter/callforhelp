@@ -2,6 +2,7 @@ import React from 'react';
 import FindAdditionalSupportee from './FindAdditionalSupportee';
 
 interface IChatTopBarProps {
+  isMinimized: boolean;
   isChatEnded: boolean;
   isSupporter: boolean;
   companionName: string;
@@ -13,6 +14,7 @@ interface IChatTopBarProps {
 }
 
 export const ChatTopBar: React.FC<IChatTopBarProps> = ({
+  isMinimized,
   isChatEnded,
   isSupporter,
   companionName,
@@ -62,7 +64,7 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
           <span className="sub-title">{subTitle}</span>
         </div>
       </div>
-      <div className="chat-top-bar-lower">
+      <div className={`chat-top-bar-lower ${isMinimized ? "slide-out-top" : "slide-in-top"}`}>
         {isChatEnded ? (
           <p>השיחה הסתיימה</p>
         ) : (

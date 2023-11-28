@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "use-detect-keyboard-open": "^0.4.0"
+  }
+}
