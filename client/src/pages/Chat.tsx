@@ -117,7 +117,7 @@ export const Chat = () => {
   let page = (
     <div className="chat-page">
       <ChatTopBar
-        isMinimized={isKeyboardOpen}
+        isMinimized={isKeyboardOpen || false}
         isChatEnded={chat?.status === 'ended'}
         companionName={companionName}
         isSupporter={role === 'supporter'}

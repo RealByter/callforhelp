@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import FindAdditionalSupportee from './FindAdditionalSupportee';
 
 interface IChatTopBarProps {
@@ -24,6 +24,9 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
   findAdditionalSupportee,
   goBackToChatsPage
 }: IChatTopBarProps) => {
+
+  let animationClassName = isMinimized ? "slide-out-top" : "slide-in-top";
+
   let subTitle = '';
   if (companionName) {
     if (isSupporter) subTitle = 'אני צריך תמיכה';
@@ -64,10 +67,10 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
           <span className="sub-title">{subTitle}</span>
         </div>
       </div>
-      <div className={`chat-top-bar-lower ${isMinimized ? "slide-out-top" : "slide-in-top"}`}>
-        {isChatEnded ? (
+      <div className={`chat-top-bar-lower ${animationClassName}`}>
+        {isChatEnded ?
           <p>השיחה הסתיימה</p>
-        ) : (
+          :
           <div className="chat-top-bar-lower-buttons">
             {isSupporter ? (
               <FindAdditionalSupportee
@@ -83,9 +86,8 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
             <button onClick={endChat} disabled={!companionName}>
               סיום שיחה
             </button>
-          </div>
-        )}
+          </div>}
       </div>
-    </div>
+    </div >
   );
 };
