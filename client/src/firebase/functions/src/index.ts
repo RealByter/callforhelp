@@ -14,6 +14,7 @@ import * as functions from "firebase-functions";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 import * as serviceAccount from "./callforhelp-37002-firebase-adminsdk-7ivya-e3e03f01cb.json";
+import { EMAIL_ERROR_MESSAGES, GENERAL_ERROR_MESSAGES, PASSWORD_ERROR_MESSAGES, USERNAME_ERROR_MESSAGES } from "./consts";
 
 const DATABASE_URL = "https://callforhelp-37002-default-rtdb.firebaseio.com";
 
@@ -31,18 +32,18 @@ export const signUp = functions.https.onCall(async (request) => {
     request;
 
   if (!email || !password || !name) {
-    logger.error("The function requires an email, a password and a name: " + request);
+    logger.error(GENERAL_ERROR_MESSAGES.missingCredentials.english + request);
     throw new functions.https.HttpsError(
       "invalid-argument",
-      "צריך אימייל, סיסמא ואימייל"
+      GENERAL_ERROR_MESSAGES.missingCredentials.hebrew
     );
   }
 
   if (request.auth) {
-    logger.error("The user must be unauthenticated in order to sign up: " + request);
+    logger.error(GENERAL_ERROR_MESSAGES.alreadyAuthenticated.english + request);
     throw new functions.https.HttpsError(
       "failed-precondition",
-      "אי אפשר להירשם בתור משתמש מחובר"
+      GENERAL_ERROR_MESSAGES.alreadyAuthenticated.hebrew
     );
   }
 
@@ -51,38 +52,36 @@ export const signUp = functions.https.onCall(async (request) => {
   );
   const emailRegex = new RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
 
+  if (password.length < 8 || password.length > 20) {
+    logger.error(PASSWORD_ERROR_MESSAGES.length.english + request);
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      PASSWORD_ERROR_MESSAGES.length.hebrew
+    );
+  }
   try {
     if (!passwordRegex.test(password)) {
-      logger.error("The password should include at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and one symbol from the following: @$!%*?&_: " + request);
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "הסיסמא צריכה להכיל לפחות אות קטנה אחת, אות גדולה אחת, מספר וסימן מיוחד (@,$,!,%,*,?,&,_)"
-      );
+      logger.error(PASSWORD_ERROR_MESSAGES.regex.english + request);
+      throw "failed test" // The text here really doesn't matter so I didn't bother with a const
     }
   } catch (error) {
     logger.error("Error checking regex: " + error + ", " + request);
-    throw new functions.https.HttpsError("invalid-argument", "הסיסמא צריכה להכיל לפחות אות קטנה אחת, אות גדולה אחת, מספר וסימן מיוחד (@,$,!,%,*,?,&,_)");
-  }
-  if (password.length < 8 || password.length > 20) {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "הסיסמא חייבת לכלול לפחות 8 תווים ולא יותר מ-20"
-    );
+    throw new functions.https.HttpsError("invalid-argument", PASSWORD_ERROR_MESSAGES.regex.hebrew);
   }
 
   try {
     if (!emailRegex) {
-      logger.error("The email must be a valid address: " + request);
-      throw new functions.https.HttpsError("invalid-argument", "האימייל צריך להיות תקין");
+      logger.error(EMAIL_ERROR_MESSAGES.regex.english + request);
+      throw "failed test" // Same here with the text
     }
   } catch (error) {
     logger.error("Error checking regex: " + error + ", " + request);
-    throw new functions.https.HttpsError("invalid-argument", "האימייל צריך להיות תקין");
+    throw new functions.https.HttpsError("invalid-argument", EMAIL_ERROR_MESSAGES.regex.hebrew);
   }
 
   if (name.length < 2) {
-    logger.error("The name must include at least 2 characters: " + request);
-    throw new functions.https.HttpsError("invalid-argument", "השם צריך לכלול לפחות 2 אותיות");
+    logger.error(USERNAME_ERROR_MESSAGES.length.english + request);
+    throw new functions.https.HttpsError("invalid-argument", USERNAME_ERROR_MESSAGES.length.hebrew);
   }
 
   try {
@@ -103,11 +102,11 @@ export const signUp = functions.https.onCall(async (request) => {
     }
   } catch (error) {
     const err = error as {message: string};
-    logger.error("An error occurred while creating the user: " + error + ", " + request);
-    if (err.message === "The email address is already in use by another account.") {
-      throw new functions.https.HttpsError("already-exists", "אי אפשר ליצור יותר ממשתמש אחד עם אותו אימייל");
+    logger.error(GENERAL_ERROR_MESSAGES.general.english + error + ", " + request);
+    if (err.message === EMAIL_ERROR_MESSAGES.alreadyExists.english) {
+      throw new functions.https.HttpsError("already-exists", EMAIL_ERROR_MESSAGES.alreadyExists.hebrew);
     } else {
-      throw new functions.https.HttpsError("internal", "An error occurred while creating the user");
+      throw new functions.https.HttpsError("internal", GENERAL_ERROR_MESSAGES.general.hebrew);
     }
   }
 });
