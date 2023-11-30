@@ -6,7 +6,7 @@ import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
 import React from 'react';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
-import { signUpErrors } from '../consts/errorMessages';
+import { FIREBASE_ERRORS, signUpErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -23,13 +23,13 @@ const SignUpPage = () => {
       await signUp({ password, email, name });
       await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e: unknown) {
-      const error = e as { message: string; code: string };  
-      
-      if (error.code === 'functions/already-exists') {
+      const error = e as { message: string; code: string };
+
+      if (error.code === FIREBASE_ERRORS.alreadyExists) {
         setError(signUpErrors.userAlreadyExists);
-      } else if (error.code === 'functions/invalid-argument') {
+      } else if (error.code === FIREBASE_ERRORS.invalidArgument) {
         setError({ title: 'קלט לא תקין', content: error.message });
-      } else if (error.code === 'functions/failed-precondition') {
+      } else if (error.code === FIREBASE_ERRORS.failedPrecondition) {
         setError({ title: 'שגיאת הרשאה', content: error.message });
       } else {
         setError(signUpErrors.generalError);

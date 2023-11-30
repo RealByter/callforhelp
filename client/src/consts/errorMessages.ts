@@ -21,3 +21,9 @@ export const signInErrors = {
   },
   generalError: { title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות באמצעות אימייל' }
 };
+
+export const FIREBASE_ERRORS = {
+  alreadyExists: 'functions/already-exists',
+  invalidArgument: 'functions/invalid-argument',
+  failedPrecondition: 'functions/failed-precondition'
+}
