@@ -62,11 +62,11 @@ const SignUpPage = () => {
   }, [user, navigate, stage]);
 
   return (
-    <>
+    <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
       <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
-    </>
+    </div>
   );
 };
 

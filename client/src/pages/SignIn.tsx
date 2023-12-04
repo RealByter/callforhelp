@@ -41,11 +41,11 @@ const SignInPage = () => {
   }, [user, navigate]);
 
   return (
-    <>
+    <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
       <BackButton to="/" />
       <Header>התחברות</Header>
       <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
-    </>
+    </div>
   );
 };
 

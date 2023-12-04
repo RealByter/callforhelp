@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
 import SupporteeWaiting from './SupporteeWaiting';
+import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useLoadingContext from '../context/loading/useLoadingContext';
 
 type ChatProps = {
@@ -34,6 +35,7 @@ export const Chat: React.FC<ChatProps> = ({
   const [companionName, setCompanionName] = useState('');
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
+  const isKeyboardOpen = useDetectKeyboardOpen();
   useLoadingContext(chatLoading || messagesLoading);
 
   // get current date in IOS string
@@ -90,6 +92,7 @@ export const Chat: React.FC<ChatProps> = ({
     page = (
       <div className="chat-page">
         <ChatTopBar
+          isMinimized={isKeyboardOpen || false}
           isChatEnded={chat?.status === 'ended'}
           companionName={companionName}
           isSupporter={role === 'supporter'}
