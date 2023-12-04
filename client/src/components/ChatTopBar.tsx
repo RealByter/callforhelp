@@ -1,27 +1,30 @@
-import React from 'react';
+import { React, useState } from 'react';
 import FindAdditionalSupportee from './FindAdditionalSupportee';
 
 interface IChatTopBarProps {
+  isMinimized: boolean;
   isChatEnded: boolean;
   isSupporter: boolean;
   companionName: string;
   userId?: string;
   endChat: () => void;
-  changeSupporter: () => void;
-  findAdditionalSupportee: () => void;
+  secondaryAction: () => void;
   goBackToChatsPage: () => void;
 }
 
 export const ChatTopBar: React.FC<IChatTopBarProps> = ({
+  isMinimized,
   isChatEnded,
   isSupporter,
   companionName,
   userId,
   endChat,
-  changeSupporter,
-  findAdditionalSupportee,
+  secondaryAction,
   goBackToChatsPage
 }: IChatTopBarProps) => {
+
+  let animationClassName = isMinimized ? "slide-out-top" : "slide-in-top";
+
   let subTitle = '';
   if (companionName) {
     if (isSupporter) subTitle = 'אני צריך תמיכה';
@@ -62,28 +65,27 @@ export const ChatTopBar: React.FC<IChatTopBarProps> = ({
           <span className="sub-title">{subTitle}</span>
         </div>
       </div>
-      <div className="chat-top-bar-lower">
-        {isChatEnded ? (
+      <div className={`chat-top-bar-lower ${animationClassName}`}>
+        {isChatEnded ?
           <p>השיחה הסתיימה</p>
-        ) : (
+          :
           <div className="chat-top-bar-lower-buttons">
             {isSupporter ? (
               <FindAdditionalSupportee
-                findAdditionalSupportee={findAdditionalSupportee}
+                findAdditionalSupportee={secondaryAction}
                 disabled={!companionName}
                 userId={userId}
               />
             ) : (
-              <button onClick={changeSupporter} disabled={!companionName}>
+              <button onClick={secondaryAction} disabled={!companionName}>
                 החלף תומך
               </button>
             )}
             <button onClick={endChat} disabled={!companionName}>
               סיום שיחה
             </button>
-          </div>
-        )}
+          </div>}
       </div>
-    </div>
+    </div >
   );
 };

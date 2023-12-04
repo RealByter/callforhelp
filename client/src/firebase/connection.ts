@@ -12,26 +12,26 @@ const DEV_FIRESTORE_PORT = 8080;
 const DEV_FUNCTIONS_HOST = '127.0.0.1';
 const DEV_FUNCTIONS_PORT = 5001;
 
-// const firebaseConfig = {
-//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'default',
-//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'localhost:9099',
-//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-//   appId: import.meta.env.VITE_FIREBASE_APP_ID
-// };
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'default',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'localhost:9099',
-  // if i forget: find a way to set the correct project id with the firebase emulators
-  projectId:
-    import.meta.env.VITE_FIREBASE_PROJECT_ID === 'your-project-id' || !import.meta.env.VITE_FIREBASE_PROJECT_ID
-      ? 'callforhelp-37002'
-      : import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
+// const firebaseConfig = {
+//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'default',
+//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'localhost:9099',
+//   // if i forget: find a way to set the correct project id with the firebase emulators
+//   projectId:
+//     import.meta.env.VITE_FIREBASE_PROJECT_ID === 'your-project-id' || !import.meta.env.VITE_FIREBASE_PROJECT_ID
+//       ? 'callforhelp-37002'
+//       : import.meta.env.VITE_FIREBASE_PROJECT_ID,
+//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+//   appId: import.meta.env.VITE_FIREBASE_APP_ID
+// };
 
 const app = initializeApp(firebaseConfig);
 

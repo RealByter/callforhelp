@@ -4,18 +4,20 @@ import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
-import React from 'react';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
-import { FIREBASE_ERRORS, signUpErrors } from '../consts/errorMessages';
+import { FIREBASE_ERRORS, signUpErrors, connectionError } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import BackButton from '../components/BackButton';
+import useLoadingContext from '../context/loading/useLoadingContext';
+import useErrorContext from '../context/Error/useErrorContext';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [error, setError] = useState<ErrorInfo>();
-
+  const setIsLoading = useLoadingContext();
+  const setError = useErrorContext();
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
     try {
       const functions = getFunctions();
@@ -31,10 +33,13 @@ const SignUpPage = () => {
         setError({ title: FIREBASE_ERRORS.invalidArgument.title, content: error.message });
       } else if (error.code === FIREBASE_ERRORS.failedPrecondition.code) {
         setError({ title: FIREBASE_ERRORS.failedPrecondition.title, content: error.message });
+      } else if (error.code === 'auth/network-request-failed') {
+        setError(connectionError.continue);
       } else {
         setError(signUpErrors.generalError);
       }
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -45,12 +50,11 @@ const SignUpPage = () => {
   }, [user, navigate]);
 
   return (
-    <>
-      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
+    <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
       <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
-    </>
+    </div>
   );
 };
 

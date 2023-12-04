@@ -3,6 +3,7 @@
 @import 'setup/variables';
 @import 'setup/mixins';
 @import 'setup/functions';
+@import 'setup/animations';
 
 // BASICS
 @import 'basics/helpers';
@@ -26,4 +27,7 @@
 @import 'components/general-carousel';
 @import 'components/chats-list.scss';
 @import 'components/back-button';
+@import 'components/supporter-waiting';
 @import 'components/supportee-waiting';
+@import 'components/loading-modal';
+@import 'components/user-options';

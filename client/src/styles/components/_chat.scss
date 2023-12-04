@@ -1,8 +1,12 @@
 .chat-page {
-  height: 100vh;
+  height: 100svh;
+  /*So when the viewport is "smaller" due to the browse bar appeareance - the input will be shown*/
   width: 100vw;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
 
   .chat-top-bar {
     width: 100vw;
@@ -10,6 +14,7 @@
     flex-direction: column;
 
     &-upper {
+      z-index: 1;
       border-bottom: $chat-upper-top-bar-border;
       background-color: #ffffff;
       width: 100%;
@@ -141,7 +146,7 @@
   }
 
   .messages {
-    height: calc(66vh - 0.5rem);
+    flex-grow: 1;
     width: 100vw;
     padding: 0.8rem 0.8rem 0 0.8rem;
     display: flex;
@@ -194,13 +199,11 @@
 
     .no-msg {
       margin: auto;
-      margin-top: 10vh;
     }
   }
 
   .chat-input {
     width: 100vw;
-    position: absolute;
     bottom: 0;
     left: 0;
     display: flex;
@@ -228,7 +231,7 @@
         font-size: 0.875rem;
         font-weight: 400;
 
-        &:focus ~ button {
+        &:focus~button {
           background: #e9e4f5;
 
           path {
