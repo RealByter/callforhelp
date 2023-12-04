@@ -7,7 +7,6 @@ import Header from '../components/Header';
 import { signInWithEmailAndPassword } from '@firebase/auth';
 import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { FIREBASE_ERRORS, signInErrors, connectionError } from '../consts/errorMessages';
-import { connectionError, signInErrors } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import useErrorContext from '../context/Error/useErrorContext';

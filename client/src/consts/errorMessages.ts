@@ -28,6 +28,7 @@ export const FIREBASE_ERRORS = {
   failedPrecondition: { code: 'functions/failed-precondition', title: 'שגיאת הרשאה' },
   notFound: 'auth/user-not-found',
   wrongPassword: 'auth/wrong-password',
+}
 
 const CONNECTION_ERROR_TEXT = {
   title: 'יש בעיות באינטרנט',

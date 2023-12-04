@@ -9,7 +9,6 @@ import { FIREBASE_ERRORS, signUpErrors, connectionError } from '../consts/errorM
 import BackButton from '../components/BackButton';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import BackButton from '../components/BackButton';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import useErrorContext from '../context/Error/useErrorContext';
 
