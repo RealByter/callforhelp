@@ -58,12 +58,7 @@ const SignUpPage = () => {
   }, [user, navigate, stage]);
 
   return (
-<<<<<<< HEAD
     <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
-      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
-=======
-    <>
->>>>>>> development
       <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />

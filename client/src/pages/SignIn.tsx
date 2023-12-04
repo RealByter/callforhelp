@@ -37,12 +37,7 @@ const SignInPage = () => {
   }, [user, navigate]);
 
   return (
-<<<<<<< HEAD
     <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
-      {error ? <ErrorModal {...error} onClose={() => setError(undefined)} /> : <></>}
-=======
-    <>
->>>>>>> development
       <BackButton to="/" />
       <Header>התחברות</Header>
       <Form submitLabel="כניסה" email password onSubmit={handleFormSubmit} />
