@@ -21,8 +21,8 @@ export const PASSWORD_ERROR_MESSAGES = {
       'The password should include at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and one symbol from the following: @$!%*?&_: '
   },
   length: {
-    hebrew: 'הסיסמא חייבת לכלול לפחות 8 תווים ולא יותר מ-20',
-    english: 'The password should contain between 8 to 20 characters: '
+    hebrew: 'הסיסמא חייבת לכלול לפחות 8 תווים ולא יותר מ-128',
+    english: 'The password should contain between 8 to 128 characters: '
   }
 };
 
@@ -34,12 +34,16 @@ export const EMAIL_ERROR_MESSAGES = {
   alreadyExists: {
     english: 'The email address is already in use by another account.',
     hebrew: 'אי אפשר ליצור יותר ממשתמש אחד עם אותו אימייל'
+  },
+  length: {
+    english: "The email can't exceed 254 characters",
+    hebrew: "האימייל לא יכול להיות ארוך מ-254 תווים"
   }
 };
 
 export const USERNAME_ERROR_MESSAGES = {
   length: {
-    hebrew: 'השם צריך לכלול לפחות 2 אותיות',
-    english: 'The name must include at least 2 characters: '
+    hebrew: 'השם צריך לכלול בין 2 ל-40 אותיות',
+    english: 'The name must include between 2 and 40 characters: '
   }
 };

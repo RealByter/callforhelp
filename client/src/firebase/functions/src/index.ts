@@ -48,11 +48,11 @@ export const signUp = functions.https.onCall(async (request) => {
   }
 
   const passwordRegex = new RegExp(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,20}$/
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,128}$/
   );
   const emailRegex = new RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
 
-  if (password.length < 8 || password.length > 20) {
+  if (password.length < 8 || password.length > 128) {
     logger.error(PASSWORD_ERROR_MESSAGES.length.english + request);
     throw new functions.https.HttpsError(
       "invalid-argument",
@@ -69,6 +69,13 @@ export const signUp = functions.https.onCall(async (request) => {
     throw new functions.https.HttpsError("invalid-argument", PASSWORD_ERROR_MESSAGES.regex.hebrew);
   }
 
+  if(email.length > 254) {
+    logger.error(EMAIL_ERROR_MESSAGES.length.english + request);
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      EMAIL_ERROR_MESSAGES.length.english
+    )
+  }
   try {
     if (!emailRegex) {
       logger.error(EMAIL_ERROR_MESSAGES.regex.english + request);
