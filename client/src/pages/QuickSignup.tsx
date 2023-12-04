@@ -19,10 +19,10 @@ import { quickSignupErrors } from '../consts/errorMessages';
 
 const QuickSignup: React.FC = () => {
   const navigate = useNavigate();
-  const [signInWithGoogle] = useSignInWithGoogle(auth);
-  const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [error, setError] = useState<ErrorInfo>();
   const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start');
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [signInWithFacebook] = useSignInWithFacebook(auth);
   const [user] = useAuthState(auth);
 
   const createUserDocument = async (user?: User) => {
