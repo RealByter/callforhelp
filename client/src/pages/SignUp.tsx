@@ -27,10 +27,10 @@ const SignUpPage = () => {
 
       if (error.code === FIREBASE_ERRORS.alreadyExists) {
         setError(signUpErrors.userAlreadyExists);
-      } else if (error.code === FIREBASE_ERRORS.invalidArgument) {
-        setError({ title: 'קלט לא תקין', content: error.message });
-      } else if (error.code === FIREBASE_ERRORS.failedPrecondition) {
-        setError({ title: 'שגיאת הרשאה', content: error.message });
+      } else if (error.code === FIREBASE_ERRORS.invalidArgument.code) {
+        setError({ title: FIREBASE_ERRORS.invalidArgument.title, content: error.message });
+      } else if (error.code === FIREBASE_ERRORS.failedPrecondition.code) {
+        setError({ title: FIREBASE_ERRORS.failedPrecondition.title, content: error.message });
       } else {
         setError(signUpErrors.generalError);
       }

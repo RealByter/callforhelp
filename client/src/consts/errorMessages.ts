@@ -24,6 +24,8 @@ export const signInErrors = {
 
 export const FIREBASE_ERRORS = {
   alreadyExists: 'functions/already-exists',
-  invalidArgument: 'functions/invalid-argument',
-  failedPrecondition: 'functions/failed-precondition'
-}
+  invalidArgument: { code: 'functions/invalid-argument', title: 'קלט לא תקין' },
+  failedPrecondition: { code: 'functions/failed-precondition', title: 'שגיאת הרשאה' },
+  notFound: 'auth/user-not-found',
+  wrongPassword: 'auth/wrong-password',
+};
