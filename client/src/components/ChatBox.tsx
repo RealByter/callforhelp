@@ -32,6 +32,7 @@ export const ChatBox: React.FC<IChatBoxProps> = ({ sendChatMsg, disabled }: ICha
           value={currentMsg}
           onChange={handleChange}
           placeholder={disabled ? '' : 'הודעה'}
+          maxLength={1000}
         />
         <button
           className={`chat-input-parts-send`}

@@ -17,9 +17,9 @@ const BackButton: React.FC<BackButtonProps> = ({ to }) => {
           <path
             d="M9.48542 17.9706L1.00014 9.48535L9.48542 1.00007"
             stroke="#0E1C74"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </NavLink>

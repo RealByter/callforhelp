@@ -22,6 +22,14 @@ export const signInErrors = {
   generalError: { title: 'שגיאה', content: 'אירעה שגיאה בעת התחברות באמצעות אימייל' }
 };
 
+export const FIREBASE_ERRORS = {
+  alreadyExists: 'functions/already-exists',
+  invalidArgument: { code: 'functions/invalid-argument', title: 'קלט לא תקין' },
+  failedPrecondition: { code: 'functions/failed-precondition', title: 'שגיאת הרשאה' },
+  notFound: 'auth/user-not-found',
+  wrongPassword: 'auth/wrong-password',
+}
+
 const CONNECTION_ERROR_TEXT = {
   title: 'יש בעיות באינטרנט',
   content: 'וודא/י שהאינטרנט מחובר ונסה/י שוב'

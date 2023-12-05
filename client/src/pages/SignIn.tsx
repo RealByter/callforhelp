@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
 import { signInWithEmailAndPassword } from '@firebase/auth';
-import { connectionError, signInErrors } from '../consts/errorMessages';
+import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
+import { FIREBASE_ERRORS, signInErrors, connectionError } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import useErrorContext from '../context/Error/useErrorContext';
@@ -22,8 +23,7 @@ const SignInPage = () => {
       await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e: unknown) {
       const error = e as { code: string };
-      console.log(error);
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      if (error.code === FIREBASE_ERRORS.notFound || error.code === FIREBASE_ERRORS.wrongPassword) {
         setError(signInErrors.invalidCredentials);
       } else if (error.code === 'auth/network-request-failed') {
         setError(connectionError.continue);

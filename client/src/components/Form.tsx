@@ -102,8 +102,8 @@ const Form = ({ onSubmit, name, email, password, submitLabel }: FormProps) => {
                           width="24"
                           height="24"
                           filterUnits="userSpaceOnUse"
-                          color-interpolation-filters="sRGB">
-                          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                          colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
                           <feColorMatrix
                             in="SourceAlpha"
                             type="matrix"
