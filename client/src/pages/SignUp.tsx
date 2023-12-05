@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
-import ErrorModal, { ErrorInfo } from '../components/ErrorModal';
 import { FIREBASE_ERRORS, signUpErrors, connectionError } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
 import { getFunctions, httpsCallable } from 'firebase/functions';
