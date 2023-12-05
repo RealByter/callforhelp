@@ -139,7 +139,8 @@ export const joinChatFirebase = async (
 
 export const assignSupporter = async (userId: string, existingChatId?: string) => {
   const chatToFill = await findChatToFill('supporter', userId);
-
+  console.log(chatToFill);
+  
   if (chatToFill) {
     if (existingChatId)
       deleteDoc(doc(collections.chats, existingChatId)).then(async () => {
