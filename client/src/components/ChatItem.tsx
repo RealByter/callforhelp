@@ -15,16 +15,11 @@ export interface ChatItemProps {
 
 export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => {
   const navigate = useNavigate();
-  const [user, userLoading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [lastMessage, setLastMessage] = useState<Message>(); // needed for the unreadMessages accuracy
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState('');
-
-  useEffect(() => {
-    // redirect if user not logged in
-    if (!userLoading && !user) navigate('/');
-  }, [user, userLoading, navigate]);
 
   useEffect(() => {    
     if (!user) return;
@@ -64,7 +59,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
   return (
     <li className={`chat-item ${isEnded && 'chat-item-ended'}`} onClick={onItemClick} tabIndex={0}>
       <div className="content">
-        <span className="name">{name || isEnded ? 'לא נמצא נתמך' : 'מחפשים לך נתמך...'}</span>
+        <span className="name">{name || (isEnded ? 'לא נמצא נתמך' : 'מחפשים לך נתמך...')}</span>
         {lastMessageTimestamp && (
           <span className="last-message">
             תגובה אחרונה <span>{lastMessageTimestamp}</span>
