@@ -1,6 +1,7 @@
 import {
   Timestamp,
   addDoc,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -8,16 +9,80 @@ import {
   orderBy,
   query,
   updateDoc,
-  where
+  where,
+  and,
+  onSnapshot,
+  getCountFromServer
 } from 'firebase/firestore';
 import { Chat } from '../firebase/chat';
+import { Message } from '../firebase/message';
 import { collections } from '../firebase/connection';
 
 export type Role = 'supporter' | 'supportee';
-export const getRoleFieldName = (role: Role) =>
+export type RoleFieldName = 'supporterId' | 'supporteeId';
+
+export const getOppositeRole = (role: Role): Role =>
+  role === 'supporter' ? 'supportee' : 'supporter';
+export const getRoleFieldName = (role: Role): RoleFieldName =>
   role === 'supporter' ? 'supporterId' : 'supporteeId';
-export const getOppositeRoleFieldName = (role: Role) =>
+export const getOppositeRoleFieldName = (role: Role): RoleFieldName =>
   role === 'supporter' ? 'supporteeId' : 'supporterId';
+
+const OnSnapshotError = (error: unknown) => {
+  // todo: handle errors
+  console.log('error', error);
+};
+
+export const getRealtimeUserChats = (userId: string, role: Role, cb: (result: Chat[]) => void) => {
+  const roleFieldName = getRoleFieldName(role);
+  const queryUserChats = query(
+    collections.chats,
+    where(roleFieldName, '==', userId),
+    orderBy('createdAt')
+  );
+
+  const unsubscribe = onSnapshot(
+    queryUserChats,
+    (snapshot) => {
+      const queryData = snapshot.docs.map((doc) => doc.data());
+      cb(queryData);
+    },
+    OnSnapshotError
+  );
+  return unsubscribe;
+};
+
+export const getRealtimeLastMessage = (chatId: string, cb: (result: Message) => void) => {
+  const queryChatMessages = query(
+    collections.messages,
+    where('chatId', '==', chatId),
+    orderBy('date', 'desc'),
+    limit(1)
+  );
+
+  const unsubscribe = onSnapshot(
+    queryChatMessages,
+    (snapshot) => {
+      const snapshotData = snapshot.docs.map((doc) => doc.data());
+      cb(snapshotData[0]);
+    },
+    OnSnapshotError
+  );
+  return unsubscribe;
+};
+
+export const getUnreadMessagesCount = async (userId: string, chatId: string): Promise<number> => {
+  const queryChatMessages = query(
+    collections.messages,
+    and(
+      where('chatId', '==', chatId),
+      where('senderId', '!=', userId),
+      where('status', '==', 'received')
+    )
+  );
+  const snapshot = await getCountFromServer(queryChatMessages);
+  return snapshot.data().count;
+};
 
 export const findChatToFill = async (role: Role, userId: string): Promise<Chat | null> => {
   const roleFieldName = getRoleFieldName(role);
@@ -72,28 +137,47 @@ export const joinChatFirebase = async (
   await updateDoc(doc(collections.chats, chatId), updates);
 };
 
-export const assignSupporter = async (userId: string) => {
+export const assignSupporter = async (userId: string, existingChatId?: string) => {
   const chatToFill = await findChatToFill('supporter', userId);
 
-  if (chatToFill) await joinChatFirebase(userId, 'supporter', chatToFill.id);
-  else await createChat(userId, 'supporter');
+  if (chatToFill) {
+    if (existingChatId)
+      deleteDoc(doc(collections.chats, existingChatId)).then(async () => {
+        // using 'then' here is probably stupid but i fear that the chat item will be deleted before it would join the already existing searching chat
+        await joinChatFirebase(userId, 'supporter', chatToFill.id);
+      });
+    else await joinChatFirebase(userId, 'supporter', chatToFill.id);
+
+    return chatToFill.id;
+  } else if (!existingChatId) {
+    const newChat = await createChat(userId, 'supporter');
+    return newChat.id;
+  } else {
+    return existingChatId;
+  }
 };
 
-export const assignSupportee = async (userId: string, name: string) => {
+export const assignSupportee = async (userId: string, name: string, existingChatId?: string) => {
   const chatToFill = await findChatToFill('supportee', userId);
 
   if (chatToFill) {
+    if (existingChatId) await deleteDoc(doc(collections.chats, existingChatId));
     await joinChatFirebase(userId, 'supportee', chatToFill.id, name);
     return chatToFill.id;
   } else {
-    const chat = await createChat(userId, 'supportee', name);
-    return chat.id;
+    if (!existingChatId) {
+      const chat = await createChat(userId, 'supportee', name);
+      return chat.id;
+    } else {
+      return existingChatId;
+    }
   }
 };
 
 export const getNameById = async (companionId: string): Promise<string> => {
   if (companionId) {
     const userSnapshot = await getDoc(doc(collections.users, companionId));
+
     if (!userSnapshot.exists()) {
       throw new Error(`Companion with the id ${companionId} wasn't found`);
     } else {

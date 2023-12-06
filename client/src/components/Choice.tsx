@@ -1,22 +1,23 @@
 import React from 'react';
 import Button from './Button';
 import Paragraph from './Paragraph';
+import { NavLink } from 'react-router-dom';
 
 type ChoiceProps = {
   paragraphText: string;
-  buttonText: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  text: string;
+  to: string;
 };
 
-const Choice: React.FC<ChoiceProps> = ({ paragraphText, buttonText, onClick }) => {
+const Choice: React.FC<ChoiceProps> = ({ paragraphText, text, to }) => {
   return (
     <div className="choice">
       <Paragraph dir="rtl" isBold>
         {paragraphText}
       </Paragraph>
-      <div className="button-wrapper">
-        <Button onClick={onClick}>{buttonText}</Button>
-      </div>
+      <NavLink to={to} className="button-wrapper">
+        <Button>{text}</Button>
+      </NavLink>
     </div>
   );
 };

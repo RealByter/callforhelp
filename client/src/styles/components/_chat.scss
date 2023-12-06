@@ -197,23 +197,6 @@
     }
   }
 
-  .has-messages {
-    position: absolute;
-    bottom: 18vh;
-    left: 8vw;
-    height: 2rem;
-    width: 2rem;
-    background-color: $chat-second-part-msg-bgd;
-    box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 34%);
-    border-radius: 50%;
-    color: $btn-bgd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
   .chat-input {
     width: 100vw;
     position: absolute;
@@ -244,7 +227,7 @@
         font-size: 0.875rem;
         font-weight: 400;
 
-        &:focus ~ button {
+        &:focus~button {
           background: #e9e4f5;
 
           path {
@@ -275,6 +258,48 @@
           stroke: rgba(172, 179, 222, 0.25);
         }
       }
+    }
+  }
+
+  .parent {
+    position: fixed;
+    left: 0.8rem;
+    bottom: 10rem;
+
+    .scroll-button {
+      position: relative;
+    }
+
+    .circle {
+      color: #9360ff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    .arrow {
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(25%, 25%);
+    }
+
+    .new-msgs {
+      background-color: #0159ff;
+      border-color: #0159ff;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      position: absolute;
+      transform: translate(60%, -50%);
+      left: 50%;
+      -moz-border-radius: 20px;
+      border-radius: 20px;
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 5px;
+      padding-bottom: 5px;
     }
   }
 }
