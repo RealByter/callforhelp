@@ -1,72 +1,58 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, collections } from '../firebase/connection';
+import { auth } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormOptions } from '../components/Form';
 import Header from '../components/Header';
-import { deleteDoc, doc, setDoc } from '@firebase/firestore';
-import { createUserWithEmailAndPassword, deleteUser, updateProfile } from '@firebase/auth';
-import { connectionError, signUpErrors } from '../consts/errorMessages';
+import { FIREBASE_ERRORS, signUpErrors, connectionError } from '../consts/errorMessages';
 import BackButton from '../components/BackButton';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import useErrorContext from '../context/Error/useErrorContext';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [stage, setStage] = useState<'start' | 'updating' | 'end'>('start'); // This is used for auth state
-  const setIsLoading = useLoadingContext(); // And this is used to prevent the user from clicking the sign up button multiple times
+  const setIsLoading = useLoadingContext();
   const setError = useErrorContext();
-
   const handleFormSubmit = async ({ name, email, password }: FormOptions) => {
-    setIsLoading(true);
-    setStage('updating');
     try {
-      const user = await createUserWithEmailAndPassword(auth, email!, password!);
-
-      if (user) {
-        try {
-          await setDoc(doc(collections.users, user.user.uid), { name: name!, acceptedTerms: true });
-        } catch (e: unknown) {
-          await deleteUser(user.user);
-          throw e;
-        }
-        try {
-          await updateProfile(user.user, { displayName: name });
-        } catch (e: unknown) {
-          await deleteDoc(doc(collections.users, user.user.uid));
-          await deleteUser(user.user);
-          throw e;
-        }
-        setStage('end');
-      }
+      const functions = getFunctions();
+      const signUp = httpsCallable(functions, 'signUp');
+      await signUp({ password, email, name });
+      await signInWithEmailAndPassword(auth, email!, password!);
     } catch (e: unknown) {
-      const error = e as { code: string };
-      if (error.code === 'auth/email-already-in-use') {
+      const error = e as { message: string; code: string };
+
+      if (error.code === FIREBASE_ERRORS.alreadyExists) {
         setError(signUpErrors.userAlreadyExists);
+      } else if (error.code === FIREBASE_ERRORS.invalidArgument.code) {
+        setError({ title: FIREBASE_ERRORS.invalidArgument.title, content: error.message });
+      } else if (error.code === FIREBASE_ERRORS.failedPrecondition.code) {
+        setError({ title: FIREBASE_ERRORS.failedPrecondition.title, content: error.message });
       } else if (error.code === 'auth/network-request-failed') {
         setError(connectionError.continue);
       } else {
         setError(signUpErrors.generalError);
       }
-      setStage('start');
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
     // Only redirect if the user existed before creating the user and after creating the user and assigning him the username
-    if (user && stage !== 'updating') {
+    if (user) {
       navigate('/selection', { replace: true });
     }
-  }, [user, navigate, stage]);
+  }, [user, navigate]);
 
   return (
-    <>
+    <div style={{overflow: "hidden"}}> /* solves overflow created by virtual keyboard */
       <BackButton to="/" />
       <Header>הרשמה עם אימייל</Header>
       <Form name password email onSubmit={handleFormSubmit} submitLabel="להרשמה" />
-    </>
+    </div>
   );
 };
 

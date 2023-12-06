@@ -15,16 +15,11 @@ export interface ChatItemProps {
 
 export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => {
   const navigate = useNavigate();
-  const [user, userLoading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [lastMessage, setLastMessage] = useState<Message>(); // needed for the unreadMessages accuracy
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState('');
-
-  useEffect(() => {
-    // redirect if user not logged in
-    if (!userLoading && !user) navigate('/');
-  }, [user, userLoading, navigate]);
 
   useEffect(() => {    
     if (!user) return;

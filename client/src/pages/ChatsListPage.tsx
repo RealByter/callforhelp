@@ -25,10 +25,10 @@ export const ChatsListPage = () => {
 
   useEffect(() => {
     const joinAsSupporter = async () => {
-      try {
+      try {        
         const hasActiveChat = await checkIfHasActive(user!.uid);
         if (!hasActiveChat) assignSupporter(user!.uid);
-        navigate('/chats');
+        // navigate('/chats');
       } catch (e: unknown) {
         const error = e as { code: string };
         console.log(error);
@@ -37,7 +37,7 @@ export const ChatsListPage = () => {
 
     // redirect if user not logged in
     if (!userLoading) {
-      if (user) joinAsSupporter;
+      if (user) joinAsSupporter();
       else navigate('/');
     }
   }, [user, userLoading, navigate]);
@@ -61,7 +61,7 @@ export const ChatsListPage = () => {
   const IsSearchingForSupportee = () => {
     return !!chats?.find((chat) => !chat.supporteeId);
   };
-
+  
   let mainContent = (
     <div className="chats-list-page">
       <h1>רשימת נתמכים</h1>

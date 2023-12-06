@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
 import SupporteeWaiting from './SupporteeWaiting';
+import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import { getCurrDateIsrael } from '../helpers/dateFunctions';
 import { useInView } from 'react-intersection-observer';
@@ -33,20 +34,24 @@ export const Chat: React.FC<ChatProps> = ({
   goBack,
   tryToFind
 }) => {
-  const [messages, messagesLoading] = useCollectionData(query(collections.messages, where('chatId', '==', chatId)));
+  const [messages, messagesLoading] = useCollectionData(
+    query(collections.messages, where('chatId', '==', chatId))
+    );
+  const noMessages = messages ? messages.length === 0 : true;
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [companionName, setCompanionName] = useState('');
   const [newMsgs, setNewMsgs] = useState(0);
   const navigate = useNavigate();
+  const isKeyboardOpen = useDetectKeyboardOpen();
   useLoadingContext(chatLoading || messagesLoading);
-
+  
   // for the scrolling behaviour
   const ref = useRef();
   const { ref: inViewRef, inView } = useInView();
   const isInitScroll = useRef(true);
-
+  
   const setRefs = useCallback(
-    (node) => {
+    (node : any) => {
       ref.current = node;
       inViewRef(node);
     },
@@ -64,8 +69,6 @@ export const Chat: React.FC<ChatProps> = ({
     };
     await addDoc(collections.messages, newMsgData);
   };
-
-  const noMessages = messages ? messages.length === 0 : true;
 
   useEffect(() => {
     if (!chatLoading && !chat) navigate('/selection');
@@ -136,53 +139,56 @@ export const Chat: React.FC<ChatProps> = ({
   let page = <></>; // todo: should be replaced with loading state once we have it
   if (!chatLoading && chat) {
     if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
-    page = (
-      <div className="chat-page">
-        <ChatTopBar
-          isChatEnded={chat?.status === 'ended'}
-          companionName={companionName}
-          isSupporter={role === 'supporter'}
-          userId={userId}
-          endChat={endChat}
-          secondaryAction={secondaryAction}
-          goBackToChatsPage={goBack}
-        />
+    else
+      page = (
+        <div className="chat-page">
+          <ChatTopBar
+            isMinimized={isKeyboardOpen || false}
+            isChatEnded={chat?.status === 'ended'}
+            companionName={companionName}
+            isSupporter={role === 'supporter'}
+            userId={userId}
+            endChat={endChat}
+            secondaryAction={secondaryAction}
+            goBackToChatsPage={goBack}
+          />
 
-        <div className="messages">
-          {noMessages ?
-            <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
-            :
-            (messages && messages
-              .sort((a, b) => {
-                const aDate = new Date(a.date);
-                const bDate = new Date(b.date);
-                return aDate.getTime() - bDate.getTime();
-              })
-              .map((m, index) =>
-              <div key={index} ref={index == messages.length - 2 ? setRefs : null}> {/* the scrolling ref is set to the message before last*/}
-                  <Message
-                    isSender={m.senderId === userId}
-                    content={m.content}
-                    messageId={m.id}
-                    messageDate={m.date}
-                    messageState={m.status}
-                  />
-                </div>)
-            )}
+          <div className="messages">
+            {noMessages ?
+              <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
+              :
+              (messages && messages
+                .sort((a, b) => {
+                  const aDate = new Date(a.date);
+                  const bDate = new Date(b.date);
+                  return aDate.getTime() - bDate.getTime();
+                })
+                .map((m, index) =>
+                  <div key={index} ref={index == messages.length - 2 ? setRefs : null}> {/* the scrolling ref is set to the message before last*/}
+                    <Message
+                      isSender={m.senderId === userId}
+                      content={m.content}
+                      messageId={m.id}
+                      messageDate={m.date}
+                      messageState={m.status}
+                    />
+                  </div>)
+              )}
 
-          {!inView &&
-            <div className='parent'>
-              <div className='scroll-button' onClick={scrollDown}>
-                <CircleSharpIcon className='circle' fontSize='large' />
-                <KeyboardDoubleArrowDownIcon className='arrow' />
-              </div>
-              {newMsgs != 0 && <span className='new-msgs'>{newMsgs}</span>}
-            </div>}
+            {(!inView && !noMessages && ref.current) &&
+              <div className='parent'>
+                <div className='scroll-button' onClick={scrollDown}>
+                  <CircleSharpIcon className='circle' fontSize='large' />
+                  <KeyboardDoubleArrowDownIcon className='arrow' />
+                </div>
+                {newMsgs != 0 && <span className='new-msgs'>{newMsgs}</span>}
+              </div>}
+
+          </div>
+
+          <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
         </div>
-
-        <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
-      </div>
-    );
+      );
   }
 
   return page;
