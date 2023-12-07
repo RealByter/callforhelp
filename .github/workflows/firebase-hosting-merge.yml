@@ -24,6 +24,9 @@ jobs:
       - name: Build
         run: npm --prefix client run build
 
+      - name: Copy build artifacts
+        run: cp -r client/dist/* ./client/src/firebase/
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
