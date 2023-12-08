@@ -264,7 +264,7 @@
     }
   }
 
-  .parent {
+  .scroll-down-info {
     position: fixed;
     left: 0.8rem;
     bottom: 10rem;
@@ -299,10 +299,7 @@
       left: 50%;
       -moz-border-radius: 20px;
       border-radius: 20px;
-      padding-left: 8px;
-      padding-right: 8px;
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding: 5px 8px 5px 8px;
     }
   }
 }

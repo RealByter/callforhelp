@@ -176,7 +176,7 @@ export const Chat: React.FC<ChatProps> = ({
               )}
 
             {(!inView && !noMessages && ref.current) &&
-              <div className='parent'>
+              <div className='scroll-down-info'>
                 <div className='scroll-button' onClick={scrollDown}>
                   <CircleSharpIcon className='circle' fontSize='large' />
                   <KeyboardDoubleArrowDownIcon className='arrow' />
