@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { LegacyRef, forwardRef, useEffect } from 'react';
 import { updateDoc, doc } from 'firebase/firestore';
 import { collections } from '../firebase/connection';
 
@@ -8,9 +8,10 @@ export interface IMessageProps {
   content: string;
   messageDate: string;
   messageState: 'sent' | 'received' | 'read';
+  ref: any;
 }
 
-export const Message: React.FC<IMessageProps> = ({ messageId, isSender, content, messageDate, messageState }: IMessageProps) => {
+export const Message: React.FC<IMessageProps> = forwardRef(({ messageId, isSender, content, messageDate, messageState }, ref: LegacyRef<HTMLDivElement>) => {
 
   useEffect(() => {
     if (isSender) return;
@@ -20,7 +21,7 @@ export const Message: React.FC<IMessageProps> = ({ messageId, isSender, content,
     (async () => {
       await updateDoc(doc(collections.messages, messageId), { status: "read" });
     })();
-  }, [])
+  }, [isSender, messageId, messageState])
 
   const formatDate = (date: string) => {
     const newDate = new Date(date);
@@ -30,9 +31,9 @@ export const Message: React.FC<IMessageProps> = ({ messageId, isSender, content,
   };
 
   return (
-    <div className={`message-body ${isSender ? 'sender' : ''} ${messageState}`}>
+    <div className={`message-body ${isSender ? 'sender' : ''} ${messageState}`} ref={ref}>
       <div className="content">{content || ''}</div>
       <div className="date">{formatDate(messageDate)}</div>
     </div>
   );
-};
+});

@@ -31,7 +31,8 @@
   `firebase init emulators`
 
   This command will let you select the project that you've created,
-  and the continue with the default configurations using the Enter key until the proccess is done.
+  After that, you can select which emulators you want to use. Mark hosting, firestore, auth and functions.
+  Then continue with the default configurations using the Enter key until the proccess is done.
 
 ## Usage
 

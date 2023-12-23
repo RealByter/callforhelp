@@ -36,7 +36,7 @@ export const Chat: React.FC<ChatProps> = ({
 }) => {
   const [messages, messagesLoading] = useCollectionData(
     query(collections.messages, where('chatId', '==', chatId))
-    );
+  );
   const noMessages = messages ? messages.length === 0 : true;
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [companionName, setCompanionName] = useState('');
@@ -44,18 +44,18 @@ export const Chat: React.FC<ChatProps> = ({
   const navigate = useNavigate();
   const isKeyboardOpen = useDetectKeyboardOpen();
   useLoadingContext(chatLoading || messagesLoading);
-  
+
   // for the scrolling behaviour
   const ref = useRef();
   const { ref: inViewRef, inView } = useInView();
   const isInitScroll = useRef(true);
-  
+
   const setRefs = useCallback(
-    (node : any) => {
+    (node: any) => {
       ref.current = node;
       inViewRef(node);
     },
-    [inViewRef],
+    [inViewRef]
   );
 
   const sendMsg = async (message: string) => {
@@ -112,29 +112,28 @@ export const Chat: React.FC<ChatProps> = ({
       // console.log(newMsgs)
       setNewMsgs(newMsgs + 1);
       return;
-    };
+    }
 
     // if the user scrolled up and sent the last message
     if (!inView) {
       scrollElemrnt.scrollIntoView({ behavior: 'instant' });
     }
 
-    // scroll to bottom when a new msg is received    
+    // scroll to bottom when a new msg is received
     scrollElemrnt.scrollIntoView({ behavior: 'smooth' });
-
   }, [messages?.length]); // for some reason for the dependency array [messages] the effect was launched twice for every message that was sent
 
   useEffect(() => {
     // resets the count when the user scrolls down
     if (inView) setNewMsgs(0);
-  }, [inView])
+  }, [inView]);
 
   const scrollDown = () => {
     if (!ref.current) return;
     const scrollElemrnt = ref.current as HTMLElement;
 
     scrollElemrnt.scrollIntoView({ behavior: 'smooth' });
-  }
+  };
 
   let page = <></>; // todo: should be replaced with loading state once we have it
   if (!chatLoading && chat) {
@@ -154,36 +153,38 @@ export const Chat: React.FC<ChatProps> = ({
           />
 
           <div className="messages">
-            {noMessages ?
+            {noMessages ? (
               <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
-              :
-              (messages && messages
+            ) : (
+              messages &&
+              messages
                 .sort((a, b) => {
                   const aDate = new Date(a.date);
                   const bDate = new Date(b.date);
                   return aDate.getTime() - bDate.getTime();
                 })
-                .map((m, index) =>
-                  <div key={index} ref={index == messages.length - 2 ? setRefs : null}> {/* the scrolling ref is set to the message before last*/}
-                    <Message
-                      isSender={m.senderId === userId}
-                      content={m.content}
-                      messageId={m.id}
-                      messageDate={m.date}
-                      messageState={m.status}
-                    />
-                  </div>)
-              )}
+                .map((m, index) => (
+                  <Message
+                    key={index}
+                    ref={index === messages.length - 2 ? setRefs : null}
+                    isSender={m.senderId === userId}
+                    content={m.content}
+                    messageId={m.id}
+                    messageDate={m.date}
+                    messageState={m.status}
+                  />
+                ))
+            )}
 
-            {(!inView && !noMessages && ref.current) &&
-              <div className='scroll-down-info'>
-                <div className='scroll-button' onClick={scrollDown}>
-                  <CircleSharpIcon className='circle' fontSize='large' />
-                  <KeyboardDoubleArrowDownIcon className='arrow' />
+            {!inView && !noMessages && ref.current && (
+              <div className="scroll-down-info">
+                <div className="scroll-button" onClick={scrollDown}>
+                  <CircleSharpIcon className="circle" fontSize="large" />
+                  <KeyboardDoubleArrowDownIcon className="arrow" />
                 </div>
-                {newMsgs != 0 && <span className='new-msgs'>{newMsgs}</span>}
-              </div>}
-
+                {newMsgs != 0 && <span className="new-msgs">{newMsgs}</span>}
+              </div>
+            )}
           </div>
 
           <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
