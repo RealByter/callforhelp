@@ -23,6 +23,10 @@ import SupporteeWaiting from './SupporteeWaiting';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { getCurrDateIsrael } from '../helpers/dateFunctions';
+import { useInView } from 'react-intersection-observer';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 
 const MESSAGES_PER_LOAD = 12;
 
@@ -65,13 +69,25 @@ export const Chat: React.FC<ChatProps> = ({
       endBefore(firstVisible)
     )
   );
+  const noMessages = messages ? messages.length === 0 : true;
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
   const [infiniteScroll, setInfiniteScroll] = useState(true);
   const [companionName, setCompanionName] = useState('');
+  const [newMsgs, setNewMsgs] = useState(0);
   const navigate = useNavigate();
-  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
   const isKeyboardOpen = useDetectKeyboardOpen();
   useLoadingContext(chatLoading || undefined);
+  // for the scrolling behaviour
+  const scrollRef = useRef();
+  const { ref: inViewRef, inView } = useInView();
+
+  const setRefs = useCallback(
+    (node: any) => {
+      scrollRef.current = node;
+      inViewRef(node);
+    },
+    [inViewRef]
+  );
 
   const fetchMessages = useCallback(async () => {
     const messagesQuery = query(
@@ -106,6 +122,13 @@ export const Chat: React.FC<ChatProps> = ({
   }, [fetchMessages, messages]);
 
   useEffect(() => {
+    if (scrollRef.current) {
+      const scrollElement = scrollRef.current as HTMLElement;
+      scrollElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
+  useEffect(() => {
     if (newMessagesList && newMessagesList.docs.length > 0) {
       setFirstVisible(newMessagesList.docs[0]);
       const newMessages = newMessagesList.docs
@@ -113,26 +136,26 @@ export const Chat: React.FC<ChatProps> = ({
           id: doc.id,
           ...(doc.data() as MessageData)
         }))
-        .filter( // to avoid updating the messages twice when sending a message but still allowing the user to get the message on a different device simultaneously
+        .filter(
+          // to avoid updating the messages twice when sending a message but still allowing the user to get the message on a different device simultaneously
           (message) =>
             new Date(message.date).getTime() >
             new Date(messages && messages.length > 0 ? messages[0].date : 0).getTime()
         );
 
-      setMessages((prevMess) => [...newMessages, ...(prevMess || [])]);
-    }
-  }, [newMessagesList, messages]);
+      if (newMessages.length > 0) {
+        setMessages((prevMess) => [...newMessages, ...(prevMess || [])]);
 
-  // get current date in IOS string
-  const getCurrDateIsrael = () => {
-    const here = new Date();
-    const invDate = new Date(here.toLocaleString('en-US', { timeZone: 'Israel' }));
-    const diff = here.getTime() - invDate.getTime();
-    return new Date(here.getTime() - diff).toISOString();
-  };
+        if (!inView && newMessages[0].senderId !== userId) {
+          setNewMsgs((prev) => prev + newMessages.length);
+          return;
+        }
+      }
+    }
+  }, [newMessagesList, messages, inView, userId]);
 
   const sendMsg = async (message: string) => {
-    const messageDate = getCurrDateIsrael();
+    const messageDate = getCurrDateIsrael().toISOString();
     const newMsgData: MessageData = {
       content: message,
       senderId: userId,
@@ -141,10 +164,17 @@ export const Chat: React.FC<ChatProps> = ({
       status: 'received'
     };
     setMessages((prevMess) => [newMsgData as MessageData, ...(prevMess || [])]);
+
+    if (!scrollRef.current) return;
+    const scrollElement = scrollRef.current as HTMLElement;
+
+    if (!inView) {
+      scrollElement.scrollIntoView({ behavior: 'instant' });
+    } else {
+      scrollElement.scrollIntoView({ behavior: 'smooth' });
+    }
     await addDoc(collections.messages, newMsgData);
   };
-
-  const noMessages = messages ? messages.length === 0 : true;
 
   useEffect(() => {
     if (!chatLoading && !chat) navigate('/selection');
@@ -165,7 +195,19 @@ export const Chat: React.FC<ChatProps> = ({
     }
   }, [chat, userId, navigate, role, tryToFind]);
 
-  let page = <></>; // should be replaced with loading state once we have it
+  useEffect(() => {
+    // resets the count when the user scrolls down
+    if (inView) setNewMsgs(0);
+  }, [inView]);
+
+  const scrollDown = () => {
+    if (!scrollRef.current) return;
+    const scrollElement = scrollRef.current as HTMLElement;
+
+    scrollElement.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  let page = <></>; // todo: should be replaced with loading state once we have it
   if (!chatLoading && chat) {
     if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
     page = (
@@ -181,40 +223,47 @@ export const Chat: React.FC<ChatProps> = ({
           goBackToChatsPage={goBack}
         />
 
-        <div className="messages">
+        <div
+          className="messages"
+          id="scrollableDiv"
+          style={{
+            height: '100vh',
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column-reverse'
+          }}>
           {noMessages ? (
             <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
           ) : (
-            <div
-              id="scrollableDiv"
-              style={{
-                height: '100vh',
-                overflow: 'auto',
-                display: 'flex',
-                flexDirection: 'column-reverse'
-              }}>
-              <InfiniteScroll
-                dataLength={messages ? messages?.length : 0}
-                next={fetchMessages}
-                style={{ display: 'flex', flexDirection: 'column-reverse' }}
-                inverse={true}
-                hasMore={infiniteScroll}
-                loader={<h4></h4>}
-                scrollableTarget="scrollableDiv">
-                {messages?.map((m, index) => (
-                  <div key={index}>
-                    <Message
-                      key={index}
-                      isSender={m.senderId === userId}
-                      content={m.content}
-                      messageId={m.id}
-                      messageDate={m.date}
-                      messageState={m.status}
-                    />
-                    <div ref={endOfMessagesRef} />
-                  </div>
-                ))}
-              </InfiniteScroll>
+            <InfiniteScroll
+              dataLength={messages ? messages?.length : 0}
+              next={fetchMessages}
+              style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1rem' }}
+              inverse={true}
+              hasMore={infiniteScroll}
+              loader={<h4></h4>}
+              scrollableTarget="scrollableDiv">
+              {messages?.map((m, index) => (
+                <Message
+                  key={index}
+                  ref={index === 1 ? setRefs : null}
+                  isSender={m.senderId === userId}
+                  content={m.content}
+                  messageId={m.id}
+                  messageDate={m.date}
+                  messageState={m.status}
+                />
+              ))}
+            </InfiniteScroll>
+          )}
+
+          {!inView && !noMessages && scrollRef.current && (
+            <div className="scroll-down-info">
+              <div className="scroll-button" onClick={scrollDown}>
+                <CircleSharpIcon className="circle" fontSize="large" />
+                <KeyboardDoubleArrowDownIcon className="arrow" />
+              </div>
+              {newMsgs != 0 && <span className="new-msgs">{newMsgs}</span>}
             </div>
           )}
         </div>
