@@ -152,11 +152,13 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-x: none;
+    // overflow-y: scroll;
+    // overflow-x: hidden;
 
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    // -ms-overflow-style: none;
+    // scrollbar-width: none;
 
     &::-webkit-scrollbar {
       display: none;

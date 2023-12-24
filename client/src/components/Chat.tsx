@@ -1,9 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { ChatTopBar } from './ChatTopBar';
 import { Role, getNameById, getOppositeRoleFieldName } from '../helpers/chatFunctions';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { addDoc, doc, query, where, limit, orderBy, getDocs, startAfter, DocumentData } from 'firebase/firestore';
-import { collections } from '../firebase/connection';
+import { useDocumentData, useCollection } from 'react-firebase-hooks/firestore';
+import {
+  addDoc,
+  doc,
+  query,
+  where,
+  limit,
+  orderBy,
+  getDocs,
+  startAfter,
+  endBefore,
+  DocumentData
+} from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
+import { collections, firestore } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import { Message } from './Message';
 import { ChatBox } from './ChatBox';
@@ -11,6 +23,9 @@ import SupporteeWaiting from './SupporteeWaiting';
 import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
+
+const MESSAGES_PER_LOAD = 12;
+
 type ChatProps = {
   chatId: string;
   userId: string;
@@ -20,14 +35,16 @@ type ChatProps = {
   goBack: () => void;
   tryToFind?: (existingChatId: string) => void;
 };
+
 type MessageData = {
   chatId: string;
-  status: "received" | "sent" | "read";
+  status: 'received' | 'sent' | 'read';
   content: string;
   senderId: string;
   date: string;
   id?: string | undefined;
-}
+};
+
 export const Chat: React.FC<ChatProps> = ({
   chatId,
   userId,
@@ -37,45 +54,74 @@ export const Chat: React.FC<ChatProps> = ({
   goBack,
   tryToFind
 }) => {
-  const [messages, setMessages] = useState<MessageData[]>()
-  const [lastVissible, setLastVisible] = useState<DocumentData>({})
+  const [messages, setMessages] = useState<MessageData[]>();
+  const [lastVisible, setLastVisible] = useState<DocumentData>({});
+  const [firstVisible, setFirstVisible] = useState<DocumentData>({});
+  const [newMessagesList] = useCollection(
+    query(
+      firstVisible ? collections.messages : collection(firestore, 'empty'),
+      where('chatId', '==', chatId),
+      orderBy('date', 'desc'),
+      endBefore(firstVisible)
+    )
+  );
   const [chat, chatLoading] = useDocumentData(doc(collections.chats, chatId || 'empty'));
-  const [newLimit, setNewLimit] = useState<number>(0);
-  const [stopOrContinue, setStopOrContinue] = useState(true)
+  const [infiniteScroll, setInfiniteScroll] = useState(true);
   const [companionName, setCompanionName] = useState('');
-  const [ifHasMore, setIfHasMore] = useState<boolean>(true);
   const navigate = useNavigate();
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
   const isKeyboardOpen = useDetectKeyboardOpen();
   useLoadingContext(chatLoading || undefined);
 
-  const addNewLimit = async (newLim: number) => {
-    setNewLimit(prevLimit =>  prevLimit + newLim);
-  }
-  const handleIfHasMore = () => {
-    setIfHasMore(true)
-  }
-
-  useMemo(() => {
-    const fetchMessages = async () => {
-      const messagesQuery = query(collections.messages, where('chatId', '==', chatId), orderBy('date', 'desc'), startAfter(lastVissible), limit(12));
-      const snapShLast = await getDocs(messagesQuery);
-      if (snapShLast.docs.length > 0) {
-        const newMessages = snapShLast.docs.map(doc => ({ id: doc.id, ...doc.data() as MessageData }));
-        setMessages(prevMess => [...prevMess || [], ...newMessages]);
-        if(snapShLast.docs){
-            setLastVisible(snapShLast.docs[snapShLast.docs.length - 1]);
-         }
+  const fetchMessages = useCallback(async () => {
+    const messagesQuery = query(
+      collections.messages,
+      where('chatId', '==', chatId),
+      orderBy('date', 'desc'),
+      startAfter(lastVisible),
+      limit(MESSAGES_PER_LOAD)
+    );
+    const snapShLast = await getDocs(messagesQuery);
+    if (snapShLast.docs.length > 0) {
+      if (!messages) {
+        setFirstVisible(snapShLast.docs[0]);
       }
-      addNewLimit(12)  
-    };
 
-    if(ifHasMore && stopOrContinue){
-      setIfHasMore(false)
-      fetchMessages();
-
+      const newMessages = snapShLast.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as MessageData)
+      }));
+      setMessages((prevMess) => [...(prevMess || []), ...newMessages]);
+      setLastVisible(snapShLast.docs[snapShLast.docs.length - 1]);
     }
-  }, [ifHasMore, stopOrContinue, chatId, lastVissible]);
+    if (snapShLast.docs.length < MESSAGES_PER_LOAD) {
+      setInfiniteScroll(false);
+    }
+  }, [chatId, lastVisible, messages]);
+
+  useEffect(() => {
+    if (!messages) {
+      fetchMessages();
+    }
+  }, [fetchMessages, messages]);
+
+  useEffect(() => {
+    if (newMessagesList && newMessagesList.docs.length > 0) {
+      setFirstVisible(newMessagesList.docs[0]);
+      const newMessages = newMessagesList.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as MessageData)
+        }))
+        .filter( // to avoid updating the messages twice when sending a message but still allowing the user to get the message on a different device simultaneously
+          (message) =>
+            new Date(message.date).getTime() >
+            new Date(messages && messages.length > 0 ? messages[0].date : 0).getTime()
+        );
+
+      setMessages((prevMess) => [...newMessages, ...(prevMess || [])]);
+    }
+  }, [newMessagesList, messages]);
 
   // get current date in IOS string
   const getCurrDateIsrael = () => {
@@ -94,16 +140,16 @@ export const Chat: React.FC<ChatProps> = ({
       date: messageDate,
       status: 'received'
     };
-    setMessages(prevMess => [newMsgData as MessageData, ...prevMess || []])
+    setMessages((prevMess) => [newMsgData as MessageData, ...(prevMess || [])]);
     await addDoc(collections.messages, newMsgData);
   };
-  
+
   const noMessages = messages ? messages.length === 0 : true;
 
   useEffect(() => {
     if (!chatLoading && !chat) navigate('/selection');
   }, [chat, chatLoading, navigate]);
-  
+
   useEffect(() => {
     const getData = async () => {
       const compName = await getNameById(chat![getOppositeRoleFieldName(role)]!);
@@ -119,12 +165,6 @@ export const Chat: React.FC<ChatProps> = ({
     }
   }, [chat, userId, navigate, role, tryToFind]);
 
-  useEffect(() => {
-    if(messages && messages?.length < newLimit){
-      setStopOrContinue(false);
-    }
-  }, [messages, stopOrContinue, newLimit]);
-  
   let page = <></>; // should be replaced with loading state once we have it
   if (!chatLoading && chat) {
     if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
@@ -146,43 +186,37 @@ export const Chat: React.FC<ChatProps> = ({
             <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
           ) : (
             <div
-                id="scrollableDiv"
-                style={{
-                  height: '100vh',
-                  overflow: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column-reverse',
-                }}
-              >
+              id="scrollableDiv"
+              style={{
+                height: '100vh',
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column-reverse'
+              }}>
               <InfiniteScroll
-                dataLength={messages ? messages?.length : 0} 
-                next={() => handleIfHasMore()}
+                dataLength={messages ? messages?.length : 0}
+                next={fetchMessages}
                 style={{ display: 'flex', flexDirection: 'column-reverse' }}
                 inverse={true}
-                hasMore={stopOrContinue}
+                hasMore={infiniteScroll}
                 loader={<h4></h4>}
-                scrollableTarget="scrollableDiv"
-              >
-          {messages?.map((m, index) => (
-                <div key={index}>
-                  <Message
-                  key={index}
-                  isSender={m.senderId === userId}
-                  content={m.content}
-                  messageId={m.id}
-                  messageDate={m.date}
-                  messageState={m.status}
-                />
-           <div ref={endOfMessagesRef} />
-                </div>
-                
-
-              ))}
-        </InfiniteScroll>
-
-        </div>
+                scrollableTarget="scrollableDiv">
+                {messages?.map((m, index) => (
+                  <div key={index}>
+                    <Message
+                      key={index}
+                      isSender={m.senderId === userId}
+                      content={m.content}
+                      messageId={m.id}
+                      messageDate={m.date}
+                      messageState={m.status}
+                    />
+                    <div ref={endOfMessagesRef} />
+                  </div>
+                ))}
+              </InfiniteScroll>
+            </div>
           )}
-          
         </div>
 
         <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
