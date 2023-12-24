@@ -44,4 +44,4 @@ const collections = {
   messages: collection(firestore, 'messages').withConverter(messageFirestoreConverter)
 };
 
-export { auth, functions, collections };
+export { auth, functions, collections, firestore };

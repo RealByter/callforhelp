@@ -29,7 +29,7 @@ export const Message: React.FC<IMessageProps> = forwardRef(({ messageId, isSende
     const minute = newDate.getMinutes();
     return `${hour}:${minute >= 10 ? minute : '0' + minute}`;
   };
-
+  
   return (
     <div className={`message-body ${isSender ? 'sender' : ''} ${messageState}`} ref={ref}>
       <div className="content">{content || ''}</div>

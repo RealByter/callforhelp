@@ -43,7 +43,7 @@ export const SupporterChatPage = () => {
   }, [userLoading, user, navigate]);
 
   let page = <></>;
-  if (chatId && !userLoading)
+  if (chatId && !userLoading && user)
     page = (
       <Chat
         chatId={chatId!}
