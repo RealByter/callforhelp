@@ -22,7 +22,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState('');
 
   useEffect(() => {    
-    if (!user) return;
+    if (!user || isEnded) return;
     if (!name) { // if !name => no supporter yet      
       assignSupporter(user.uid, chatId);
     } else {
@@ -38,7 +38,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, isEnded, chatId }) => 
         unsubscribe();
       };
     }
-  }, [user, name, chatId]);
+  }, [user, name, chatId, isEnded]);
 
   useEffect(() => {
     if (!user) return;

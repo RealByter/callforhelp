@@ -210,67 +210,68 @@ export const Chat: React.FC<ChatProps> = ({
   let page = <></>; // todo: should be replaced with loading state once we have it
   if (!chatLoading && chat) {
     if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
-    page = (
-      <div className="chat-page">
-        <ChatTopBar
-          isMinimized={isKeyboardOpen || false}
-          isChatEnded={chat?.status === 'ended'}
-          companionName={companionName}
-          isSupporter={role === 'supporter'}
-          userId={userId}
-          endChat={endChat}
-          secondaryAction={secondaryAction}
-          goBackToChatsPage={goBack}
-        />
+    else
+      page = (
+        <div className="chat-page">
+          <ChatTopBar
+            isMinimized={isKeyboardOpen || false}
+            isChatEnded={chat?.status === 'ended'}
+            companionName={companionName}
+            isSupporter={role === 'supporter'}
+            userId={userId}
+            endChat={endChat}
+            secondaryAction={secondaryAction}
+            goBackToChatsPage={goBack}
+          />
 
-        <div
-          className="messages"
-          id="scrollableDiv"
-          style={{
-            height: '100vh',
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column-reverse'
-          }}>
-          {noMessages ? (
-            <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
-          ) : (
-            <InfiniteScroll
-              dataLength={messages ? messages?.length : 0}
-              next={fetchMessages}
-              style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1rem' }}
-              inverse={true}
-              hasMore={infiniteScroll}
-              loader={<h4></h4>}
-              scrollableTarget="scrollableDiv">
-              {messages?.map((m, index) => (
-                <Message
-                  key={index}
-                  ref={index === 1 ? setRefs : null}
-                  isSender={m.senderId === userId}
-                  content={m.content}
-                  messageId={m.id}
-                  messageDate={m.date}
-                  messageState={m.status}
-                />
-              ))}
-            </InfiniteScroll>
-          )}
+          <div
+            className="messages"
+            id="scrollableDiv"
+            style={{
+              height: '100vh',
+              overflow: 'auto',
+              display: 'flex',
+              flexDirection: 'column-reverse'
+            }}>
+            {noMessages ? (
+              <span className="no-msg">{companionName ? 'עוד אין הודעות' : 'עוד אין שותף'}</span>
+            ) : (
+              <InfiniteScroll
+                dataLength={messages ? messages?.length : 0}
+                next={fetchMessages}
+                style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1rem' }}
+                inverse={true}
+                hasMore={infiniteScroll}
+                loader={<h4></h4>}
+                scrollableTarget="scrollableDiv">
+                {messages?.map((m, index) => (
+                  <Message
+                    key={index}
+                    ref={index === 1 ? setRefs : null}
+                    isSender={m.senderId === userId}
+                    content={m.content}
+                    messageId={m.id}
+                    messageDate={m.date}
+                    messageState={m.status}
+                  />
+                ))}
+              </InfiniteScroll>
+            )}
 
-          {!inView && !noMessages && scrollRef.current && (
-            <div className="scroll-down-info">
-              <div className="scroll-button" onClick={scrollDown}>
-                <CircleSharpIcon className="circle" fontSize="large" />
-                <KeyboardDoubleArrowDownIcon className="arrow" />
+            {!inView && !noMessages && scrollRef.current && (
+              <div className="scroll-down-info">
+                <div className="scroll-button" onClick={scrollDown}>
+                  <CircleSharpIcon className="circle" fontSize="large" />
+                  <KeyboardDoubleArrowDownIcon className="arrow" />
+                </div>
+                {newMsgs != 0 && <span className="new-msgs">{newMsgs}</span>}
               </div>
-              {newMsgs != 0 && <span className="new-msgs">{newMsgs}</span>}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
-      </div>
-    );
+          <ChatBox sendChatMsg={sendMsg} disabled={!companionName || chat?.status === 'ended'} />
+        </div>
+      );
   }
 
   return page;
