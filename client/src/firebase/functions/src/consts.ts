@@ -1,5 +1,9 @@
 export const GENERAL_ERROR_MESSAGES = {
   missingCredentials: {
+    updateName: {
+      hebrew: 'צריך שם',
+      english: 'The function requires a name: '
+    },
     hebrew: 'צריך אימייל, סיסמא ושם משתמש',
     english: 'The function requires an email, a password and a name: '
   },
@@ -8,8 +12,16 @@ export const GENERAL_ERROR_MESSAGES = {
     english: 'The user must be unauthenticated in order to sign up: '
   },
   general: {
+    updateName: {
+      hebrew: 'אירעה שגיאה בזמן שינוי השם',
+      english: 'An error occurred while updating the name: '
+    },
     hebrew: 'אירעה שגיאה בזמן יצירת המשתמש',
     english: 'An error occurred while creating the user: '
+  },
+  notAuthenticated: {
+    hebrew: 'אי אפשר לשנות שם כאשר לא מחוברים לחשבון',
+    english: 'The user must be authenticated in order to update their name: '
   }
 };
 
@@ -37,7 +49,7 @@ export const EMAIL_ERROR_MESSAGES = {
   },
   length: {
     english: "The email can't exceed 254 characters",
-    hebrew: "האימייל לא יכול להיות ארוך מ-254 תווים"
+    hebrew: 'האימייל לא יכול להיות ארוך מ-254 תווים'
   }
 };
 
