@@ -15,11 +15,12 @@ import Disclaimer from './components/Disclaimer.tsx';
 import LoadingContextProvider from './context/loading/LoadingContextProvider.tsx';
 import ErrorContextProvider from './context/Error/ErrorContextProvider.tsx';
 import { SupporterChatPage } from './pages/SupporterChatPage.tsx';
+import UserPage from './pages/UserPage.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
-    <Disclaimer /> 
+    <Disclaimer />
     <BrowserRouter>
       <ErrorContextProvider>
         <LoadingContextProvider>
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/chats" element={<ChatsListPage />} />
               <Route path="/selection" element={<Selection />} />
               <Route path="/example" element={<InfoModalExample />} />
+              <Route path="/user" element={<UserPage />} />
             </Routes>
           </AuthenticationWrapper>
         </LoadingContextProvider>

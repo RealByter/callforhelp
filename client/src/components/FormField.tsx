@@ -7,9 +7,11 @@ type TextInputProps = {
   label: string;
   inputType?: string;
   placeHolder?: string;
-  inputProps: UseFormRegisterReturn; // Should have the useForm register props
+  inputProps?: UseFormRegisterReturn; // Should have the useForm register props
   inputClass?: string;
   error?: FieldError;
+  disabled?: boolean;
+  value?: string | null | undefined;
 };
 
 export default function FormField({
@@ -18,7 +20,9 @@ export default function FormField({
   inputProps,
   inputClass = '',
   placeHolder = label,
-  error
+  error,
+  value,
+  disabled
 }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const effectiveInputType =
@@ -26,19 +30,21 @@ export default function FormField({
 
   return (
     <div className="input-container">
-      <label htmlFor={`input-${inputProps.name}`} className="label">
+      <label htmlFor={inputProps && `input-${inputProps.name}`} className="label">
         {label}
       </label>
       <div className="input-wrapper">
         <input
           {...inputProps!}
-          id={`input-${inputProps.name}`}
+          id={inputProps && `input-${inputProps?.name}`}
+          disabled={disabled}
           dir="rtl"
           type={effectiveInputType}
           aria-invalid={error ? 'true' : 'false'}
           className={`form-input ${inputClass} ${error && 'invalid'}`}
           placeholder={placeHolder}
           style={inputType === 'password' ? { paddingLeft: '2.75rem' } : {}}
+          {...(value ? { value } : {})} // A way to pass an attribute conditionally
         />
         {inputType === 'password' && (
           <button type="button" onClick={() => setShowPassword((prev) => !prev)}>

@@ -1,0 +1,33 @@
+.user-page {
+  height: 100vh;
+  width: 100vw;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  .back-button {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 1;
+    background: none;
+    border: none;
+    width: 11px;
+    height: 20px;
+    padding: 0;
+
+    svg {
+      width: 11px;
+      height: 20px;
+      padding: 0;
+    }
+  }
+
+  h1 {
+    margin-bottom: 2.5rem;
+    color: $default-text-color;
+    font-family: $font-secondary;
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+}
