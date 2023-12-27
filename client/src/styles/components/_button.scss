@@ -1,7 +1,7 @@
 .generic-button {
+  font-size: $login-page-all-text-size;
   color: $default-text-color;
   border-radius: $all-pages-btn-radius;
-  font-size: $login-page-all-text-size;
   outline: none;
   background-color: $btn-bgd;
   width: 100%;
@@ -15,7 +15,7 @@
   }
 
   &:disabled {
-    color: rgba(17, 58, 140, 0.50);
+    color: rgba(17, 58, 140, 0.5);
     background-color: rgba(255, 255, 255, 0.5);
   }
 }

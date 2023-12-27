@@ -5,8 +5,8 @@ import { auth, collections } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import { doc, getDoc } from 'firebase/firestore';
-import BackButton from '../components/BackButton';
 import Button from '../components/Button';
+import { FieldError } from 'react-hook-form';
 
 const UserPage: React.FC = () => {
   const [user, userLoading] = useAuthState(auth);
@@ -27,6 +27,8 @@ const UserPage: React.FC = () => {
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
+
+  const nameIsValid = name.length >= 2 && name.length <= 40;
 
   return (
     <div className="user-page">
@@ -59,9 +61,19 @@ const UserPage: React.FC = () => {
           onChange={(e: FormEvent<HTMLInputElement>) => {
             setName(e.currentTarget.value);
           }}
+          error={
+            !nameIsValid
+              ? ({
+                  message:
+                    name.length < 2
+                      ? 'צריכים להיות לפחות 2 תווים'
+                      : 'אורך השם המקסימלי הוא 40 תווים'
+                } as FieldError)
+              : undefined
+          }
         />
-        <FormField label="אימייל" disabled value={user ? user.email : ''}/>
-        <Button type="submit" disabled={!name?.length} className="submit-button">
+        <FormField label="אימייל" disabled value={user ? user.email : ''} />
+        <Button type="submit" disabled={!nameIsValid} className="submit-button">
           עדכן פרטים
         </Button>
       </form>

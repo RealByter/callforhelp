@@ -37,7 +37,7 @@ export default function FormField({
       </label>
       <div className="input-wrapper">
         <input
-          {...inputProps!}
+          {...(inputProps ? inputProps : {})}
           id={inputProps && `input-${inputProps?.name}`}
           disabled={disabled}
           dir="rtl"
@@ -46,7 +46,8 @@ export default function FormField({
           className={`form-input ${inputClass} ${error && 'invalid'}`}
           placeholder={placeHolder}
           style={inputType === 'password' ? { paddingLeft: '2.75rem' } : {}}
-          {...(value ? { value, onChange } : {})} // A way to pass an attribute conditionally
+          {...(value ? { value } : {})} // A way to pass an attribute conditionally
+          {...(onChange ? { onChange } : {})}
         />
         {inputType === 'password' && (
           <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
