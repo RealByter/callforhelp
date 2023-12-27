@@ -7,6 +7,7 @@ import { assignSupportee, finishChat } from '../helpers/chatFunctions';
 import { getDocs } from 'firebase/firestore';
 import { Chat } from '../components/Chat';
 import SupporteeWaiting from '../components/SupporteeWaiting';
+import BackToSelection from '../components/BackToSelection';
 
 /*
   TODO - take care of the disconnect events
@@ -86,7 +87,12 @@ export const SupporteeChatPage = () => {
     }
   }, [userLoading, user, navigate, chatId, setSearchParams, tryToFindSupporter]);
 
-  let page = <SupporteeWaiting />;
+  let page = (
+    <>
+      <SupporteeWaiting />
+      <BackToSelection text="חזרה לעמוד בחירה" />
+    </>
+  );
   if (chatId && user)
     page = (
       <Chat

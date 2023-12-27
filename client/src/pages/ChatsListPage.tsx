@@ -13,6 +13,7 @@ import {
 import Button from '../components/Button';
 import SupporterWaiting from '../components/SupporterWaiting';
 import LoadingModal from '../components/LoadingModal';
+import BackToSelection from '../components/BackToSelection';
 
 export const ChatsListPage = () => {
   const navigate = useNavigate();
@@ -105,9 +106,7 @@ export const ChatsListPage = () => {
     mainContent = (
       <>
         <SupporterWaiting />
-        <NavLink className="chats-list-page-selection-link-waiting" to="/selection">
-          חזרה לעמוד בחירה
-        </NavLink>
+        <BackToSelection text="חזרה לעמוד בחירה" />
       </>
     );
 

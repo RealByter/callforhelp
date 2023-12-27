@@ -27,6 +27,7 @@ import { getCurrDateIsrael } from '../helpers/dateFunctions';
 import { useInView } from 'react-intersection-observer';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
+import BackToSelection from './BackToSelection';
 
 const MESSAGES_PER_LOAD = 12;
 
@@ -209,7 +210,13 @@ export const Chat: React.FC<ChatProps> = ({
 
   let page = <></>; // todo: should be replaced with loading state once we have it
   if (!chatLoading && chat) {
-    if (role === 'supportee' && !chat.supporterId) page = <SupporteeWaiting />;
+    if (role === 'supportee' && !chat.supporterId)
+      page = (
+        <>
+          <SupporteeWaiting />
+          <BackToSelection text="חזרה לעמוד בחירה" />
+        </>
+      );
     else
       page = (
         <div className="chat-page">
