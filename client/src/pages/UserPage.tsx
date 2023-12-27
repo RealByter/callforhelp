@@ -6,19 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import useLoadingContext from '../context/loading/useLoadingContext';
 import { doc, getDoc } from 'firebase/firestore';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
 
 const UserPage: React.FC = () => {
   const [user, userLoading] = useAuthState(auth);
   const navigate = useNavigate();
   const setIsLoading = useLoadingContext();
-  const [name, setName] = useState<string | null>('');
+  const [name, setName] = useState<string>('');
 
   useEffect(() => {
     if (!userLoading) {
       if (!user) {
         navigate('/');
       } else {
-        setName(user.displayName);
+        setName(user.displayName!);
       }
     }
   }, [userLoading, user, navigate]);
@@ -51,9 +52,18 @@ const UserPage: React.FC = () => {
       </button>
       <h1>נתוני משתמש</h1>
 
-      <form onSubmit={submitHandler}>
-        <FormField label="שם משתמש" value={name} />
-        <FormField label="אימייל" disabled value={user?.email} />
+      <form onSubmit={submitHandler} className="form-wrapper">
+        <FormField
+          label="שם משתמש"
+          value={name}
+          onChange={(e: FormEvent<HTMLInputElement>) => {
+            setName(e.currentTarget.value);
+          }}
+        />
+        <FormField label="אימייל" disabled value={user ? user.email : ''}/>
+        <Button type="submit" disabled={!name?.length} className="submit-button">
+          עדכן פרטים
+        </Button>
       </form>
     </div>
   );

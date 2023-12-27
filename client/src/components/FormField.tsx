@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -12,6 +12,7 @@ type TextInputProps = {
   error?: FieldError;
   disabled?: boolean;
   value?: string | null | undefined;
+  onChange?: (event: FormEvent<HTMLInputElement>) => void;
 };
 
 export default function FormField({
@@ -22,7 +23,8 @@ export default function FormField({
   placeHolder = label,
   error,
   value,
-  disabled
+  disabled,
+  onChange
 }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const effectiveInputType =
@@ -44,7 +46,7 @@ export default function FormField({
           className={`form-input ${inputClass} ${error && 'invalid'}`}
           placeholder={placeHolder}
           style={inputType === 'password' ? { paddingLeft: '2.75rem' } : {}}
-          {...(value ? { value } : {})} // A way to pass an attribute conditionally
+          {...(value ? { value, onChange } : {})} // A way to pass an attribute conditionally
         />
         {inputType === 'password' && (
           <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
