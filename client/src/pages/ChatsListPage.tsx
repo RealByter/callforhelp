@@ -13,6 +13,7 @@ import {
 import Button from '../components/Button';
 import SupporterWaiting from '../components/SupporterWaiting';
 import LoadingModal from '../components/LoadingModal';
+import BackToSelection from '../components/BackToSelection';
 
 export const ChatsListPage = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const ChatsListPage = () => {
 
   useEffect(() => {
     const joinAsSupporter = async () => {
-      try {        
+      try {
         const hasActiveChat = await checkIfHasActive(user!.uid);
         if (!hasActiveChat) assignSupporter(user!.uid);
         // navigate('/chats');
@@ -61,7 +62,7 @@ export const ChatsListPage = () => {
   const IsSearchingForSupportee = () => {
     return !!chats?.find((chat) => !chat.supporteeId);
   };
-  
+
   let mainContent = (
     <div className="chats-list-page">
       <h1>רשימת נתמכים</h1>
@@ -100,9 +101,14 @@ export const ChatsListPage = () => {
     </div>
   );
 
-  if (chatsLoading)
-    mainContent = <LoadingModal />;
-  else if (!chats!.find((chat) => chat.supporteeId)) mainContent = <SupporterWaiting />;
+  if (chatsLoading) mainContent = <LoadingModal />;
+  else if (!chats!.find((chat) => chat.supporteeId))
+    mainContent = (
+      <>
+        <SupporterWaiting />
+        <BackToSelection text="חזרה לעמוד בחירה" />
+      </>
+    );
 
   return mainContent;
 };

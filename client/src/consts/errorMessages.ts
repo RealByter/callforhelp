@@ -26,6 +26,7 @@ export const FIREBASE_ERRORS = {
   alreadyExists: 'functions/already-exists',
   invalidArgument: { code: 'functions/invalid-argument', title: 'קלט לא תקין' },
   failedPrecondition: { code: 'functions/failed-precondition', title: 'שגיאת הרשאה' },
+  internal: 'functions/internal',
   notFound: 'auth/user-not-found',
   wrongPassword: 'auth/wrong-password',
 }

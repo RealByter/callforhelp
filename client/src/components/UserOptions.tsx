@@ -1,10 +1,14 @@
 import { signOut } from 'firebase/auth';
 import { Menu } from '@headlessui/react';
 import { auth } from '../firebase/connection';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const UserOptions: React.FC = () => {
-  return (
+  const location = useLocation();
+
+  return location.pathname == '/user' ? (
+    <></>
+  ) : (
     <Menu as="div" className="user-options">
       <Menu.Button className="open-button">
         <svg
@@ -29,7 +33,7 @@ const UserOptions: React.FC = () => {
       </Menu.Button>
       <Menu.Items as="ul" className="options">
         <Menu.Item>
-          <NavLink to="/profile">פרטים אישיים</NavLink>
+          <NavLink to="/user">פרטים אישיים</NavLink>
         </Menu.Item>
         <Menu.Item>
           <button onClick={() => signOut(auth)}>התנתקות</button>
