@@ -4,14 +4,19 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, collections } from '../firebase/connection';
 import { useNavigate } from 'react-router-dom';
 import useLoadingContext from '../context/loading/useLoadingContext';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import Button from '../components/Button';
 import { FieldError } from 'react-hook-form';
+import { updateProfile } from 'firebase/auth';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { FIREBASE_ERRORS } from '../consts/errorMessages';
+import useErrorContext from '../context/Error/useErrorContext';
 
 const UserPage: React.FC = () => {
   const [user, userLoading] = useAuthState(auth);
   const navigate = useNavigate();
   const setIsLoading = useLoadingContext();
+  const setError = useErrorContext();
   const [name, setName] = useState<string>('');
 
   useEffect(() => {
@@ -24,8 +29,31 @@ const UserPage: React.FC = () => {
     }
   }, [userLoading, user, navigate]);
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    /* 
+    Apparently you need to be on the Blaze plan (pay-as-you-go) in order to upload
+    firebase functions to the cloud so for now i'm removing the precautions  
+    */
+    setIsLoading(true);
+    await updateProfile(user!, {displayName: name});
+    await updateDoc(doc(collections.users, user!.uid), {name});
+    // try {
+    //   const functions = getFunctions();
+    //   const updateName = httpsCallable(functions, 'updateName');
+    //   await updateName({ name });
+    // } catch (e: unknown) {
+    //   const error = e as { message: string; code: string };
+
+    //   if (error.code === FIREBASE_ERRORS.invalidArgument.code) {
+    //     setError({ title: FIREBASE_ERRORS.invalidArgument.title, content: error.message });
+    //   } else if (error.code === FIREBASE_ERRORS.failedPrecondition.code) {
+    //     setError({ title: FIREBASE_ERRORS.failedPrecondition.title, content: error.message });
+    //   } else {
+    //     setError({ title: 'שגיאה', content: 'אירעה שגיאה בעת שינוי שם' });
+    //   }
+    // }
+    setIsLoading(false);
   };
 
   const nameIsValid = name.length >= 2 && name.length <= 40;
@@ -73,7 +101,10 @@ const UserPage: React.FC = () => {
           }
         />
         <FormField label="אימייל" disabled value={user ? user.email : ''} />
-        <Button type="submit" disabled={!nameIsValid} className="submit-button">
+        <Button
+          type="submit"
+          disabled={!user || !nameIsValid || name == user.displayName}
+          className="submit-button">
           עדכן פרטים
         </Button>
       </form>
